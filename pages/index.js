@@ -36,6 +36,13 @@ export default function Home() {
         <p className="text-lg md:text-xl mb-8 max-w-2xl">
           Books, stories, and creative projects come alive here.
         </p>
+
+        {/* Example section: you can add more content below */}
+        <div className="mt-8">
+          <p className="italic text-gray-300">
+            Explore our latest stories and creations.
+          </p>
+        </div>
       </main>
     </>
   );
