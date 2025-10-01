@@ -1,115 +1,219 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// pages/index.js
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import Head from "next/head";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function Home() {
+  const router = useRouter();
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/books", label: "Books" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    { href: "/blog", label: "Blog" },
+    { href: "/reviews", label: "Reviews" },
+  ];
+
+  // Slow down background storm video
+  useEffect(() => {
+    const video = document.getElementById("bg-video");
+    if (video) {
+      video.playbackRate = 0.5;
+    }
+  }, []);
+
+  // SEO data
+  const title = "Silver Spine Studio™ — Noir Thrillers by Leameso James";
+  const description =
+    "Official site of Silver Spine Studio™. Explore The Beautiful Beast, Shadows of a Ghost, The Gathering Storm, and more by Leameso James.";
+  const url = "https://www.silverspinestudio.com";
+  const ogImage = `${url}/og/series-cover.jpg`;
+
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Silver Spine Studio",
+    "url": url,
+    "logo": `${url}/og/logo.png`,
+    "sameAs": [
+      "https://instagram.com/SilverSpineStudio",
+      "https://twitter.com/SilverSpineStudio",
+      "https://facebook.com/SilverSpineStudio",
+      "https://youtube.com/@SilverSpineStudio",
+      "https://tiktok.com/@SilverSpineStudio"
+    ]
+  };
+
   return (
-    <div
-      className={`${geistSans.className} ${geistMono.className} font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20`}
-    >
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative overflow-hidden">
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={url} />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Silver Spine Studio" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={url} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+
+        {/* JSON-LD */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </Head>
+
+      {/* Background Storm Video */}
+      <video
+        id="bg-video"
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/storm-lightning.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-black/50" />
+
+      {/* Lightning overlay flashes */}
+      <div className="lightning-overlay absolute inset-0 pointer-events-none"></div>
+
+      {/* Header */}
+      <header className="relative z-10 bg-gray-900/70 backdrop-blur-md shadow-md">
+        <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
+          <h1 className="text-2xl font-extrabold text-yellow-400">
+            Silver Spine Studio
+          </h1>
+          <nav className="flex space-x-6">
+            {links.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`transition ${
+                  router.asPath === href
+                    ? "text-red-500 font-semibold"
+                    : "text-gray-200 hover:text-yellow-400"
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </header>
+
+      {/* Hero */}
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 py-20">
+        <h2 className="text-5xl md:text-6xl font-bold mb-6 text-yellow-400">
+          Welcome to Silver Spine Studio
+        </h2>
+        <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl">
+          Crafting stories that cut deep, linger long, and shine through the
+          dark. Explore our books, dive into our world, and join the journey
+          ahead.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6">
+          <Link
+            href="/books/books"
+            className="bg-yellow-400 text-black px-8 py-3 rounded-xl font-semibold hover:bg-yellow-300 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Explore Books
+          </Link>
+          <Link
+            href="/about"
+            className="border border-yellow-400 px-8 py-3 rounded-xl font-semibold hover:bg-yellow-400 hover:text-black transition"
           >
-            Read our docs
-          </a>
+            Learn More
+          </Link>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="relative z-10 bg-gray-950/70 text-gray-400 text-center py-8">
+        <p className="mb-4">
+          © {new Date().getFullYear()} Silver Spine Studio™. All rights reserved.
+        </p>
+        <div className="flex justify-center space-x-6 text-2xl">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaFacebook />
+          </a>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTwitter />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaInstagram />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaYoutube />
+          </a>
+          <a
+            href="https://tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTiktok />
+          </a>
+        </div>
       </footer>
+
+      {/* Lightning effect styles */}
+      <style jsx>{`
+        .lightning-overlay {
+          animation: flash 20s infinite;
+        }
+        @keyframes flash {
+          0%, 96%, 100% {
+            background: transparent;
+          }
+          97% {
+            background: rgba(255, 255, 255, 0.6);
+          }
+          98% {
+            background: transparent;
+          }
+          99% {
+            background: rgba(255, 255, 255, 0.4);
+          }
+        }
+      `}</style>
     </div>
   );
 }
