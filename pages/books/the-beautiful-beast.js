@@ -73,7 +73,7 @@ export default function TheBeautifulBeast() {
           dragging secrets into the light. A novel by <b>Leameso James</b>.
         </p>
 
-        {/* Back to Books */}
+        {/* Back to Index */}
         <Link
           href="/books"
           className="inline-block mt-4 px-6 py-3 rounded-lg bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition"

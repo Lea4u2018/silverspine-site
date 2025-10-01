@@ -1,15 +1,15 @@
-// pages/books.js
+// pages/index.js
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Head from "next/head";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
-export default function Books() {
+export default function Index() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
+    { href: "/books", label: "Index" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -45,7 +45,7 @@ export default function Books() {
   ];
 
   // SEO data for this landing page
-  const title = "Books by Leameso James | Silver Spine Studio™";
+  const title = "Index by Leameso James | Silver Spine Studio™";
   const description =
     "Explore the Silver Spine Studio thriller series: The Beautiful Beast, Shadows of a Ghost, The Gathering Storm, and more by Leameso James.";
   const url = "https://www.silverspinestudio.com/books";

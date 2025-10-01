@@ -7,7 +7,7 @@ export default function Layout({ children }) {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
+    { href: "/books", label: "Index" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
