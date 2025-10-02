@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Image from "next/image";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function About() {
@@ -55,10 +56,12 @@ export default function About() {
 
         {/* Author Photo */}
         <div className="flex justify-center mb-8">
-          <img
+          <Image
             src="/author.jpg"
             alt="Leameso James"
-            className="w-40 h-40 object-cover rounded-full border-4 border-yellow-400 shadow-lg"
+            width={160}
+            height={160}
+            className="object-cover rounded-full border-4 border-yellow-400 shadow-lg"
           />
         </div>
 
@@ -72,13 +75,14 @@ export default function About() {
             both their brilliance and their breaking points, their strength and their scars.
           </p>
           <p>
-            Currently completing her studies in <span className="font-semibold">Cybersecurity at the University of Phoenix</span>,
+            Currently completing her studies in{" "}
+            <span className="font-semibold">Cybersecurity at the University of Phoenix</span>,
             James continues to draw strength from her faith. She openly acknowledges God as her source,
             her guide, and her anchor through every season of learning and creation.
           </p>
           <p>
             With that foundation, she has stepped fully into her creative calling as an
-            <span className="font-semibold"> author and content creator</span>, establishing
+            <span className="font-semibold"> author and content creator</span>, establishing{" "}
             <span className="font-semibold"> Silver Spine Studio</span> as a home for unforgettable narratives.
             Her vision is clear: to craft stories with elegance and cinematic force — tales that do not shy away
             from darkness, yet always illuminate the beauty of resilience, redemption, and the human spirit.
@@ -92,8 +96,53 @@ export default function About() {
           © {new Date().getFullYear()} Silver Spine Studio. All rights reserved.
         </p>
         <p className="text-sm text-gray-400 mt-1">
-          Hand-built from the ground up — code by code, line by line in
-          <span className="text-yellow-400 font-semibold"> PyCharm</span>,
-          powered by <span className="text-yellow-400 font-semibold">React/Next.js</span>.
+          Hand-built from the ground up — code by code, line by line in{" "}
+          <span className="text-yellow-400 font-semibold">PyCharm</span>, powered by{" "}
+          <span className="text-yellow-400 font-semibold">React/Next.js</span>.
         </p>
-        <div className="flex justify-center space
+        <div className="flex justify-center space-x-5 text-lg mt-3">
+          <a
+            href="https://facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaFacebook />
+          </a>
+          <a
+            href="https://twitter.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTwitter />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaInstagram />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaYoutube />
+          </a>
+          <a
+            href="https://tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTiktok />
+          </a>
+        </div>
+      </footer>
+    </div>
+  );
+}

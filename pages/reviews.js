@@ -41,10 +41,10 @@ export default function ReviewsPage() {
   return (
     <div className="bg-black text-gray-100 min-h-screen flex flex-col">
       <Head>
-        <title>Reviews | Silver Spine Studio™</title>
+        <title>Reader Reviews | Silver Spine Studio™</title>
         <meta
           name="description"
-          content="See what readers are saying about the books from Silver Spine Studio by Leameso James."
+          content="What readers are saying about Silver Spine Studio books. Honest reviews and impressions."
         />
       </Head>
 
@@ -72,9 +72,9 @@ export default function ReviewsPage() {
         </div>
       </header>
 
-      {/* Content */}
+      {/* Reviews Grid */}
       <main className="flex-1 px-6 py-12 text-center">
-        <h1 className="text-3xl font-bold mb-12">Reader Reviews</h1>
+        <h1 className="text-3xl font-bold mb-12 text-yellow-400">Reader Reviews</h1>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
           {reviews.map((review, index) => (
             <div
@@ -96,7 +96,7 @@ export default function ReviewsPage() {
         </div>
       </main>
 
-      {/* Footer with Icons */}
+      {/* Footer */}
       <footer className="bg-gray-950 text-gray-400 text-center py-8">
         <p className="mb-4">
           © {new Date().getFullYear()} Silver Spine Studio. All rights reserved.
@@ -116,3 +116,34 @@ export default function ReviewsPage() {
             rel="noopener noreferrer"
             className="hover:text-yellow-400 transition"
           >
+            <FaTwitter />
+          </a>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaInstagram />
+          </a>
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaYoutube />
+          </a>
+          <a
+            href="https://tiktok.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTiktok />
+          </a>
+        </div>
+      </footer>
+    </div>
+  );
+}

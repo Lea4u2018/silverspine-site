@@ -148,4 +148,12 @@ export default function Blog() {
             href="https://tiktok.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-yellow-400 trans
+            className="hover:text-yellow-400 transition"
+          >
+            <FaTiktok />
+          </a>
+        </div>
+      </footer>
+    </div>
+  );
+}
