@@ -11,8 +11,8 @@ export default function Home() {
 
   return (
     <Layout
-      title="Silver Spine Studio"
-      description="Books, stories, and creative projects."
+      title="Silver Spine Studio | Home" // ✅ clear title for homepage
+      description="Books, stories, and creative projects from Silver Spine Studio by Leameso James."
     >
       <div className="relative flex flex-col min-h-screen">
         {/* Background storm video */}

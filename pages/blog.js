@@ -1,12 +1,14 @@
+// pages/blog.js
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function Blog() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" }, // ✅ FIXED
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -15,6 +17,14 @@ export default function Blog() {
 
   return (
     <div className="bg-black text-gray-100 min-h-screen flex flex-col relative overflow-hidden">
+      <Head>
+        <title>Blog | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content="Thoughts, inspirations, and behind-the-scenes insights from Silver Spine Studio. Explore the creative journey of Leameso James."
+        />
+      </Head>
+
       {/* Rain Video Background */}
       <video
         id="bg-video"
@@ -138,12 +148,4 @@ export default function Blog() {
             href="https://tiktok.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTiktok />
-          </a>
-        </div>
-      </footer>
-    </div>
-  );
-}
+            className="hover:text-yellow-400 trans

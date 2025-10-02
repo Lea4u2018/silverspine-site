@@ -1,12 +1,14 @@
+// pages/about.js
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function About() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" }, // ✅ FIXED
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -15,6 +17,14 @@ export default function About() {
 
   return (
     <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+      <Head>
+        <title>About | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content="Learn more about Leameso James, author and founder of Silver Spine Studio. Discover the vision and story behind the books."
+        />
+      </Head>
+
       {/* Header */}
       <header className="bg-gray-900/80 backdrop-blur-md shadow-md relative z-10">
         <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
@@ -60,8 +70,6 @@ export default function About() {
             by the pull of cinematic storytelling. What moves her most is not simply conflict,
             but the fragile space between endurance and temptation — the way characters reveal
             both their brilliance and their breaking points, their strength and their scars.
-            For James, the truest stories live in that tension, where perseverance is tested and
-            where light and shadow wrestle for ground.
           </p>
           <p>
             Currently completing her studies in <span className="font-semibold">Cybersecurity at the University of Phoenix</span>,
@@ -87,51 +95,5 @@ export default function About() {
           Hand-built from the ground up — code by code, line by line in
           <span className="text-yellow-400 font-semibold"> PyCharm</span>,
           powered by <span className="text-yellow-400 font-semibold">React/Next.js</span>.
-          Crafted without third-party site builders, with intention behind every detail.
         </p>
-        <div className="flex justify-center space-x-5 text-lg mt-3">
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaFacebook />
-          </a>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTwitter />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaInstagram />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaYoutube />
-          </a>
-          <a
-            href="https://tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTiktok />
-          </a>
-        </div>
-      </footer>
-    </div>
-  );
-}
+        <div className="flex justify-center space

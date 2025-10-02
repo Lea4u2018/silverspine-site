@@ -1,3 +1,4 @@
+// pages/reviews.js
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -7,7 +8,7 @@ export default function ReviewsPage() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" }, // ✅ FIXED
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -40,7 +41,11 @@ export default function ReviewsPage() {
   return (
     <div className="bg-black text-gray-100 min-h-screen flex flex-col">
       <Head>
-        <title>Reader Reviews</title>
+        <title>Reviews | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content="See what readers are saying about the books from Silver Spine Studio by Leameso James."
+        />
       </Head>
 
       {/* Header */}
@@ -111,34 +116,3 @@ export default function ReviewsPage() {
             rel="noopener noreferrer"
             className="hover:text-yellow-400 transition"
           >
-            <FaTwitter />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaInstagram />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaYoutube />
-          </a>
-          <a
-            href="https://tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTiktok />
-          </a>
-        </div>
-      </footer>
-    </div>
-  );
-}

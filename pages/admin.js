@@ -1,12 +1,14 @@
+// pages/admin.js
 import Link from "next/link";
 import { useRouter } from "next/router";
+import Head from "next/head";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
 export default function Admin() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" }, // ✅ FIXED
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -16,6 +18,14 @@ export default function Admin() {
 
   return (
     <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+      <Head>
+        <title>Admin | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content="Administrative dashboard for Silver Spine Studio. Manage books, posts, and site content."
+        />
+      </Head>
+
       {/* Header */}
       <header className="bg-gray-900 shadow-md">
         <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
