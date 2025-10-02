@@ -1,15 +1,15 @@
-// pages/index.js
+// pages/books/index.js
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Head from "next/head";
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 
-export default function Index() {
+export default function BooksPage() {
   const router = useRouter();
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" }, // FIXED
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
@@ -24,7 +24,7 @@ export default function Index() {
         "A storm-soaked thriller set against the Million-Dollar Highway, dragging secrets into the light.",
       status: "Available soon",
       cover: "/covers/beautiful-beast.jpg",
-      url: "/books/the-beautiful-beast", // links to detail page (future)
+      url: "/books/the-beautiful-beast",
     },
     {
       title: "Shadows of a Ghost",
@@ -44,8 +44,8 @@ export default function Index() {
     },
   ];
 
-  // SEO data for this landing page
-  const title = "Index by Leameso James | Silver Spine Studio™";
+  // SEO data for Books page
+  const title = "Books by Leameso James | Silver Spine Studio™"; // FIXED
   const description =
     "Explore the Silver Spine Studio thriller series: The Beautiful Beast, Shadows of a Ghost, The Gathering Storm, and more by Leameso James.";
   const url = "https://www.silverspinestudio.com/books";
@@ -116,7 +116,7 @@ export default function Index() {
 
       {/* Main Book Grid */}
       <main className="flex-1 px-6 py-4 text-center mb-12 -mt-2">
-        <h1 className="text-4xl font-bold mb-6">From the Studio</h1>
+        <h1 className="text-4xl font-bold mb-6">Books</h1> {/* FIXED */}
         <div className="grid gap-10 md:grid-cols-3 max-w-6xl mx-auto">
           {books.map((book) => (
             <div
