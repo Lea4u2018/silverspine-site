@@ -1,52 +1,366 @@
+// /pages/blog.js
+import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
 export default function Blog() {
   const router = useRouter();
+
+  // ---- brand / assets ----
+  const GOLD = "#a77a23";
+  const DISC_LOGO = "/SilverSpine_FB_Profile_CircleDisc_1024.png";
+  const BIG_LOGO = "/Silver_Spine_Studio_Logo_2025_10_11.png";
+  const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
+  const REQUEST_EMAIL = "contact@silverspinestudio.com";
+
+  // ---- header height (for sticky header only) ----
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const syncHeaderVar = () => {
+      const h = headerRef.current
+        ? Math.round(headerRef.current.getBoundingClientRect().height)
+        : 140;
+      document.documentElement.style.setProperty("--header-h", `${h}px`);
+    };
+    syncHeaderVar();
+
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(syncHeaderVar);
+      if (headerRef.current) ro.observe(headerRef.current);
+    }
+    window.addEventListener("load", syncHeaderVar);
+    window.addEventListener("resize", syncHeaderVar);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener("load", syncHeaderVar);
+      window.removeEventListener("resize", syncHeaderVar);
+    };
+  }, []);
+
+  // ---- MOVE THE GLOBAL FOOTER INTO THIS PAGE (right under bottom nebula) ----
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const getFooter = () =>
+      document.querySelector(
+        "#site-footer, footer.site-footer, footer#footer, footer.Footer, .site-footer, .footer, [data-site-footer]"
+      );
+
+    const mount = document.getElementById("blog-footer-mount");
+    const footer = getFooter();
+
+    if (!mount || !footer) return;
+
+    // Normalize footer positioning/styles so it becomes part of page flow
+    Object.assign(footer.style, {
+      position: "static",
+      left: "auto",
+      right: "auto",
+      bottom: "auto",
+      top: "auto",
+      transform: "none",
+      zIndex: "auto",
+      marginTop: "0",
+      paddingBottom: "max(12px, env(safe-area-inset-bottom))",
+    });
+
+    // Record original parent & next sibling to restore on unmount
+    const originalParent = footer.parentNode;
+    const originalNext = footer.nextSibling;
+
+    // Move footer node into our mount point (no clone -> single footer, not duplicate)
+    mount.appendChild(footer);
+
+    // 🔧 “Pull icons fresh”: remove inline SVG fill/stroke so CSS can drive hover
+    try {
+      const socialSvgs = footer.querySelectorAll(
+        'a[href*="facebook.com" i] svg, a[href*="instagram.com" i] svg, a[href*="tiktok.com" i] svg, a[aria-label*="facebook" i] svg, a[aria-label*="instagram" i] svg, a[aria-label*="tiktok" i] svg'
+      );
+      socialSvgs.forEach((svg) => {
+        svg.removeAttribute("color");
+        svg.style.color = ""; // let CSS win
+        svg.querySelectorAll("*").forEach((n) => {
+          n.removeAttribute("fill");
+          n.removeAttribute("stroke");
+          n.style.fill = "";
+          n.style.stroke = "";
+        });
+      });
+    } catch {}
+
+    // Update CSS var with *actual* footer height after move
+    const updateFooterVar = () => {
+      const fH = Math.round(footer.getBoundingClientRect().height) || 220;
+      document.documentElement.style.setProperty("--footer-h", `${fH}px`);
+    };
+    updateFooterVar();
+
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(updateFooterVar);
+      ro.observe(footer);
+    }
+    window.addEventListener("resize", updateFooterVar);
+
+    return () => {
+      // Put footer back where it was (safety if user navigates away)
+      if (originalParent) {
+        if (originalNext) originalParent.insertBefore(footer, originalNext);
+        else originalParent.appendChild(footer);
+      }
+      if (ro) ro.disconnect();
+      window.removeEventListener("resize", updateFooterVar);
+    };
+  }, []);
+
+  // ---- thunder (center chip, responsive left nudge) ----
+  const [siteAudioMuted, setSiteAudioMuted] = useState(true);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    let el = document.getElementById("site-audio");
+    if (!el) {
+      el = document.createElement("audio");
+      el.id = "site-audio";
+      el.src = "/thunder_rumble.mp3";
+      el.loop = true;
+      el.preload = "auto";
+      document.body.appendChild(el);
+    }
+    el.muted = true;
+  }, []);
+  const toggleThunder = async () => {
+    const a = document.getElementById("site-audio");
+    if (!a) return;
+    try {
+      if (a.paused) {
+        a.muted = false;
+        a.volume = 0.2;
+        if (a.readyState < 2) a.load();
+        await a.play();
+        setSiteAudioMuted(false);
+      } else {
+        a.pause();
+        setSiteAudioMuted(true);
+      }
+    } catch {}
+  };
+
+  // ---- nav links ----
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
+    { href: "/books", label: "Books" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
     { href: "/reviews", label: "Reviews" },
   ];
 
+  // ---- local UI ----
+  const [showPlan, setShowPlan] = useState(false);
+  const [showBrandNotes, setShowBrandNotes] = useState(false);
+  const [showArc, setShowArc] = useState(false);
+  const [showPress, setShowPress] = useState(false);
+  const [arcName, setArcName] = useState("");
+  const [arcEmail, setArcEmail] = useState("");
+  const [arcFormat, setArcFormat] = useState("ePub");
+  const [arcReviewSpot, setArcReviewSpot] = useState("Goodreads");
+  const [pressName, setPressName] = useState("");
+  const [pressOutlet, setPressOutlet] = useState("");
+  const [pressEmail, setPressEmail] = useState("");
+  const [pressNeeds, setPressNeeds] = useState("Interview, logo usage, and cover art");
+  const [pressDeadline, setPressDeadline] = useState("");
+  const [pressAgree, setPressAgree] = useState(false);
+
+  const submitArc = (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent("ARC Signup — The Beautiful Beast");
+    const body = encodeURIComponent(
+      `Hi,%0D%0A%0D%0AI'd like to join the ARC.%0D%0A%0D%0AName: ${arcName}%0D` +
+        `Email: ${arcEmail}%0DPreferred format: ${arcFormat}%0D` +
+        `Where I'll review: ${arcReviewSpot}%0D%0AThanks!`
+    );
+    window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
+    setShowArc(false);
+  };
+  const submitPress = (e) => {
+    e.preventDefault();
+    if (!pressAgree) return;
+    const subject = encodeURIComponent("Press Request — The Beautiful Beast / Silver Spine Studio");
+    const body = encodeURIComponent(
+      `Hi,%0D%0A%0D%0APress request details:%0D%0A%0D%0A` +
+        `Name: ${pressName}%0D` +
+        `Outlet: ${pressOutlet}%0D` +
+        `Email: ${pressEmail}%0D` +
+        `Deadline: ${pressDeadline || "N/A"}%0D` +
+        `Needs: ${pressNeeds}%0D%0A%0D%0A` +
+        `I acknowledge materials (if shared) are confidential and not for redistribution without written consent.%0D%0A%0D%0AThanks!`
+    );
+    window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
+    setShowPress(false);
+  };
+
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative overflow-hidden">
-      {/* Rain Video Background */}
-      <video
-        id="bg-video"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
+    <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+      <Head>
+        <title>Blog | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content="Thoughts, inspirations, and behind-the-scenes insights from Silver Spine Studio."
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <style>{`
+          :root {
+            --header-h: 140px; /* JS updates */
+            --footer-h: 220px; /* updated after we mount/move footer */
+            --gold: ${GOLD};
+          }
+
+          /* Only the window scrolls */
+          html, body { margin: 0; background:#000; height:auto; overflow-y:auto; }
+          #__next { height:auto; overflow:visible; }
+
+          .nav-wrap { max-width: 1400px; }
+          .nav-link { color: #e5e7eb; }
+          .nav-link:hover { color: ${GOLD}; }
+          .nav-active { color: #ef4444; font-weight: 600; }
+
+          /* MAIN: no artificial min-height; no inner scroller */
+          .page-frame {
+            position: relative;
+            z-index: 1;      /* ensure content stays above the ribbon below */
+            display: flex;
+            flex-direction: column;
+            overflow: visible !important;
+          }
+          .page-frame > *:last-child { margin-bottom: 0 !important; }
+
+          /* Nebula ribbons (unchanged) */
+          .nebula {
+            width: 100%;
+            background-image: url('${NEBULA}');
+            background-size: cover;
+            background-position: center;
+            filter: saturate(1.06) contrast(1.05);
+          }
+          .nebula-top,
+          .nebula-bottom {
+            height: 32px;
+          }
+          .nebula-top {
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 80%, transparent);
+                    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 80%, transparent);
+          }
+          .nebula-bottom {
+            position: relative;
+            z-index: 0; /* keep it behind content above */
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 80%, transparent);
+                    mask-image: linear-gradient(to top, rgba(0,0,0,1) 80%, transparent);
+          }
+
+          /* Tighten the gap ABOVE the footer a touch, but don't collide */
+          #blog-footer-mount { margin-top: -6px; }
+
+          /* Footer: ensure normal flow + a tiny bottom pad so last line isn't off-screen */
+          #site-footer,
+          footer.site-footer,
+          footer#footer,
+          footer.Footer,
+          .site-footer,
+          .footer,
+          [data-site-footer] {
+            position: static !important;
+            bottom: auto !important;
+            left: auto !important;
+            right: auto !important;
+            z-index: auto !important;
+            transform: none !important;
+            margin-top: 0 !important;
+            padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+          }
+
+          /* Thunder chip */
+          .chip {
+            display:inline-flex; align-items:center; gap:.5rem;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(167,122,35,0.55);
+            border-radius: 999px; padding: 9px 16px; color: ${GOLD};
+            box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+            font-size: 0.9rem; line-height: 1; white-space: nowrap;
+          }
+          .chip:hover { background: rgba(0,0,0,0.92); }
+
+          /* ========================================= */
+          /* DISCLOSURE FIX (no more bottom clipping)  */
+          /* ========================================= */
+          .disclosure {
+            overflow: hidden;                    /* clip only when closed */
+            will-change: max-height, opacity;
+          }
+          .disclosure.open {
+            overflow: visible;                   /* show full content when open */
+          }
+
+          /* =============================== */
+          /* SOCIAL HOVER — LIGHT & SCOPED   */
+          /* =============================== */
+          #blog-footer-mount a:hover svg {
+            color: var(--gold) !important;
+            filter: drop-shadow(0 0 8px rgba(167,122,35,0.85));
+            transition: color .18s ease, filter .18s ease;
+          }
+        `}</style>
+      </Head>
+
+      {/* ===== HEADER (GREY GRADIENT) ===== */}
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-50 bg-gradient-to-b from-gray-950 to-gray-900 border-b border-[#a77a23]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
       >
-        <source src="/Firefly-Rain.mp4" type="video/mp4" />
-      </video>
+        {/* 3 columns: left logo / center chip / right nav */}
+        <div className="nav-wrap mx-auto grid grid-cols-3 items-center px-6 py-3 md:py-4">
+          {/* Left: Logo */}
+          <div className="flex items-center gap-3 md:gap-4">
+            <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
+              <Image
+                src={DISC_LOGO}
+                alt="Silver Spine Studio logo"
+                width={512}
+                height={512}
+                priority
+                className="w-auto select-none drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
+                style={{ height: "88px" }}
+                sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
+              />
+              <span className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide" style={{ color: GOLD }}>
+                Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
+              </span>
+            </Link>
+          </div>
 
-      {/* Dark Overlay for readability */}
-      <div className="absolute inset-0 bg-black/50 z-0"></div>
+          {/* Center: Thunder toggle — left shift to sit between logo & "Home" */}
+          <div className="flex items-center justify-center">
+            <button
+              type="button"
+              onClick={toggleThunder}
+              className="chip -translate-x-6 md:-translate-x-8 lg:-translate-x-10 xl:-translate-x-12"
+              aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
+              title={siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
+            >
+              {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+              {siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
+            </button>
+          </div>
 
-      {/* Header */}
-      <header className="bg-gray-900/80 backdrop-blur-md shadow-md relative z-10">
-        <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
-          <h1 className="text-2xl font-extrabold text-yellow-400">
-            Silver Spine Studio
-          </h1>
-          <nav className="flex space-x-6">
+          {/* Right: Nav links */}
+          <nav className="flex justify-end gap-5 md:gap-10 tracking-wide text-base md:text-lg">
             {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  router.asPath === href
-                    ? "text-red-500 font-semibold"
-                    : "text-gray-200 hover:text-yellow-400"
-                }`}
-              >
+              <Link key={href} href={href} className={`transition ${router.asPath === href ? "nav-active" : "nav-link"}`}>
                 {label}
               </Link>
             ))}
@@ -54,96 +368,276 @@ export default function Blog() {
         </div>
       </header>
 
-      {/* Blog Content */}
-      <main className="flex-1 px-6 py-12 text-center mb-24 relative z-10">
-        <h1 className="text-4xl font-bold mb-8 text-yellow-400">
-          Welcome to Silver Spine Studio
-        </h1>
-        <div className="max-w-3xl mx-auto text-left space-y-6 leading-relaxed">
-          <p>
-            Every story has a shadow. Some you see coming, some you only notice
-            when it’s already moved past you. Silver Spine Studio was born from
-            chasing those shadows — the storm-soaked ones that linger on the
-            highway, the whispered ones that follow families, and the quiet ones
-            that live inside us all.
-          </p>
-          <p>
-            I didn’t want a place of polished perfection. I wanted a place that
-            felt alive, scarred, and a little dangerous. A studio where the
-            stories aren’t afraid to bleed, where the rain smears the glass, and
-            where light fights to cut through the dark.
-          </p>
-          <p>
-            The first book to come from this vision,{" "}
-            <span className="font-semibold text-yellow-400">The Beautiful Beast</span>,
-            began on a cold mountain road and has taken years of grit to bring
-            into the light. It’s a thriller, yes, but more than that, it’s a
-            reminder of what storms expose: secrets, loyalties, betrayals — the
-            kind of truths that don’t wash away with the rain.
-          </p>
-          <p>
-            Here on the blog, I’ll share more than just announcements. You’ll
-            find pieces of the journey — the craft, the failures, the
-            inspirations, the late-night thoughts that keep the stories alive.
-            Think of this as both a workshop and a fireside: equal parts grit
-            and glow.
-          </p>
-          <p>
-            So, welcome. Stay a while. The storm hasn’t broken yet, and the best
-            stories are just beginning to walk out of the dark.
-          </p>
-          <p className="font-semibold">— Leameso James</p>
+      {/* ===== MAIN ===== */}
+      <main className="page-frame">
+        {/* Top ribbon */}
+        <div className="nebula nebula-top" aria-hidden="true" />
+
+        <div className="max-w-7xl mx-auto px-6 md:px-8 pt-6 md:pt-8 pb-8 md:pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7 items-start">
+            {/* LEFT: logo + two cards */}
+            <section className="space-y-4">
+              <div className="bg-black rounded-2xl border border-white/10 shadow-[0_18px_48px_rgba(0,0,0,0.6)] p-3">
+                <div className="bg-black rounded-xl p-3">
+                  <img
+                    src={BIG_LOGO}
+                    alt="Silver Spine Studio logo large"
+                    draggable="false"
+                    className="block w-full h-auto"
+                    style={{ filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.55))" }}
+                  />
+                </div>
+              </div>
+
+              {/* CARD 1 */}
+              <article className="rounded-xl bg-black/60 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
+                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
+                  <span className="uppercase tracking-wide">Announcement</span>
+                  <time dateTime="2025-10-13">Oct 13, 2025</time>
+                </div>
+                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
+                  The Beautiful Beast — Launch Timeline & What’s Next
+                </h3>
+                <p className="text-gray-300 mb-3 text-sm">
+                  The road to release is mapped. Here’s the plan and how to get early access.
+                </p>
+                <ul className="text-gray-300 text-sm list-disc ml-5 mb-4">
+                  <li>ARC sign-ups + selection window</li>
+                  <li>Cover reveal + teaser trailer</li>
+                  <li>Preorder live + launch week events</li>
+                </ul>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowPlan(v => !v)}
+                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
+                    aria-expanded={showPlan}
+                    aria-controls="launch-plan"
+                  >
+                    {showPlan ? "Hide timeline" : "View timeline"}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowArc(true)}
+                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
+                  >
+                    Get early access (ARC)
+                  </button>
+                </div>
+
+                <div
+                  id="launch-plan"
+                  className={`disclosure mt-3 ${showPlan ? "open" : ""}`}
+                  style={{
+                    maxHeight: showPlan ? 2000 : 0,   // plenty of room; no clipping
+                    opacity: showPlan ? 1 : 0,
+                    transition: "max-height 260ms ease, opacity 220ms ease"
+                  }}
+                >
+                  <div className="rounded-lg border border-white/10 p-4 bg-black/40">
+                    <h4 className="text-lg font-semibold mb-3" style={{ color: GOLD }}>Milestones</h4>
+                    <ol className="list-decimal ml-5 space-y-2 text-sm text-gray-200">
+                      <li><span className="font-semibold">ARC Sign-ups</span> — <span className="whitespace-nowrap">Nov 15, 2025</span>. Selection emails <span className="whitespace-nowrap">Nov 25, 2025</span>.</li>
+                      <li><span className="font-semibold">Cover Reveal (Final)</span> — <span className="whitespace-nowrap">Nov 30, 2025</span>.</li>
+                      <li><span className="font-semibold">Teaser Trailer Drop</span> — <span className="whitespace-nowrap">Dec 7, 2025</span>.</li>
+                      <li><span className="font-semibold">ARC Delivery Window</span> — <span className="whitespace-nowrap">Dec 8–10, 2025</span>.</li>
+                      <li><span className="font-semibold">Preorder Goes Live</span> — <span className="whitespace-nowrap">Dec 17, 2025</span>.</li>
+                      <li><span className="font-semibold">Launch Week</span> — <span className="whitespace-nowrap">Jan 1, 2026</span>.</li>
+                      <li><span className="font-semibold">Official Release Day</span> — <span className="whitespace-nowrap">Jan 8, 2026</span>.</li>
+                    </ol>
+
+                    <h4 className="text-lg font-semibold mt-5 mb-2" style={{ color: GOLD }}>What to expect</h4>
+                    <ul className="list-disc ml-5 space-y-2 text-sm text-gray-200">
+                      <li><span className="font-semibold">First pages:</span> Prologue + Ch.1–2 during reveal week.</li>
+                      <li><span className="font-semibold">Reader perks:</span> Digital art + annotated scene map.</li>
+                      <li><span className="font-semibold">How to support:</span> Join ARC, wishlist/preorder, share the teaser.</li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+
+              {/* CARD 2 */}
+              <article className="rounded-xl bg-black/60 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
+                <div className="flex items-center justify-between text:[11px] text-gray-400 mb-2">
+                  <span className="uppercase tracking-wide">Behind the Scenes</span>
+                  <time dateTime="2025-10-06">Oct 6, 2025</time>
+                </div>
+                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
+                  Building the Silver Spine Look
+                </h3>
+                <p className="text-gray-300 mb-3 text-sm">Jet black, deep gold, stormlight. The system we’re shipping across the site.</p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowBrandNotes(v => !v)}
+                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
+                    aria-expanded={showBrandNotes}
+                    aria-controls="brand-notes"
+                  >
+                    {showBrandNotes ? "Hide notes" : "View notes"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowPress(true)}
+                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
+                  >
+                    Request press kit
+                  </button>
+                </div>
+
+                <div
+                  id="brand-notes"
+                  className={`disclosure mt-3 ${showBrandNotes ? "open" : ""}`}
+                  style={{
+                    maxHeight: showBrandNotes ? 1200 : 0,  // more headroom than before
+                    opacity: showBrandNotes ? 1 : 0,
+                    transition: "max-height 260ms ease, opacity 220ms ease"
+                  }}
+                >
+                  <div className="rounded-lg border border-white/10 p-4 bg-black/40 text-sm text-gray-200">
+                    <ul className="list-disc ml-5 space-y-2">
+                      <li><span className="font-semibold">Palette:</span> Jet black base, storm-gold accents (${GOLD}).</li>
+                      <li><span className="font-semibold">Type:</span> Elegant serif for headings; clean sans for UI.</li>
+                      <li><span className="font-semibold">Motion:</span> Subtle fades/parallax &lt; 400ms; cinematic, not busy.</li>
+                    </ul>
+                  </div>
+                </div>
+              </article>
+            </section>
+
+            {/* RIGHT: nebula content (kept inside card only) */}
+            <section className="md:self-start">
+              <div
+                className="rounded-2xl p-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.65)] overflow-hidden relative"
+                style={{
+                  backgroundImage: `url(${NEBULA}), radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.05), rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.6))`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              >
+                <div className="relative z-[1] rounded-xl border border-[#a77a23]/35 bg-[rgba(15,15,15,0.86)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] p-6 md:p-8">
+                  <h1 className="text-4xl md:text-5xl font-extrabold mb-5 text-center" style={{ color: GOLD }}>
+                    Welcome to Silver Spine Studio<span className="align-super text-xl">™</span>
+                  </h1>
+
+                  <div className="max-w-3xl mx-auto space-y-5 text-[1.05rem] md:text-lg leading-relaxed">
+                    <p>Every story has a shadow. Some you see coming, some you only notice when it’s already moved past you. Silver Spine Studio was born from chasing those shadows — the storm-soaked ones that linger on the highway, the whispered ones that follow families, and the quiet ones that live inside us all.</p>
+                    <p>I didn’t want a place of polished perfection. I wanted a place that felt alive, scarred, and a little dangerous. A studio where the stories aren’t afraid to bleed, where the rain smears the glass, and where light fights to cut through the dark.</p>
+                    <p>The first book to come from this vision, <span className="font-semibold" style={{ color: GOLD }}>The Beautiful Beast</span>, began on a cold mountain road and has taken years of grit to bring into the light. It’s a thriller, yes, but more than that, it’s a reminder of what storms expose: secrets, loyalties, betrayals — the kind of truths that don’t wash away with the rain.</p>
+                    <p>Here on the blog, expect craft notes, behind-the-scenes, and progress on releases. If you like grit with a little glow, you’ll feel at home.</p>
+                    <p className="font-semibold">— Leameso James</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
+
+        {/* Bottom ribbon */}
+        <div className="nebula nebula-bottom" aria-hidden="true" />
+
+        {/* FOOTER MOUNT */}
+        <div id="blog-footer-mount" />
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-950/90 text-gray-300 text-center py-3 fixed bottom-0 left-0 w-full z-10">
-        <p className="mb-1 text-sm">
-          © {new Date().getFullYear()} Silver Spine Studio. All rights reserved.
-        </p>
-        <div className="flex justify-center space-x-5 text-lg">
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaFacebook />
-          </a>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTwitter />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaInstagram />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaYoutube />
-          </a>
-          <a
-            href="https://tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTiktok />
-          </a>
+      {/* Modals */}
+      {showArc && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-xl font-semibold" style={{ color: GOLD }}>ARC Signup — The Beautiful Beast</h3>
+              <button onClick={() => setShowArc(false)} className="text-gray-300 hover:text-white">✕</button>
+            </div>
+            <form onSubmit={submitArc} className="space-y-4">
+              <div>
+                <label className="block text-sm text-gray-300 mb-1">Name</label>
+                <input value={arcName} onChange={e => setArcName(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-300 mb-1">Email</label>
+                <input type="email" value={arcEmail} onChange={e => setArcEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-300 mb-1">Preferred format</label>
+                  <select value={arcFormat} onChange={e => setArcFormat(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60">
+                    <option>ePub</option>
+                    <option>PDF</option>
+                    <option>MOBI</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-300 mb-1">Where you’ll review</label>
+                  <select value={arcReviewSpot} onChange={e => setArcReviewSpot(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60">
+                    <option>Goodreads</option>
+                    <option>Amazon</option>
+                    <option>BookBub</option>
+                    <option>Personal blog</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onClick={() => setShowArc(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
+                <button type="submit" className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90">Send request</button>
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Submitting opens your email client with a prefilled message to {REQUEST_EMAIL}.</p>
+            </form>
+          </div>
         </div>
-      </footer>
+      )}
+
+      {showPress && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Press Request — Private</h3>
+              <button onClick={() => setShowPress(false)} className="text-gray-300 hover:text-white">✕</button>
+            </div>
+            <form onSubmit={submitPress} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-300 mb-1">Your name</label>
+                  <input value={pressName} onChange={e => setPressName(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-300 mb-1">Outlet</label>
+                  <input value={pressOutlet} onChange={e => setPressOutlet(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm text-gray-300 mb-1">Email</label>
+                  <input type="email" value={pressEmail} onChange={e => setPressEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                </div>
+                <div>
+                  <label className="block text sm text-gray-300 mb-1">Deadline (optional)</label>
+                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2025" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm text-gray-300 mb-1">What you need</label>
+                <input value={pressNeeds} onChange={e => setPressNeeds(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+              </div>
+
+              <label className="flex items-start gap-2 text-xs text-gray-300">
+                <input type="checkbox" checked={pressAgree} onChange={e => setPressAgree(e.target.checked)} required />
+                <span>I acknowledge materials (if shared) are confidential and not for redistribution without written consent.</span>
+              </label>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onClick={() => setShowPress(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
+                <button type="submit" disabled={!pressAgree} className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50">Send request</button>
+              </div>
+
+              <p className="text-xs text-gray-400 mt-2">Submitting opens your email client with a prefilled message to {REQUEST_EMAIL}. No files are shared on this page.</p>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
