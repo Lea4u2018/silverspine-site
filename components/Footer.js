@@ -56,7 +56,7 @@ export default function Footer({ note, ...props }) {
             );
           })}
 
-          {/* Logo Hub button */}
+          {/* Logo Hub button (Hidden for Launch)
           <button
             onClick={() => setOpen(true)}
             className="
@@ -77,6 +77,7 @@ export default function Footer({ note, ...props }) {
               ({Array.isArray(HUB_ITEMS) ? HUB_ITEMS.length : 0})
             </span>
           </button>
+           */}
         </div>
 
         {/* Credits / Page-specific note */}

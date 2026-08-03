@@ -10,43 +10,45 @@ export default function Home() {
   const videoRef = useRef(null);
   const headerRef = useRef(null);
 
-  // --- Measure header + footer so hero height fits with the footer visible ---
   useEffect(() => {
     const setVars = () => {
       const header = headerRef.current;
-      const footer = document.getElementById("site-footer"); // from your global Footer
-      const hH = header ? header.getBoundingClientRect().height : 140; // safe fallback
-      const fH = footer ? footer.getBoundingClientRect().height : 220; // safe fallback
+      const footer = document.getElementById("site-footer");
+      const hH = header ? header.getBoundingClientRect().height : 140;
+      const fH = footer ? footer.getBoundingClientRect().height : 220;
       document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
       document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
     };
     setVars();
 
-    const ro = new ResizeObserver(setVars);
-    if (headerRef.current) ro.observe(headerRef.current);
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(setVars) : null;
+    if (ro && headerRef.current) ro.observe(headerRef.current);
     const footerEl = document.getElementById("site-footer");
-    if (footerEl) ro.observe(footerEl);
+    if (ro && footerEl) ro.observe(footerEl);
 
     window.addEventListener("load", setVars);
     window.addEventListener("resize", setVars);
 
     return () => {
-      ro.disconnect();
+      if (ro) ro.disconnect();
       window.removeEventListener("load", setVars);
       window.removeEventListener("resize", setVars);
     };
   }, []);
 
-  // Start muted (mobile autoplay-safe). User can enable.
   const [isMuted, setIsMuted] = useState(true);
   const [stars, setStars] = useState([]);
 
-  // ---- LOGO PREFLIGHT — prioritize DISC and size to fill nav height ----
-  const CANDIDATES = [
-    "/SilverSpine_FB_Profile_CircleDisc_1024.png", // <<< Disc first
-    "/SilverSpine_FB_Profile_1024.png",
-    "/Silver_Spine_Studio_Logo_2025_10_11.png",
-  ];
+  const SILVER = "#c9ced6";
+
+ const CANDIDATES = [
+  "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
+  "/Final_Silver_Spine_Circular_Logo_With_Words.png",
+  "/SilverSpine_FB_Profile_CircleDisc_1024.png",
+  "/SilverSpine_FB_Profile_1024.png",
+  "/Silver_Spine_Studio_Logo_2025_10_11.png",
+];
+
   const [logoSrc, setLogoSrc] = useState(null);
   const [useTextLogo, setUseTextLogo] = useState(false);
 
@@ -58,12 +60,16 @@ export default function Home() {
         return;
       }
       const test = new Image();
-      test.onload = () => { if (!cancelled) setLogoSrc(srcs[idx]); };
+      test.onload = () => {
+        if (!cancelled) setLogoSrc(srcs[idx]);
+      };
       test.onerror = () => tryLoad(srcs, idx + 1);
-      test.src = srcs[idx] + `?v=${Date.now()}`; // bust dev cache
+      test.src = srcs[idx] + `?v=${Date.now()}`;
     };
     tryLoad(CANDIDATES);
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const links = [
@@ -75,47 +81,13 @@ export default function Home() {
     { href: "/reviews", label: "Reviews" },
   ];
 
-  // Active helper: Home only on "/", others when pathname starts with href
   const isActive = (href) => {
     if (href === "/") return router.pathname === "/";
     return router.asPath.startsWith(href);
   };
 
-  // --- Audio toggle + hint handling ---
   const [showAudioHint, setShowAudioHint] = useState(true);
 
-  const playAudio = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    try {
-      audio.muted = false;
-      audio.volume = 0.25;
-      audio.currentTime = 0;
-      await audio.play();
-      setIsMuted(false);
-      setShowAudioHint(false);
-    } catch { /* ignore */ }
-  };
-
-  const toggleAudio = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    setIsMuted((prev) => {
-      const next = !prev;
-      if (!next) {
-        audio.muted = false;
-        audio.volume = 0.25;
-        audio.currentTime = 0;
-        audio.play().then(() => setShowAudioHint(false)).catch(() => {});
-      } else {
-        audio.pause();
-        audio.muted = true;
-      }
-      return next;
-    });
-  };
-
-  // Starfield once
   useEffect(() => {
     const newStars = Array.from({ length: 80 }, () => ({
       top: Math.random() * 100,
@@ -127,7 +99,6 @@ export default function Home() {
     setStars(newStars);
   }, []);
 
-  // Video control + performance
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
@@ -143,7 +114,6 @@ export default function Home() {
     return () => io.disconnect();
   }, []);
 
-  // ------- Announcement Ticker content -------
   const TICKER_SENTENCE =
     "Coming soon — The Silver Spine Studio™ Series: The Seven-Fold Chronicle";
   const TICKER_ITEMS = Array.from({ length: 8 }, () => TICKER_SENTENCE);
@@ -159,7 +129,6 @@ export default function Home() {
         <link rel="canonical" href="https://www.silverspinestudio.com/" />
         <style>{`
           :root {
-            /* Fallbacks until JS measures header/footer */
             --header-h: 140px;
             --footer-h: 220px;
           }
@@ -168,7 +137,6 @@ export default function Home() {
           @keyframes softPulse { 0%,100% { opacity: .65 } 50% { opacity: 1 } }
           .overlay-fix { pointer-events: none !important; }
 
-          /* --- Accessible marquee/ticker --- */
           .ticker-wrap {
             position: relative;
             overflow: hidden;
@@ -211,16 +179,12 @@ export default function Home() {
             .ticker-track { animation: none; }
           }
 
-          /* Hero frame:
-             - Uses real header/footer heights to fit on one screen.
-             - Clamp keeps it cinematic across devices. */
           .hero-frame {
             height: clamp(60vh, calc(100vh - var(--header-h) - var(--footer-h)), 78vh);
           }
         `}</style>
       </Head>
 
-      {/* Header (tightened) */}
       <header
         ref={headerRef}
         className="relative z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
@@ -231,16 +195,16 @@ export default function Home() {
               <img
                 src={logoSrc}
                 alt="Silver Spine Studio logo"
-                /* Disc scaled to fill nav height comfortably */
-                className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
+                className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
                 draggable="false"
               />
             ) : (
-              <span className="text-2xl md:text-3xl font-extrabold text-[#a77a23] select-none">
+              <span className="text-2xl md:text-3xl font-extrabold select-none" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
               </span>
             )}
-            <span className="hidden sm:inline text-lg md:text-2xl font-semibold tracking-wide text-[#a77a23]">
+
+            <span className="hidden sm:inline text-lg md:text-2xl font-semibold tracking-wide" style={{ color: SILVER }}>
               Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
             </span>
           </Link>
@@ -266,34 +230,46 @@ export default function Home() {
           </nav>
         </div>
 
-        {/* --- Announcement Ticker (trim) --- */}
-        <div className="ticker-wrap">
-          <div
-            className="ticker-track text-[0.9rem] md:text-base tracking-wide"
-            style={{ color: "#f5edd7", padding: "6px 0" }}
-            aria-label="Announcement ticker: Coming soon"
-          >
-            {TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`a-${i}`}>{t}</span>
-            ))}
-            {TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`b-${i}`}>{t}</span>
-            ))}
-          </div>
-        </div>
+       <div className="ticker-wrap">
+   {/* Row 1: Original Series Chronicle Tracker */}
+   <div
+     className="ticker-track text-[0.9rem] md:text-base tracking-wide border-b border-white/5"
+     style={{ color: "#f5edd7", padding: "6px 0" }}
+     aria-label="Announcement ticker: Coming soon"
+   >
+     {TICKER_ITEMS.map((t, i) => (
+       <span className="ticker-item" key={`a-${i}`}>{t}</span>
+     ))}
+     {TICKER_ITEMS.map((t, i) => (
+       <span className="ticker-item" key={`b-${i}`}>{t}</span>
+     ))}
+   </div>
+
+     {/* Row 2: Premium Book 1 Live Pricing Blast */}
+   <div
+     className="ticker-track text-[0.85rem] md:text-sm tracking-widest font-semibold uppercase"
+     style={{ color: "#f5edd7", padding: "4px 0", background: "rgba(0,0,0,0.2)" }}
+     aria-label="Launch Alert: Out Now"
+   >
+     {TICKER_ITEMS.map((t, i) => (
+       <span className="ticker-item" key={`c-${i}`}>
+         <span style={{ color: "#ef4444", fontWeight: "800" }}>🚨 OUT NOW:</span> THE BEAUTIFUL BEAST EXTENDED SNEAK PEEK ($4.99) • FULL NOVEL PRE-ORDERS OPEN SEPT 1ST • OFFICIAL RELEASE OCT 20TH •
+       </span>
+     ))}
+   </div>
+
+ </div>
+
       </header>
 
-      {/* Hero — centered & cinematic; footer fully visible without scrolling */}
       <main className="relative overflow-hidden flex items-center justify-center text-center">
         <div className="relative w-full hero-frame">
-          {/* Nebula background */}
           <img
             src="/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg"
             alt="Nebula background"
             className="absolute inset-0 w-full h-full object-cover object-center z-0 contrast-110 saturate-125"
           />
 
-          {/* Lightning video */}
           <video
             ref={videoRef}
             autoPlay
@@ -306,7 +282,6 @@ export default function Home() {
             <source src="/storm-lightning.mp4" type="video/mp4" />
           </video>
 
-          {/* Star field */}
           <div className="absolute inset-0 z-20 overlay-fix">
             {stars.map((s, i) => (
               <div
@@ -325,35 +300,34 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Minimal color unifier */}
           <div className="absolute inset-0 bg-[rgba(10,14,22,0.12)] z-30 overlay-fix" />
 
-          {/* CINEMATIC LETTERBOX — ONLY TOP */}
           <div className="absolute top-0 left-0 w-full h-8 md:h-12 bg-black z-40 overlay-fix" />
 
-          {/* Hero text */}
           <div className="absolute inset-0 flex items-center justify-center z-50 px-4">
             <div className="inline-block rounded-xl bg-black/35 backdrop-blur-[1.5px] px-4 py-3 md:px-6 md:py-4 shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
-              <h1 className="text-5xl md:text-7xl font-extrabold mb-2 md:mb-3 text-[#a77a23] tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+              <h1
+                className="text-5xl md:text-7xl font-extrabold mb-2 md:mb-3 tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
+                style={{ color: SILVER }}
+              >
                 Welcome to Silver Spine Studio
                 <span className="align-super text-2xl">™</span>
               </h1>
+
               <h2 className="text-lg md:text-2xl text-gray-100 mb-2 tracking-widest italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-                Where thrillers strike like lightning.
+                Where thrillers strike like lightning…
               </h2>
+
               <p className="text-base md:text-xl text-gray-100 max-w-[60ch] mx-auto italic tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Stories forged in storm and consequence, where beauty and danger
-                share the same breath.
+                Stories are forged in storms of consequence, as beauty and danger share the same breath.
               </p>
             </div>
           </div>
 
-          {/* Thunder audio */}
           <audio ref={audioRef} muted={isMuted} loop preload="auto">
             <source src="/thunder_rumble.mp3" type="audio/mpeg" />
           </audio>
 
-          {/* Audio toggle */}
           <button
             onClick={() => {
               const audio = audioRef.current;
@@ -378,7 +352,6 @@ export default function Home() {
             {isMuted ? "🔇" : "🔊"}
           </button>
 
-          {/* Clickable hint */}
           {showAudioHint && (
             <button
               onClick={async () => {
@@ -391,7 +364,7 @@ export default function Home() {
                   await audio.play();
                   setIsMuted(false);
                   setShowAudioHint(false);
-                } catch {/* ignore */}
+                } catch {}
               }}
               className="absolute top-4 right-16 z-50 select-none"
               aria-live="polite"
@@ -410,7 +383,6 @@ export default function Home() {
           )}
         </div>
       </main>
-      {/* Global Footer renders after this; no local footer here */}
     </div>
   );
 }

@@ -22,7 +22,7 @@ export default function ReviewsPage() {
 
   const GOLD = "#a77a23";
   const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
-  const DISC_LOGO = "/SilverSpine_FB_Profile_CircleDisc_1024.png";
+ const DISC_LOGO = "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png";
   const AUDIO_SRC = "/thunder_rumble.mp3";
 
   // header sizing for disc logo
@@ -272,17 +272,37 @@ export default function ReviewsPage() {
       >
         <div className="mx-auto grid grid-cols-2 md:grid-cols-3 items-center px-6 py-4 md:py-5 max-w-[1400px]">
           <div className="flex items-center">
-            <Link href="/" aria-label="Silver Spine Studio — Home">
-              <Image
-                src={DISC_LOGO}
-                alt="Silver Spine Studio (disc)"
-                width={512}
-                height={512}
-                priority
-                className="disc-logo select-none drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
-                style={{ height: "clamp(64px, calc(var(--header-h) - 28px), 108px)", width: "auto" }}
-              />
-            </Link>
+           <Link
+  href="/"
+  aria-label="Silver Spine Studio — Home"
+  className="flex items-center gap-3 md:gap-4"
+>
+  <Image
+    src={DISC_LOGO}
+    alt="Silver Spine Studio"
+    width={512}
+    height={512}
+    priority
+    className="disc-logo select-none"
+    style={{
+      height: "clamp(64px, calc(var(--header-h) - 28px), 108px)",
+      width: "auto",
+      filter: "drop-shadow(0 0 18px rgba(220,220,220,0.16))",
+    }}
+  />
+
+  <span
+    className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+    style={{
+      color: "#eef2f7",
+      textShadow:
+        "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+    }}
+  >
+    Silver Spine Studio
+    <span className="align-super text-sm md:text-base">™</span>
+  </span>
+</Link>
           </div>
 
           <div className="hidden md:block" />

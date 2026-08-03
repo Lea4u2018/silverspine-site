@@ -167,46 +167,67 @@ export default function Contact() {
       </Head>
 
       {/* HEADER (disc logo) */}
-      <header
-        ref={headerRef}
-        className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
-            {logoSrc && !useTextLogo ? (
-              <img
-                src={logoSrc}
-                alt="Silver Spine Studio logo"
-                className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
-                draggable="false"
-              />
-            ) : (
-              <span className="text-2xl md:text-3xl font-extrabold" style={{ color: GOLD }}>
-                Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
-              </span>
-            )}
-            <span className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide" style={{ color: GOLD }}>
-              Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
-            </span>
-          </Link>
+     <header
+  ref={headerRef}
+  className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
+>
+  <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
+  <Link
+  href="/"
+  className="flex items-center gap-3 md:gap-4 group"
+  aria-label="Silver Spine Studio — Home"
+>
+  {logoSrc && !useTextLogo ? (
+    <img
+      src="/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png"
+      alt="Silver Spine Studio logo"
+      className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(238,242,247,0.22)]"
+      draggable="false"
+    />
+  ) : (
+    <span
+      className="text-2xl md:text-3xl font-extrabold"
+      style={{
+        color: "#eef2f7",
+        textShadow:
+          "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+      }}
+    >
+      Silver Spine Studio
+      <span className="align-super text-base md:text-lg">™</span>
+    </span>
+  )}
 
-          <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-            {links.map(({ href, label }) => {
-              const active = router.asPath === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={active ? "nav-active" : "nav-link"}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-      </header>
+  <span
+    className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+    style={{
+      color: "#eef2f7",
+      textShadow:
+        "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+    }}
+  >
+    Silver Spine Studio
+    <span className="align-super text-sm md:text-base">™</span>
+  </span>
+</Link>
+
+    <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
+      {links.map(({ href, label }) => {
+        const active = router.asPath === href;
+        return (
+          <Link
+            key={href}
+            href={href}
+            className={active ? "nav-active" : "nav-link"}
+            aria-current={active ? "page" : undefined}
+          >
+            {label}
+          </Link>
+        );
+      })}
+    </nav>
+  </div>
+</header>
 
       {/* TOP NEBULA (band) */}
       <div className="nebula nebula-top mask-top relative z-10">
@@ -219,46 +240,35 @@ export default function Contact() {
           <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg" style={{ color: GOLD, letterSpacing: ".02em" }}>
             Get In Touch
           </h1>
-          <p className="text-gray-200/90 max-w-2xl mx-auto mt-2">
-            Whether it’s about <em>The Beautiful Beast</em>, upcoming releases, or collaborations —
-            I’d love to hear from you. Fill out the form below, and I’ll get back as soon as I can.
-          </p>
+        <p
+  className="max-w-2xl mx-auto mt-2"
+  style={{
+    color: "#d9dee5",
+    textShadow:
+      "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)",
+  }}
+>
+  Whether it’s about <em>The Beautiful Beast</em>, upcoming releases, or
+  collaborations — I’d love to hear from you. Fill out the form below,
+  and I’ll get back as soon as I can.
+</p>
         </section>
 
-        {/* Form panel */}
+           {/* Form panel */}
         <main className="px-6 pb-0 text-center">
           <section className="max-w-3xl mx-auto px-4 md:px-6">
             <div className="panel mt-2 mb-2">
               <div className="content">
-                <form action="https://formspree.io/f/mkgqvaby" method="POST" className="space-y-5 text-left">
-                  <div>
-                    <label className="block mb-2 text-gray-300">Name</label>
-                    <input type="text" name="name" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300" placeholder="Your name" />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-300">Email</label>
-                    <input type="email" name="_replyto" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300" placeholder="you@example.com" />
-                  </div>
-                  <div>
-                    <label className="block mb-2 text-gray-300">Message</label>
-                    <textarea name="message" rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300" placeholder="Write your message here..." />
-                  </div>
-                  <input type="hidden" name="_subject" value="New message from SilverSpineStudio.com" />
-                  <button type="submit" className="w-full py-3 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 transition">Send Message</button>
-                </form>
+
+                {/* WIRE THE SECURE FORM INTERFACE ENGINE HOOK */}
+                <ContactFormEngine />
+
               </div>
             </div>
 
-            {/* Thunder control — directly under the panel */}
+            {/* Thunder control */}
             <div className="flex justify-center mt-2 mb-1">
-              <button
-                type="button"
-                onClick={toggleSiteAudio}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full"
-                style={{ background: "rgba(0,0,0,0.75)", color: GOLD, border: "1px solid rgba(167,122,35,0.45)", boxShadow: "0 6px 24px rgba(0,0,0,0.45)" }}
-                aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-                title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-              >
+              <button type="button" onClick={toggleSiteAudio} className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: "rgba(0,0,0,0.75)", color: GOLD, border: "1px solid rgba(167,122,35,0.45)", boxShadow: "0 6px 24px rgba(0,0,0,0.45)" }} aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"} title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}>
                 {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
                 {siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
               </button>
@@ -266,9 +276,76 @@ export default function Contact() {
           </section>
         </main>
 
-        {/* NEBULA SPACER (between button and footer; no letterbox to avoid black stripe) */}
         <div className="nebula-spacer" />
       </div>
     </div>
+  );
+}
+
+// ========== THE ACTIVE SECURE INTERACTION HANDSHAKE MODULE ==========
+function ContactFormEngine() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [hp, setHp] = useState("");
+  const [startedAt] = useState(() => Date.now());
+  const [status, setStatus] = useState({ state: "idle", msg: "" });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ state: "sending", msg: "" });
+
+    try {
+      const response = await fetch("/api/contact-safe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message, hp, startedAt }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.ok) {
+        setStatus({ state: "success", msg: "Thanks! Your message has been sent successfully." });
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        setStatus({ state: "error", msg: data.error || "Something went wrong. Please try again." });
+      }
+    } catch {
+      setStatus({ state: "error", msg: "Network error. Please check your connection." });
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-5 text-left">
+      <div className="hidden" aria-hidden="true">
+        <label>Leave this empty</label>
+        <input type="text" value={hp} onChange={(e) => setHp(e.target.value)} autoComplete="off" />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-gray-300">Name</label>
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="Your name" />
+      </div>
+      <div>
+        <label className="block mb-2 text-gray-300">Email</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="you@example.com" />
+      </div>
+      <div>
+        <label className="block mb-2 text-gray-300">Message</label>
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="Write your message here..." />
+      </div>
+
+      {status.msg && (
+        <p className={`text-sm font-semibold ${status.state === "success" ? "text-green-400" : "text-red-400"}`}>
+          {status.msg}
+        </p>
+      )}
+
+      <button type="submit" disabled={status.state === "sending"} className="w-full py-3 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50 transition">
+        {status.state === "sending" ? "Sending Securely..." : "Send Message"}
+      </button>
+    </form>
   );
 }

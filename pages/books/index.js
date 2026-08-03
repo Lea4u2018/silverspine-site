@@ -6,6 +6,7 @@ import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 
 export default function Books() {
   const GOLD = "#a77a23";
+  const SILVER = "#c9ced6";
   const headerRef = useRef(null);
 
   // ===== Measure header/footer so footer is on-screen (no giant gap) =====
@@ -37,14 +38,15 @@ export default function Books() {
     };
   }, []);
 
-  // ===== Disc logo first =====
+  // ===== Updated logo first =====
   const [logoSrc, setLogoSrc] = useState(null);
   const [useTextLogo, setUseTextLogo] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
     const CANDIDATES = [
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png", // disc
+      "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
+      "/SilverSpine_FB_Profile_CircleDisc_1024.png",
       "/SilverSpine_FB_Profile_1024.png",
       "/Silver_Spine_Studio_Logo_2025_10_11.png",
     ];
@@ -72,8 +74,8 @@ export default function Books() {
       el.pause();
       el.currentTime = 0;
       el.playbackRate = id === 1 ? 1.02 : 0.92;
-      el.volume = 0.18;
-      await el.play(); // may throw NotAllowedError on first hover
+      el.volume = 0.35;
+      await el.play();
     } catch {
       setPendingNarrationId(id);
       setShowNarrationChip(true);
@@ -109,7 +111,7 @@ export default function Books() {
     }
   };
 
-  // ===== Thunder (optional, button only) =====
+  // ===== Thunder (button now requires DOUBLE-CLICK to toggle) =====
   const [thunderOn, setThunderOn] = useState(false);
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -122,7 +124,7 @@ export default function Books() {
       el.preload = "auto";
       document.body.appendChild(el);
     }
-    el.muted = true; // starts muted
+    el.muted = true;
   }, []);
 
   const toggleThunder = async () => {
@@ -136,24 +138,21 @@ export default function Books() {
     }
 
     try {
-      // Primary attempt — should work on first click in most browsers
       a.volume = 0.12;
       a.muted = false;
       if (a.readyState < 2) a.load();
       await a.play();
       setThunderOn(true);
     } catch {
-      // Fallback unlock sequence for stricter browsers (e.g., Safari)
       try {
         a.muted = true;
-        await a.play();   // silent allowed
-        a.pause();        // stop silent frame
-        a.muted = false;  // unmute
+        await a.play();
+        a.pause();
+        a.muted = false;
         if (a.readyState < 2) a.load();
-        await a.play();   // real play
+        await a.play();
         setThunderOn(true);
       } catch {
-        // Last resort: small delay and retry once
         setTimeout(async () => {
           try {
             a.muted = false;
@@ -179,19 +178,23 @@ export default function Books() {
     { id: 7, title: "SCORCHED EARTH", tagline: "Before the ashes settle — no one is safe.", img: "/covers/7-scorched-earth-francis-blank-cover.jpg", whisper: "/audio/scorched_whisper_01.mp3", color: "#8B0000", ribbon: "THE BEST TO COME" },
   ];
 
+  const [blurbExpanded, setBlurbExpanded] = useState(false);
+
   return (
     <div className="bg-black text-gray-100">
       <Head>
         <title>Books | Silver Spine Studio™</title>
-        <meta name="description" content="The Silver Spine Studio™ Series — The seven-fold chronicle. Stories forged in storm and consequence." />
+        <meta
+          name="description"
+          content="The Silver Spine Studio™ Series — The seven-fold chronicle. Stories forged in storm and consequence."
+        />
         <style>{`
           :root { --header-h: 140px; --footer-h: 220px; }
           .page-frame { min-height: calc(100vh - var(--header-h) - var(--footer-h)); display: flex; flex-direction: column; }
 
-          /* Nebula ribbons + cinematic bars */
           .nebula { position: relative; width: 100%; background-image: url('/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg'); background-size: cover; background-position: center; filter: saturate(1.15) contrast(1.1); }
-          .nebula-top { height: 120px; }
-          .nebula-bottom { height: 100px; margin-top: -16px; } /* pulls footer up */
+          .nebula-top { height: 48px; }
+          .nebula-bottom { height: 100px; margin-top: -16px; }
 
           .mask-top { -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0)); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0)); }
           .mask-bottom { -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0)); mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0)); }
@@ -199,23 +202,20 @@ export default function Books() {
           .letterbox-bar.top-edge { bottom:0; }
           .letterbox-bar.bottom-edge { top:0; }
 
-          /* Chips & headings position */
-          .hero-spacer { height: 72px; }
-          @media (max-width: 1280px) { .hero-spacer { height: 64px; } }
-          @media (max-width: 1024px) { .hero-spacer { height: 56px; } }
-          @media (max-width: 768px)  { .hero-spacer { height: 44px; } }
+          .hero-spacer { height: 8px; }
+          @media (max-width: 1280px) { .hero-spacer { height: 8px; } }
+          @media (max-width: 1024px) { .hero-spacer { height: 8px; } }
+          @media (max-width: 768px)  { .hero-spacer { height: 8px; } }
 
-          .heading { text-align:center; color:${GOLD}; font-size:2.8rem; font-weight:800; line-height:1.2; margin-top: 0.2rem; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
-
-          /* More breathing room between subheading and covers */
-          .subheading { text-align:center; color:#f3e2b8; font-size:1.02rem; font-style:italic; margin:.35rem 0 1.85rem; }
+          .heading { text-align:center; color:${GOLD}; font-size:2.8rem; font-weight:800; line-height:1.2; margin-top: 0.06rem; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+          .subheading { text-align:center; color:#f3e2b8; font-size:1.02rem; font-style:italic; margin:.12rem 0 .6rem; }
 
           .book-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2rem; justify-items: center; align-items: start; max-width: 88%; margin: 0 auto 1.2rem; padding: 0.2rem 1rem 0.6rem; }
           .book-grid { margin-top: .2rem; }
 
           @media (max-width: 1600px) { .book-grid { grid-template-columns: repeat(4, 1fr); } }
           @media (max-width: 1024px) { .book-grid { grid-template-columns: repeat(3, 1fr); } }
-          @media (max-width: 768px)  { .heading { font-size: 2.2rem; } .nebula-top { height: 100px; } .nebula-bottom { height: 92px; margin-top: -14px; } .book-grid { grid-template-columns: repeat(2, 1fr); max-width: 94%; } }
+          @media (max-width: 768px)  { .heading { font-size: 2.2rem; } .nebula-top { height: 44px; } .nebula-bottom { height: 92px; margin-top: -14px; } .book-grid { grid-template-columns: repeat(2, 1fr); max-width: 94%; } }
           @media (max-width: 480px)  { .book-grid { grid-template-columns: 1fr; } }
 
           .book-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 300px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease; }
@@ -227,18 +227,36 @@ export default function Books() {
 
           .book-title { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 2rem/1.16 'Libre Baskerville', Georgia, serif; color:var(--glow); text-shadow:0 0 18px rgba(0,0,0,.6); z-index:4; }
           .author-name { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 1.2rem/1.2 'Libre Baskerville', Georgia, serif; color:var(--glow); letter-spacing:.18em; z-index:4; }
-          .tagline { margin-top:.6rem; text-align:center; color:${GOLD}; font-style:italic; font-size:1rem; opacity:0; transition:opacity .6s ease-in-out; }
+
+          .tagline { margin-top:.6rem; text-align:center; color: var(--glow); font-style:italic; font-size:1rem; opacity:0; transition:opacity .6s ease-in-out; }
           .book-card:hover + .tagline { opacity:.9; }
 
           .chip { display:inline-flex; align-items:center; gap:.5rem; background: rgba(0,0,0,0.75); border: 1px solid rgba(167,122,35,0.45); border-radius: 999px; padding: 6px 12px; color: ${GOLD}; box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
           .chip:hover { background: rgba(0,0,0,0.9); }
+
+          .featured-wrap { max-width: 1120px; margin: 0 auto 1.1rem; padding: 0 1rem; }
+          .featured-title { font: 800 1.9rem/1.22 'Libre Baskerville', Georgia, serif; color: ${GOLD}; text-align:center; letter-spacing:.01em; text-shadow:0 1px 10px rgba(0,0,0,.45); }
+          .featured-series { text-align:center; color:#f3e2b8; font-size:1.02rem; margin-top:.15rem; font-style:italic; }
+          .featured-blurb { margin: .55rem auto .75rem; color:#eae6da; font-size:1.02rem; line-height:1.52; text-align:justify; max-width: 1080px; }
+          .featured-blurb.clamped { display:-webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow:hidden; }
+          .featured-actions { display:flex; gap:.75rem; justify-content:center; align-items:center; margin-top:.2rem; }
+          .btn-primary { display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(167,122,35,0.55); color:${GOLD}; padding:.6rem 1rem; border-radius:999px; background:rgba(0,0,0,0.55); }
+          .btn-primary:hover { background:rgba(0,0,0,0.85); border-color:rgba(167,122,35,0.8); }
+          .btn-ghost { font-size:.92rem; color:#d9d1bd; text-decoration:underline; text-underline-offset:3px; }
+
+          .timeline { max-width: 1080px; margin: .35rem auto 1.05rem; padding: .6rem .9rem; border: 1px solid rgba(167,122,35,0.35); border-radius: 12px; background: rgba(0,0,0,0.45); }
+          .timeline h4 { margin: 0 0 .3rem; font: 700 1rem/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: ${GOLD}; letter-spacing:.04em; text-transform: uppercase; }
+          .timeline-list { display:grid; grid-template-columns: 1fr 2.2fr; gap: .35rem .9rem; align-items: start; }
+          .timeline dt { color:#d9d1bd; font-weight:600; }
+          .timeline dd { color:#eee7d6; margin:0; }
+          @media (max-width: 640px) { .timeline-list { grid-template-columns: 1fr; } }
         `}</style>
       </Head>
 
       {/* HEADER */}
       <header
         ref={headerRef}
-        className="relative z-30 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
+        className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
           <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
@@ -246,15 +264,15 @@ export default function Books() {
               <img
                 src={logoSrc}
                 alt="Silver Spine Studio logo"
-                className="h-[88px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
+                className="h-[88px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
                 draggable="false"
               />
             ) : (
-              <span className="text-2xl md:text-3xl font-extrabold" style={{ color: GOLD }}>
+              <span className="text-2xl md:text-3xl font-extrabold" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
               </span>
             )}
-            <span className="hidden sm:inline text-lg md:text-2xl font-semibold tracking-wide" style={{ color: GOLD }}>
+            <span className="hidden sm:inline text-lg md:text-2xl font-semibold tracking-wide" style={{ color: SILVER }}>
               Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
             </span>
           </Link>
@@ -271,16 +289,13 @@ export default function Books() {
       </header>
 
       {/* Between header and footer */}
-      <div className="page-frame">
-        {/* TOP NEBULA */}
+     <div className="page-frame relative z-0">
         <div className="nebula nebula-top mask-top relative z-10">
           <div className="letterbox-bar top-edge" />
         </div>
 
-        {/* Spacer */}
         <div className="hero-spacer" aria-hidden="true" />
 
-        {/* CONTROL CHIPS */}
         <div className="relative z-20 flex items-center justify-center gap-3 mb-2">
           {showNarrationChip && !narrationEnabled && (
             <button className="chip" onClick={enableNarration} title="Enable narration (one-time)">
@@ -288,28 +303,119 @@ export default function Books() {
             </button>
           )}
           <button
-            onClick={toggleThunder}
+            onDoubleClick={toggleThunder}
             className="chip"
-            title={thunderOn ? "Click to turn thunder off" : "Click to hear thunder"}
-            aria-label={thunderOn ? "Click to turn thunder off" : "Click to hear thunder"}
+            title={thunderOn ? "Double-click to turn thunder off" : "Double-click to hear thunder"}
+            aria-label={thunderOn ? "Double-click to turn thunder off" : "Double-click to hear thunder"}
           >
             {thunderOn ? <FaVolumeUp size={16} /> : <FaVolumeMute size={16} />}
-            {thunderOn ? "Click to turn thunder off" : "Click to hear thunder"}
+            {thunderOn ? "Double-click to turn thunder off" : "Double-click to hear thunder"}
           </button>
         </div>
 
-        {/* MAIN */}
         <main className="flex-1 relative z-20 pb-8">
-          <h1 className="heading">
+         <h1 className="heading" style={{ color: SILVER }}>
             The Silver Spine Studio<span className="align-super text-base">™</span> Series: The seven-fold chronicle.
           </h1>
           <h2 className="subheading">
-            Hover a book to feel the charge. Narration plays on hover (one-time enable may be required).
+            Hover or click a book to feel the charge. Narration plays on hover (one-time enable may be required).
           </h2>
+
+              {/* FEATURED BOOK: THE BEAUTIFUL BEAST W/ TRAILER */}
+           {/* FEATURED BOOK: THE BEAUTIFUL BEAST W/ VERTICAL 9:16 TRAILER */}
+      <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-black/40 p-6 rounded-2xl border border-white/5 shadow-2xl">
+
+          {/* CINEMATIC VERTICAL TRAILER COLUMN (Left Side - Shifted to 4 Columns to balance the 9:16 frame) */}
+          <div className="md:col-span-4 max-w-[280px] md:max-w-full mx-auto w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative group">
+            <video
+              controls
+              preload="metadata"
+              className="w-full h-full object-contain"
+              aria-label="The Beautiful Beast - Vertical Teaser Trailer"
+              onPlay={() => {
+                // Instantly syncs and starts the book's specific background narration track
+                tryPlayNarration(1);
+              }}
+              onPause={() => {
+                // Smoothly stops or fades out the narration when they pause the teaser
+                stopNarration(1);
+              }}
+              onEnded={() => {
+                // Ensures audio cuts out perfectly when the clip finishes running
+                stopNarration(1);
+              }}
+            >
+              <source src="/videos/Social_Media_Teaser_1.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+
+          {/* DESCRIPTION, DETAILS & HOOK BUTTON (Right Side - Expanded to 8 Columns to fill the canvas) */}
+          <div className="md:col-span-8 flex flex-col justify-center h-full space-y-5">
+            <div>
+              <h3
+                className="text-2xl md:text-4xl font-extrabold tracking-tight text-white text-left"
+                style={{
+                  textShadow: "0 0 10px rgba(201,206,214,0.22), 0 2px 10px rgba(0,0,0,0.82)",
+                }}
+              >
+                The Beautiful Beast
+              </h3>
+              <p className="text-[#a77a23] text-xs md:text-sm font-bold uppercase tracking-widest mt-1 mb-4">
+                Crime Thriller • Psychological • Rural Noir
+              </p>
+              <p
+                id="featured-blurb-text"
+                className="text-sm md:text-base text-gray-300 leading-relaxed text-left"
+                style={{
+                  textShadow: "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)",
+                }}
+              >
+                A year after a Thanksgiving-night crash on Colorado’s Million-Dollar Highway—and the cover-up that followed—the first debt comes due. When new headlights carve through the canyon, old secrets scrape to the surface—and someone is shaping grief into a weapon.
+              </p>
+            </div>
+
+            {/* AUTOMATIC PROMO ACCESS HIGHLIGHT */}
+            <div className="bg-[#a77a23]/10 border border-[#a77a23]/20 p-4 rounded-xl">
+              <p className="text-xs md:text-sm text-gray-300 leading-normal">
+                ⚡ <span className="text-white font-semibold">Limited Preview:</span> Get the unedited Prologue + Chapters 1–2 for <span className="text-[#a77a23] font-bold">$4.99</span>. Buying today whitelists your email for the <span className="text-white font-bold">$14.99 insider pre-order rate</span> on launch day.
+              </p>
+            </div>
+
+            {/* DYNAMIC GUMROAD OVERLAY BUY BUTTON */}
+            <div className="pt-2">
+              <a
+                href="https://gumroad.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-white bg-[#a77a23] hover:bg-[#8e661b] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)]"
+              >
+                📖 Download the Extended Sneak Peek
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        {/* HISTORICAL TIMELINE RECOVERY MODULE */}
+        <div className="timeline mt-8" role="region" aria-label="Story timeline">
+          <h4>Timeline</h4>
+          <dl className="timeline-list">
+            <dt>11/22/2018</dt>
+            <dd><em>Thanksgiving night.</em> On the Million-Dollar Highway, one crash buys a town a secret—<strong>a debt that won’t stop collecting.</strong> The cover-up begins.</dd>
+            <dt>11/28/2019</dt>
+            <dd>A year later, <strong>someone refuses to let the lie sleep.</strong></dd>
+            <dt>12/01/2019</dt>
+            <dd>Three days later, <strong>the bridge returns what the night tried to keep.</strong></dd>
+          </dl>
+        </div>
+      </section>
 
           <section className="book-grid">
             {books.map((b) => (
-              <div key={b.id} style={{ textAlign: "center" }}>
+              <div key={b.id} style={{ textAlign: "center", "--glow": b.color }}>
                 <div
                   className="book-card"
                   style={{ "--glow": b.color }}
@@ -332,13 +438,10 @@ export default function Books() {
           </section>
         </main>
 
-        {/* BOTTOM NEBULA (thinner, pulls footer up) */}
         <div className="nebula nebula-bottom mask-bottom relative z-10">
           <div className="letterbox-bar bottom-edge" />
         </div>
       </div>
-
-      {/* No local footer here. Global Footer renders after this. */}
     </div>
   );
 }

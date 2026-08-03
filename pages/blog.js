@@ -11,10 +11,10 @@ export default function Blog() {
 
   // ---- brand / assets ----
   const GOLD = "#a77a23";
-  const DISC_LOGO = "/SilverSpine_FB_Profile_CircleDisc_1024.png";
-  const BIG_LOGO = "/Silver_Spine_Studio_Logo_2025_10_11.png";
-  const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
-  const REQUEST_EMAIL = "contact@silverspinestudio.com";
+ const DISC_LOGO = "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png";
+ const BIG_LOGO = "/Final_Silver_Spine_Square_Logo_With_Words_Transparant.png";
+ const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
+ const REQUEST_EMAIL = "contact@silverspinestudio.com";
 
   // ---- header height (for sticky header only) ----
   const headerRef = useRef(null);
@@ -222,7 +222,7 @@ export default function Blog() {
           }
 
           /* Only the window scrolls */
-          html, body { margin: 0; background:#000; height:auto; overflow-y:auto; }
+         html, body { margin: 0; background:#000; min-height: 100%; }
           #__next { height:auto; overflow:visible; }
 
           .nav-wrap { max-width: 1400px; }
@@ -326,21 +326,34 @@ export default function Blog() {
         <div className="nav-wrap mx-auto grid grid-cols-3 items-center px-6 py-3 md:py-4">
           {/* Left: Logo */}
           <div className="flex items-center gap-3 md:gap-4">
-            <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
-              <Image
-                src={DISC_LOGO}
-                alt="Silver Spine Studio logo"
-                width={512}
-                height={512}
-                priority
-                className="w-auto select-none drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
-                style={{ height: "88px" }}
-                sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
-              />
-              <span className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide" style={{ color: GOLD }}>
-                Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
-              </span>
-            </Link>
+           <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
+  <Image
+    src={DISC_LOGO}
+    alt="Silver Spine Studio logo"
+    width={512}
+    height={512}
+    priority
+    className="w-auto select-none"
+    style={{
+      height: "88px",
+      filter:
+        "drop-shadow(0 8px 22px rgba(255,255,255,0.16))",
+    }}
+    sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
+  />
+
+  <span
+    className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+    style={{
+      color: "#d1d5db",
+      textShadow:
+        "0 0 10px rgba(255,255,255,0.10), 0 0 22px rgba(255,255,255,0.08)",
+    }}
+  >
+    Silver Spine Studio
+    <span className="align-super text-sm md:text-base">™</span>
+  </span>
+</Link>
           </div>
 
           {/* Center: Thunder toggle — left shift to sit between logo & "Home" */}
@@ -437,22 +450,25 @@ export default function Blog() {
                 >
                   <div className="rounded-lg border border-white/10 p-4 bg-black/40">
                     <h4 className="text-lg font-semibold mb-3" style={{ color: GOLD }}>Milestones</h4>
-                    <ol className="list-decimal ml-5 space-y-2 text-sm text-gray-200">
-                      <li><span className="font-semibold">ARC Sign-ups</span> — <span className="whitespace-nowrap">Nov 15, 2025</span>. Selection emails <span className="whitespace-nowrap">Nov 25, 2025</span>.</li>
-                      <li><span className="font-semibold">Cover Reveal (Final)</span> — <span className="whitespace-nowrap">Nov 30, 2025</span>.</li>
-                      <li><span className="font-semibold">Teaser Trailer Drop</span> — <span className="whitespace-nowrap">Dec 7, 2025</span>.</li>
-                      <li><span className="font-semibold">ARC Delivery Window</span> — <span className="whitespace-nowrap">Dec 8–10, 2025</span>.</li>
-                      <li><span className="font-semibold">Preorder Goes Live</span> — <span className="whitespace-nowrap">Dec 17, 2025</span>.</li>
-                      <li><span className="font-semibold">Launch Week</span> — <span className="whitespace-nowrap">Jan 1, 2026</span>.</li>
-                      <li><span className="font-semibold">Official Release Day</span> — <span className="whitespace-nowrap">Jan 8, 2026</span>.</li>
-                    </ol>
+                  <ol className="list-decimal ml-5 space-y-2 text-sm text-gray-200">
+   <li><span className="font-semibold text-[#a77a23]"> Cover Reveal (Live Today)</span> — Aug 3, 2026. The blank ribbon falls away. The premium artwork is officially unmasked.</li>
+   <li><span className="font-semibold"> ARC Sign-ups</span> — Aug 7 - Aug 14, 2026. Advanced Review Copy team applications go live. Selection emails go out Aug 17, 2026.</li>
+   <li><span className="font-semibold"> Teaser Trailer Drop</span> — Aug 21, 2026. Production loops push live.</li>
+   <li><span className="font-semibold"> ARC Delivery Window</span> — Aug 24–26, 2026.</li>
+   <li><span className="font-semibold"> Preorder Goes Live</span> — Sep 1, 2026. Early whitelisted buyers lock in the $14.99 insider novel rate.</li>
+   <li><span className="font-semibold"> Launch Week Events</span> — Oct 13, 2026.</li>
+   <li><span className="font-semibold"> Official Release Day</span> — Oct 20, 2026.</li>
+ </ol>
 
-                    <h4 className="text-lg font-semibold mt-5 mb-2" style={{ color: GOLD }}>What to expect</h4>
-                    <ul className="list-disc ml-5 space-y-2 text-sm text-gray-200">
-                      <li><span className="font-semibold">First pages:</span> Prologue + Ch.1–2 during reveal week.</li>
-                      <li><span className="font-semibold">Reader perks:</span> Digital art + annotated scene map.</li>
-                      <li><span className="font-semibold">How to support:</span> Join ARC, wishlist/preorder, share the teaser.</li>
-                    </ul>
+
+                  <h4 className="text-lg font-semibold mt-5 mb-2" style={{ color: GOLD }}>What to expect</h4>
+<ul className="list-disc ml-5 space-y-2 text-sm text-gray-200">
+  <li><span className="font-semibold">First pages:</span> Read the Prologue + Chapters 1–2 immediately inside our premium Extended Sneak Peek.</li>
+  <li><span className="font-semibold">Reader perks:</span> Digital cover art + an annotated Highway 550 scene map.</li>
+<li><span className="font-semibold text-[#a77a23]">How to support:</span> Buy the Sneak Peek for $4.99 today and lock in your insider rate of just $14.99 for the full book on release day (Regular price $24.99)!</li>
+
+</ul>
+
                   </div>
                 </div>
               </article>

@@ -43,11 +43,12 @@ export default function About() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-    const CANDIDATES = [
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png", // preferred disc
-      "/SilverSpine_FB_Profile_1024.png",
-      "/Silver_Spine_Studio_Logo_2025_10_11.png",
-    ];
+   const CANDIDATES = [
+  "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
+  "/SilverSpine_FB_Profile_CircleDisc_1024.png",
+  "/SilverSpine_FB_Profile_1024.png",
+  "/Silver_Spine_Studio_Logo_2025_10_11.png",
+];
     const tryLoad = (i = 0) => {
       if (i >= CANDIDATES.length) { if (!cancelled) setUseTextLogo(true); return; }
       const img = new Image();
@@ -201,39 +202,62 @@ export default function About() {
       <canvas id="stars" />
 
       {/* HEADER */}
-      <header
-        ref={headerRef}
-        className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
-            {logoSrc && !useTextLogo ? (
-              <img
-                src={logoSrc}
-                alt="Silver Spine Studio logo"
-                className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(167,122,35,0.25)]"
-                draggable="false"
-              />
-            ) : (
-              <span className="text-2xl md:text-3xl font-extrabold" style={{ color: GOLD }}>
-                Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
-              </span>
-            )}
-            <span className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide" style={{ color: GOLD }}>
-              Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
-            </span>
-          </Link>
+    <header
+  ref={headerRef}
+  className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
+>
+  <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
+    <Link
+      href="/"
+      className="flex items-center gap-3 md:gap-4 group"
+      aria-label="Silver Spine Studio — Home"
+    >
+      {logoSrc && !useTextLogo ? (
+        <img
+          src={logoSrc}
+          alt="Silver Spine Studio logo"
+          className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(238,242,247,0.22)]"
+          draggable="false"
+        />
+      ) : (
+        <span
+          className="text-2xl md:text-3xl font-extrabold"
+          style={{
+            color: "#eef2f7",
+            textShadow:
+              "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+          }}
+        >
+          Silver Spine Studio
+          <span className="align-super text-base md:text-lg">™</span>
+        </span>
+      )}
 
-          <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-            <Link href="/" className="nav-link">Home</Link>
-            <Link href="/books" className="nav-link">Books</Link>
-            <Link href="/about" className="nav-active" aria-current="page">About</Link>
-            <Link href="/contact" className="nav-link">Contact</Link>
-            <Link href="/blog" className="nav-link">Blog</Link>
-            <Link href="/reviews" className="nav-link">Reviews</Link>
-          </nav>
-        </div>
-      </header>
+      <span
+        className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+        style={{
+          color: "#eef2f7",
+          textShadow:
+            "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+        }}
+      >
+        Silver Spine Studio
+        <span className="align-super text-sm md:text-base">™</span>
+      </span>
+    </Link>
+
+    <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
+      <Link href="/" className="nav-link">Home</Link>
+      <Link href="/books" className="nav-link">Books</Link>
+      <Link href="/about" className="nav-active" aria-current="page">
+        About
+      </Link>
+      <Link href="/contact" className="nav-link">Contact</Link>
+      <Link href="/blog" className="nav-link">Blog</Link>
+      <Link href="/reviews" className="nav-link">Reviews</Link>
+    </nav>
+  </div>
+</header>
 
       {/* TOP NEBULA (tight) */}
       <div className="nebula nebula-top mask-top relative z-10">
@@ -245,83 +269,118 @@ export default function About() {
         {/* HEADING */}
         <section className="relative max-w-6xl mx-auto w-full px-4 md:px-6 pt-1">
           <div className="text-center">
-            <h1 className="heading">About the Author</h1>
+          <h1
+  className="heading"
+  style={{
+    color: "#eef2f7",
+    textShadow:
+      "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+  }}
+>
+  About the Author
+</h1>
             <p className="subheading">A life built from storms, stories, and staying power.</p>
           </div>
         </section>
 
-        {/* MAIN — bio */}
-        <main className="px-6 pb-0 text-center">
-          <section className="max-w-4xl mx-auto px-4 md:px-6">
-            <div className="nebula-sheet mt-1 mb-1">
-              <div className="content card-wrap">
-                {showAuthorImg && (
-                  <div className="flex justify-center mb-4">
-                    <div className="w-[150px] h-[150px] rounded-full overflow-hidden border-2" style={{ borderColor: GOLD }}>
-                      <img
-                        src="/author.jpg"
-                        alt="Leameso James"
-                        className="object-cover w-full h-full"
-                        onError={() => setShowAuthorImg(false)}
-                        draggable="false"
-                      />
-                    </div>
-                  </div>
-                )}
+       {/* MAIN — bio */}
+ <main className="px-6 pb-0 text-center max-w-7xl mx-auto w-full pt-2">
+   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-                {/* --- BIO COPY --- */}
-                <div className="max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
-                  <p>
-                    <span className="font-semibold" style={{ color: GOLD }}>Leameso James</span>,
-                    born in Newark, New Jersey and raised in Tuskegee, Alabama, has always been drawn to
-                    stories that feel cinematic and human. Not darkness for its own sake—but the places where
-                    courage is forged, where love and conscience light the way through the storm.
-                  </p>
+     {/* YOUR EXACT ABOUT SECTION (Shifted to 7 Columns to make room on the side) */}
+     <div className="lg:col-span-7">
+       <div className="nebula-sheet mt-1 mb-1">
+         <div className="content card-wrap">
+           {showAuthorImg && (
+             <div className="flex justify-center mb-4">
+               <div className="w-[150px] h-[150px] rounded-full overflow-hidden border-2" style={{ borderColor: GOLD }}>
+                 <img
+                   src="/author.jpg"
+                   alt="Leameso James"
+                   className="object-cover w-full h-full"
+                   onError={() => setShowAuthorImg(false)}
+                   draggable="false"
+                 />
+               </div>
+             </div>
+           )}
+           {/* --- YOUR EXACT UNTOUCHED BIO COPY --- */}
+           <div className="max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
+             <p>
+               <span className="font-semibold" style={{ color: GOLD }}>Leameso James</span>,
+               born in Newark, New Jersey and raised in Tuskegee, Alabama, has always been drawn to
+               stories that feel cinematic and human. Not darkness for its own sake—but the places where
+               courage is forged, where love and conscience light the way through the storm.
+             </p>
+             <p>
+               What compels her isn’t only conflict, but the delicate span between ache and answer—the
+               moment a character chooses whether to harden or to hope. She writes toward that tension:
+               the human spirit meeting the night with a steady flame, fighting in both the dark and the light.
+             </p>
+             <p>
+               Currently completing her studies in <span className="font-semibold">Cybersecurity at the University of Phoenix</span>,
+               James grounds her work in faith. She openly acknowledges God as her source, her guide, and her
+               anchor—grace that steadies the hand, sharpens the craft, and keeps the compass true when the winds rise.
+             </p>
+             <p>
+               With that foundation, she has stepped fully into her calling as an
+               <span className="font-semibold"> author and content creator</span>, establishing{" "}
+               <span className="font-semibold">Silver Spine Studio</span><span className="align-super text-xs">™</span> as a home for elegant, high-impact narratives.
+               These are stories unafraid of shadow, yet intent on revealing what endures—mercy, loyalty,
+               sacrificial love—the light that survives the rain.
+             </p>
+             <p>
+               She believes in the human spirit’s capacity to rise. We bend, and some of us break, but breaking is
+               not the end; it is where the mending begins. Triumph here isn’t a tidy bow—it’s the decision not to give up,
+               to fight forward with courage, to let love do its quiet, stubborn work. That’s the pulse on every page.
+             </p>
+           </div>
+         </div>
+       </div>
+     </div>
 
-                  <p>
-                    What compels her isn’t only conflict, but the delicate span between ache and answer—the
-                    moment a character chooses whether to harden or to hope. She writes toward that tension:
-                    the human spirit meeting the night with a steady flame, fighting in both the dark and the light.
-                  </p>
+     {/* THE NEW SALES BOX PLACED EXACTLY ON THE SIDE (Spans 5 Columns) */}
+     <div className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-gray-950 to-black border border-[#a77a23]/30 p-6 rounded-2xl shadow-2xl text-left space-y-4">
+       <div className="text-center space-y-1">
+         <span className="text-[#a77a23] text-xs font-bold uppercase tracking-widest block">Limited Preview Event</span>
+         <h3 className="text-xl font-extrabold text-white tracking-tight">The Beautiful Beast</h3>
+         <p className="text-xs text-gray-400 italic">Prologue + Chapters 1–2</p>
+       </div>
 
-                  <p>
-                    Currently completing her studies in <span className="font-semibold">Cybersecurity at the University of Phoenix</span>,
-                    James grounds her work in faith. She openly acknowledges God as her source, her guide, and her
-                    anchor—grace that steadies the hand, sharpens the craft, and keeps the compass true when the winds rise.
-                  </p>
+       <div className="bg-black/60 p-4 rounded-xl border border-white/5 text-[0.95rem] text-gray-200 leading-relaxed">
+         <p className="mb-2">🚨 <span className="text-white font-semibold">Insider Privilege:</span> Download the instant digital sneak peek today for just <span className="text-[#a77a23] font-bold">$4.99</span>.</p>
+         <p>Purchasing today whitelists your email in our database ledger, locking in your discounted <span className="text-white font-bold">$14.99 release-day preorder rate</span> for the full book on September 1st!</p>
+       </div>
 
-                  <p>
-                    With that foundation, she has stepped fully into her calling as an
-                    <span className="font-semibold"> author and content creator</span>, establishing{" "}
-                    <span className="font-semibold">Silver Spine Studio</span><span className="align-super text-xs">™</span> as a home for elegant, high-impact narratives.
-                    These are stories unafraid of shadow, yet intent on revealing what endures—mercy, loyalty,
-                    sacrificial love—the light that survives the rain.
-                  </p>
+       <div className="pt-2">
+         <a
+           href="https://gumroad.com"
+           target="_blank"
+           rel="noopener noreferrer"
+           className="w-full inline-flex items-center justify-center gap-2 font-bold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)] text-sm"
+         >
+           📖 Claim the Extended Sneak Peek
+         </a>
+       </div>
 
-                  <p>
-                    She believes in the human spirit’s capacity to rise. We bend, and some of us break, but breaking is
-                    not the end; it is where the mending begins. Triumph here isn’t a tidy bow—it’s the decision not to give up,
-                    to fight forward with courage, to let love do its quiet, stubborn work. That’s the pulse on every page.
-                  </p>
-                </div>
-              </div>
-            </div>
+       {/* RESTORED THUNDER AUDIO CONTROLLER (Centered underneath checkout layout) */}
+       <div className="flex justify-center pt-2">
+         <button
+           type="button"
+           aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
+           onClick={toggleSiteAudio}
+           className="chip"
+           title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
+         >
+           {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+           {siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
+         </button>
+       </div>
+     </div>
 
-            {/* Thunder control directly under the card */}
-            <div className="controls-row">
-              <button
-                type="button"
-                aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-                onClick={toggleSiteAudio}
-                className="chip"
-                title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-              >
-                {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-                {siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-              </button>
-            </div>
-          </section>
-        </main>
+   </div>
+ </main>
+
 
         {/* BOTTOM NEBULA (tight) */}
         <div className="nebula nebula-bottom mask-bottom relative">
