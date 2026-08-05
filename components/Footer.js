@@ -5,9 +5,12 @@ import { GOLD, CORE_ICONS, HUB_ITEMS } from "@/lib/socials";
 
 export default function Footer({ note, ...props }) {
   const [open, setOpen] = useState(false);
+  const [year, setYear] = useState("");
 
-  // Optional: quick visibility check in DevTools if something goes blank again
+  // Safely sets the year only on the client browser to prevent hydration crashes
   useEffect(() => {
+    setYear(new Date().getFullYear());
+
     // eslint-disable-next-line no-console
     console.log("[Footer] CORE_ICONS:", (CORE_ICONS || []).map(i => i.key));
     // eslint-disable-next-line no-console
@@ -55,29 +58,6 @@ export default function Footer({ note, ...props }) {
               </a>
             );
           })}
-
-          {/* Logo Hub button (Hidden for Launch)
-          <button
-            onClick={() => setOpen(true)}
-            className="
-              inline-flex items-center gap-2 rounded-full
-              border border-gray-800 px-4 h-11
-              bg-transparent
-              text-gray-300
-              hover:text-[#a77a23] hover:bg-gray-300/20 hover:border-gray-600
-              transition-colors duration-150
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(167,122,35,0.55)]
-            "
-            aria-haspopup="dialog"
-            aria-expanded={open}
-            title="Open Logo Hub"
-          >
-            <span className="text-sm" style={{ color: GOLD }}>Logo Hub</span>
-            <span className="text-xs text-gray-400">
-              ({Array.isArray(HUB_ITEMS) ? HUB_ITEMS.length : 0})
-            </span>
-          </button>
-           */}
         </div>
 
         {/* Credits / Page-specific note */}
@@ -87,7 +67,7 @@ export default function Footer({ note, ...props }) {
           ) : (
             <>
               <p className="mb-2">
-                © {new Date().getFullYear()} <span style={{ color: GOLD }}>Silver Spine Studio™</span>. All rights reserved.
+                © {year || "2026"} <span style={{ color: GOLD }}>Silver Spine Studio™</span>. All rights reserved.
               </p>
               <p className="text-gray-300">
                 Hand-built with <span style={{ color: GOLD }}>PyCharm</span>, <span style={{ color: GOLD }}>Next.js</span>, <span style={{ color: GOLD }}>React</span>, <span style={{ color: GOLD }}>Tailwind&nbsp;CSS</span>.

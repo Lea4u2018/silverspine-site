@@ -4,7 +4,10 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        {/* Official Gumroad Overlay Engine Setup */}
+        <script src="https://gumroad.com" async></script>
+      </Head>
       <body className="bg-black text-gray-100">
         <Main />
         <NextScript />

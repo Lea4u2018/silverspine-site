@@ -354,7 +354,7 @@ export default function About() {
 
        <div className="pt-2">
          <a
-           href="https://gumroad.com"
+           href="https://creativeefficiency.gumroad.com/l/the-beautiful-beast-sneak-peek"
            target="_blank"
            rel="noopener noreferrer"
            className="w-full inline-flex items-center justify-center gap-2 font-bold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)] text-sm"
