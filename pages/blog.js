@@ -87,6 +87,7 @@ export default function Blog() {
   const [arcEmail, setArcEmail] = useState("");
   const [arcFormat, setArcFormat] = useState("EPUB");
   const [arcReviewSpot, setArcReviewSpot] = useState("Social media");
+  const [arcAgree, setArcAgree] = useState(false);
   const [pressName, setPressName] = useState("");
   const [pressOutlet, setPressOutlet] = useState("");
   const [pressEmail, setPressEmail] = useState("");
@@ -96,6 +97,7 @@ export default function Blog() {
 
   const submitArc = (e) => {
     e.preventDefault();
+    if (!arcAgree) return;
     const subject = encodeURIComponent("Early-release ARC request — The Beautiful Beast");
     const body = encodeURIComponent(
       [
@@ -108,11 +110,14 @@ export default function Blog() {
         `Preferred format: ${arcFormat}`,
         `Where I'll review: ${arcReviewSpot}`,
         "",
+        "I agree that any early-release / ARC files I receive are licensed for my personal review use only. I will not copy, upload, resell, or share the files (or substantial excerpts) publicly or privately, except for a fair review. I understand unauthorized distribution may result in removal from the ARC program and legal action.",
+        "",
         "Thanks!",
       ].join("\n")
     );
     window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
     setShowArc(false);
+    setArcAgree(false);
   };
   const submitPress = (e) => {
     e.preventDefault();
@@ -499,9 +504,22 @@ export default function Blog() {
                   </select>
                 </div>
               </div>
+              <label className="flex items-start gap-2 text-xs text-gray-300 leading-relaxed">
+                <input
+                  type="checkbox"
+                  checked={arcAgree}
+                  onChange={(e) => setArcAgree(e.target.checked)}
+                  required
+                  className="mt-0.5"
+                />
+                <span>
+                  I understand ARC / early-release files are licensed for my personal review only. I will not copy, upload, resell, or share the files (or substantial excerpts) with anyone else. Unauthorized sharing may end my ARC access and may be pursued as copyright infringement.
+                </span>
+              </label>
+
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowArc(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
-                <button type="submit" className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90">Open email request</button>
+                <button type="submit" disabled={!arcAgree} className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50">Open email request</button>
               </div>
               <p className="text-xs text-gray-400 mt-2">
                 Submitting opens your email client with a prefilled message to {REQUEST_EMAIL} for your request of early-release content info.

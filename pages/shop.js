@@ -202,6 +202,15 @@ export default function Shop() {
                 </p>
               </div>
 
+              <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-xs md:text-sm text-gray-300 leading-relaxed">
+                <p className="font-semibold text-white mb-1">Copyright &amp; license</p>
+                <p>
+                  © {new Date().getFullYear()} Silver Spine Studio™ / Leameso James. All rights reserved.
+                  Purchase grants a personal, non-transferable license to read the sneak peek.
+                  Files may not be copied, uploaded, resold, or shared. Buyer-stamped PDFs help deter unauthorized distribution.
+                </p>
+              </div>
+
               <div className="rounded-xl border border-[#a77a23]/35 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
                 <p className="font-semibold text-white mb-1">Full novel pricing · hard cutoff</p>
                 <ul className="space-y-1.5 text-xs md:text-sm">

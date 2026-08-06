@@ -305,6 +305,7 @@ export default function Books() {
                 <div className="bg-[#a77a23]/10 border border-[#a77a23]/20 p-4 rounded-xl">
                   <p className="text-xs md:text-sm text-gray-300 leading-normal">
                     ⚡ <span className="text-white font-semibold">Limited Preview:</span> Get the unedited Prologue + Chapters 1–2 for <span className="text-[#a77a23] font-bold">$4.99</span>. Buying today whitelists your email for the <span className="text-white font-bold">$14.99 insider rate</span> from <span className="text-white font-bold">Sep 1 – Oct 19, 2026</span>. Full retail is <span className="text-white font-bold">$24.99</span> starting <span className="text-white font-bold">Oct 20, 2026</span>.
+                    {" "}Personal license only — files may not be shared, uploaded, or resold.
                   </p>
                 </div>
 
