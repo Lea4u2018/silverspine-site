@@ -89,6 +89,7 @@ export default function FAQ() {
     <InfoPageShell
       title="FAQ"
       eyebrow="Help"
+      tone="faq"
       description="Answers about The Beautiful Beast, the Seven-Fold Chronicle, digital downloads, pricing windows, and how to stay updated."
     >
       {SECTIONS.map((section) => (

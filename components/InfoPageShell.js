@@ -10,7 +10,7 @@ const SILVER = "#c9ced6";
 /**
  * Shared shell for Privacy / FAQ / Refunds — one calm reading composition.
  */
-export default function InfoPageShell({ title, description, eyebrow, children }) {
+export default function InfoPageShell({ title, description, eyebrow, tone, children }) {
   const router = useRouter();
   const headerRef = useRef(null);
   const [logoSrc, setLogoSrc] = useState(null);
@@ -101,6 +101,9 @@ export default function InfoPageShell({ title, description, eyebrow, children })
             text-transform: uppercase;
             margin: 1.75rem 0 0.65rem;
           }
+          .info-prose.tone-faq h2 {
+            color: #d4a94a;
+          }
           .info-prose p, .info-prose li {
             color: #d1d5db;
             line-height: 1.65;
@@ -109,6 +112,12 @@ export default function InfoPageShell({ title, description, eyebrow, children })
           .info-prose ul { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0 0; }
           .info-prose li + li { margin-top: 0.35rem; }
           .info-prose a { color: ${GOLD}; text-decoration: underline; text-underline-offset: 2px; }
+          .info-prose.tone-faq a {
+            color: #ffffff;
+          }
+          .info-prose.tone-faq a:hover {
+            color: ${GOLD};
+          }
           .faq-item {
             border-top: 1px solid rgba(255,255,255,0.08);
             padding: 0.85rem 0;
@@ -193,7 +202,11 @@ export default function InfoPageShell({ title, description, eyebrow, children })
           <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-7 max-w-2xl">
             {description}
           </p>
-          <div className="rounded-2xl border border-white/10 bg-black/55 p-5 md:p-8 shadow-2xl info-prose">
+          <div
+            className={`rounded-2xl border border-white/10 bg-black/55 p-5 md:p-8 shadow-2xl info-prose${
+              tone === "faq" ? " tone-faq" : ""
+            }`}
+          >
             {children}
           </div>
           <p className="mt-6 text-center text-xs text-gray-500">
