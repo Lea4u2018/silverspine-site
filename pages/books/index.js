@@ -167,7 +167,7 @@ export default function Books() {
 
   // ===== Page data =====
   const books = [
-    { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-full-tagged.png", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
+    { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-full-tagged.png", motion: "/covers/1-the-beautiful-beast-motion.mp4", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
     { id: 2, title: "SHADOWS OF A GHOST", tagline: "A shadow doesn’t vanish — it just learns to wait.", img: "/covers/2-shadows-of-a-ghost-arthur-blank-cover.jpg", whisper: "/audio/ghost_whisper_01.mp3", color: "#E5C877", ribbon: "IN THE WORKS" },
     { id: 3, title: "THE GATHERING STORM", tagline: "The sting of lightning before the clap of thunder.", img: "/covers/3-the-gathering-storm-bee-blank-cover.jpg", whisper: "/audio/storm_whisper_01.mp3", color: "#D4A24B", ribbon: "SIMMERING" },
     { id: 4, title: "FRAGILE UNBROKEN", tagline: "What doesn’t shatter learns how to cut.", img: "/covers/4-fragile-unbroken-elliot-blank-cover.jpg", whisper: "/audio/fragile_whisper_01.mp3", color: "#C57A2A", ribbon: "WHEELS TURNING" },
@@ -201,7 +201,7 @@ export default function Books() {
           @media (max-width: 480px) { .book-grid { grid-template-columns: 1fr; } }
           .book-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 300px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; }
           .book-card:hover, .book-card.selected { transform: translateY(-3px) scale(1.015); box-shadow: 0 0 45px var(--glow), 0 0 75px var(--glow); border-color: var(--glow); }
-          .book-card img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
+          .book-card img, .book-card video { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
           .ribbon { position:absolute; top:50%; left:50%; width:250%; height:58%; transform:translate(-50%,-50%) rotate(-45deg); background:#000; display:flex; align-items:center; justify-content:center; z-index:6; }
           .ribbon-text { color:#fff; font:700 1rem/1 'Libre Baskerville', Georgia, serif; letter-spacing:.22em; text-transform:uppercase; opacity:.95; }
           .book-title { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 2rem/1.16 'Libre Baskerville', Georgia, serif; color:var(--glow); text-shadow:0 0 18px rgba(0,0,0,.6); z-index:4; }
@@ -355,7 +355,20 @@ export default function Books() {
                     onMouseEnter={() => tryPlayNarration(b.id)}
                     onMouseLeave={() => stopNarration(b.id)}
                   >
-                    <img src={b.img} alt={b.title} />
+                    {b.motion ? (
+                      <video
+                        src={b.motion}
+                        poster={b.img}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        aria-label={`${b.title} live cover`}
+                      />
+                    ) : (
+                      <img src={b.img} alt={b.title} />
+                    )}
                     {b.id !== 1 && (
                       <div className="ribbon">
                         <span className="ribbon-text">{b.ribbon}</span>

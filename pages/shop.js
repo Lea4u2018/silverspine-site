@@ -180,9 +180,15 @@ export default function Shop() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start">
             <div className="md:col-span-4">
               <div className="aspect-[2/3] max-w-[240px] mx-auto md:mx-0 overflow-hidden rounded-xl border border-white/10 shadow-xl bg-gray-950">
-                <img
-                  src="/covers/1-the-beautiful-beast-full-tagged.png"
-                  alt="The Beautiful Beast cover"
+                <video
+                  src="/covers/1-the-beautiful-beast-motion.mp4"
+                  poster="/covers/1-the-beautiful-beast-full-tagged.png"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label="The Beautiful Beast live cover"
                   className="w-full h-full object-cover"
                 />
               </div>

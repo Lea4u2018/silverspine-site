@@ -155,12 +155,17 @@ export default function Home() {
     }, 700);
   };
 
-  const SERIES_TICKER =
-    "The Silver Spine Studio™ Series: The Seven-Fold Chronicle — thrillers forged in storm and consequence";
-  const LAUNCH_TICKER =
-    "The Beautiful Beast Extended Sneak Peek ($4.99) • Insider full novel $14.99 Sep 1–Oct 19, 2026 • Full retail $24.99 starts Oct 20, 2026";
-  const SERIES_TICKER_ITEMS = Array.from({ length: 8 }, () => SERIES_TICKER);
-  const LAUNCH_TICKER_ITEMS = Array.from({ length: 8 }, () => LAUNCH_TICKER);
+  const SERIES_TICKER_ITEMS = Array.from(
+    { length: 6 },
+    () =>
+      "The Silver Spine Studio™ Series: The Seven-Fold Chronicle — thrillers forged in storm and consequence"
+  );
+  // Short segments read cleaner than one giant uppercase sentence.
+  const LAUNCH_TICKER_ITEMS = Array.from({ length: 4 }, () => [
+    { label: "The Beautiful Beast Extended Sneak Peek — $4.99", outNow: true },
+    { label: "Insider full novel $14.99 · Sep 1–Oct 19, 2026", outNow: false },
+    { label: "Full retail $24.99 starts Oct 20, 2026", outNow: false },
+  ]).flat();
 
   return (
     <div className="bg-black text-gray-100">
@@ -281,33 +286,51 @@ export default function Home() {
             background: rgba(0,0,0,0.95);
             border-top: 1px solid rgba(167,122,35,0.3);
             border-bottom: 1px solid rgba(0,0,0,0.4);
-            mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
           }
           .ticker-track {
-            display: inline-flex;
-            white-space: nowrap;
+            display: flex;
+            width: max-content;
             will-change: transform;
-            animation: tickerMove var(--ticker-speed, 70s) linear infinite;
+            animation: tickerMove var(--ticker-speed, 60s) linear infinite;
+          }
+          .ticker-track.ticker-launch {
+            --ticker-speed: 48s;
+          }
+          .ticker-group {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            white-space: nowrap;
           }
           @media (max-width: 768px) {
-            .ticker-track { --ticker-speed: 55s; }
+            .ticker-track { --ticker-speed: 42s; }
+            .ticker-track.ticker-launch { --ticker-speed: 36s; }
           }
           @media (min-width: 1280px) {
-            .ticker-track { --ticker-speed: 85s; }
+            .ticker-track { --ticker-speed: 72s; }
+            .ticker-track.ticker-launch { --ticker-speed: 56s; }
           }
           .ticker-item {
-            padding-right: 3rem;
-            margin-right: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 1.75rem;
             position: relative;
           }
           .ticker-item::after {
             content: "•";
+            position: absolute;
+            right: 0;
             color: #b8ae96;
-            opacity: 0.9;
-            margin-left: 1.75rem;
+            opacity: 0.85;
+            transform: translateX(50%);
           }
-          .ticker-item:last-child::after { content: ""; }
+          .ticker-out-now {
+            color: #ef4444;
+            font-weight: 800;
+            margin-right: 0.4em;
+          }
 
           @keyframes tickerMove {
             0%   { transform: translateX(0); }
@@ -475,29 +498,39 @@ export default function Home() {
             style={{ color: "#f5edd7", padding: "6px 0" }}
             aria-label="Series announcement ticker"
           >
-            {SERIES_TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`a-${i}`}>{t}</span>
-            ))}
-            {SERIES_TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`b-${i}`}>{t}</span>
-            ))}
+            <div className="ticker-group">
+              {SERIES_TICKER_ITEMS.map((t, i) => (
+                <span className="ticker-item" key={`a-${i}`}>{t}</span>
+              ))}
+            </div>
+            <div className="ticker-group" aria-hidden="true">
+              {SERIES_TICKER_ITEMS.map((t, i) => (
+                <span className="ticker-item" key={`b-${i}`}>{t}</span>
+              ))}
+            </div>
           </div>
 
           <div
-            className="ticker-track text-[0.85rem] md:text-sm tracking-widest font-semibold uppercase"
-            style={{ color: "#f5edd7", padding: "4px 0", background: "rgba(0,0,0,0.2)" }}
+            className="ticker-track ticker-launch text-[0.8rem] md:text-sm tracking-wide font-semibold"
+            style={{ color: "#f5edd7", padding: "5px 0", background: "rgba(0,0,0,0.2)" }}
             aria-label="Launch alert: out now"
           >
-            {LAUNCH_TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`c-${i}`}>
-                <span style={{ color: "#ef4444", fontWeight: "800" }}>OUT NOW:</span> {t}
-              </span>
-            ))}
-            {LAUNCH_TICKER_ITEMS.map((t, i) => (
-              <span className="ticker-item" key={`d-${i}`}>
-                <span style={{ color: "#ef4444", fontWeight: "800" }}>OUT NOW:</span> {t}
-              </span>
-            ))}
+            <div className="ticker-group">
+              {LAUNCH_TICKER_ITEMS.map((item, i) => (
+                <span className="ticker-item" key={`c-${i}`}>
+                  {item.outNow && <span className="ticker-out-now">OUT NOW:</span>}
+                  {item.label}
+                </span>
+              ))}
+            </div>
+            <div className="ticker-group" aria-hidden="true">
+              {LAUNCH_TICKER_ITEMS.map((item, i) => (
+                <span className="ticker-item" key={`d-${i}`}>
+                  {item.outNow && <span className="ticker-out-now">OUT NOW:</span>}
+                  {item.label}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 

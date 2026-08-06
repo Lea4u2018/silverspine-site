@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function TheBeautifulBeast() {
   // SEO data for this specific book
@@ -56,13 +55,17 @@ export default function TheBeautifulBeast() {
 
       {/* Main Content */}
       <main className="flex-1 px-6 py-10 text-center max-w-3xl mx-auto">
-        <div className="relative w-full h-[500px] mb-6">
-          <Image
-            src="/covers/1-the-beautiful-beast-full-tagged.png"
-            alt="The Beautiful Beast cover"
-            layout="fill"
-            objectFit="contain"
-            className="rounded-lg shadow-lg"
+        <div className="relative w-full max-w-[320px] mx-auto aspect-[2/3] mb-6 overflow-hidden rounded-lg shadow-lg">
+          <video
+            src="/covers/1-the-beautiful-beast-motion.mp4"
+            poster="/covers/1-the-beautiful-beast-full-tagged.png"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="The Beautiful Beast live cover"
+            className="w-full h-full object-cover"
           />
         </div>
         <h1 className="text-4xl font-bold mb-4 text-yellow-400">
