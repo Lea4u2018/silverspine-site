@@ -44,6 +44,27 @@ function sanitizeStr(s, max = 2000) {
   return s.replace(/\0/g, "").slice(0, max);
 }
 
+/** Fix common bad SMTP host values like "://office365.com" or "https://smtp.office365.com". */
+function normalizeSmtpHost(host) {
+  if (typeof host !== "string") return "";
+  let h = host.trim().replace(/^https?:\/\//i, "").replace(/^\/\//, "");
+  if (!h) return "";
+  const lower = h.toLowerCase();
+  if (lower === "office365.com" || lower === "outlook.com" || lower === "microsoft.com") {
+    return "smtp.office365.com";
+  }
+  if (lower.includes("office365") && !lower.startsWith("smtp.")) {
+    return "smtp.office365.com";
+  }
+  return h;
+}
+
+function extractEmail(value) {
+  if (typeof value !== "string") return "";
+  const m = value.match(/<([^>]+)>/);
+  return (m ? m[1] : value).trim();
+}
+
 export default async function handler(req, res) {
   // Method guard
   if (req.method !== "POST") {
@@ -70,12 +91,18 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: "Invalid JSON" });
   }
 
-  // Fields: name, email, message, hp (honeypot), startedAt (ms timestamp)
+  // Fields: name, email, message, kind, hp (honeypot), startedAt (ms timestamp)
+  const kind = sanitizeStr(payload.kind, 40).trim().toLowerCase() || "contact";
   const name = sanitizeStr(payload.name, 200).trim();
   const email = sanitizeStr(payload.email, 320).trim();
-  const message = sanitizeStr(payload.message, 5000).trim();
+  let message = sanitizeStr(payload.message, 5000).trim();
   const hp = String(payload.hp || "").trim(); // bots often fill this
   const startedAt = Number(payload.startedAt || 0);
+
+  if (kind === "list" && !message) {
+    message =
+      "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle.";
+  }
 
   // Honeypot: must be empty
   if (hp) {
@@ -101,18 +128,26 @@ export default async function handler(req, res) {
   }
 
   // Env vars (configure in Vercel → Settings → Environment Variables)
-  const {
-    SMTP_HOST,
-    SMTP_PORT,
-    SMTP_USER,
-    SMTP_PASS,
-    SMTP_SECURE, // "true" or "false"
-    MAIL_TO,     // where you want to receive messages (e.g., contact@silverspinestudio.com)
-    MAIL_FROM,   // the from identity shown in emails (e.g., "Silver Spine Studio <contact@silverspinestudio.com>")
-  } = process.env;
+  const SMTP_HOST = normalizeSmtpHost(process.env.SMTP_HOST);
+  const SMTP_PORT = String(process.env.SMTP_PORT || "").trim();
+  const SMTP_USER = String(process.env.SMTP_USER || "").trim();
+  const SMTP_PASS = String(process.env.SMTP_PASS || "").trim();
+  const SMTP_SECURE = process.env.SMTP_SECURE; // "true" or "false"
+  const MAIL_TO = String(process.env.MAIL_TO || "").trim();
+  const MAIL_FROM = String(process.env.MAIL_FROM || "").trim();
 
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !MAIL_TO || !MAIL_FROM) {
+    console.error("Mail config missing required env vars");
     return res.status(500).json({ ok: false, error: "Mail server not configured." });
+  }
+
+  // Catch mangled credentials early (production had host "://office365.com" and non-email identities).
+  if (!isValidEmail(SMTP_USER) || !isValidEmail(extractEmail(MAIL_FROM)) || !isValidEmail(extractEmail(MAIL_TO))) {
+    console.error("Mail config invalid: SMTP_USER / MAIL_FROM / MAIL_TO must be real email addresses");
+    return res.status(500).json({
+      ok: false,
+      error: "Mail server not configured correctly. Please contact the site owner.",
+    });
   }
 
   // Nodemailer transport (Microsoft 365 typical settings shown below)
@@ -132,8 +167,12 @@ export default async function handler(req, res) {
 
   // Compose message
   const ua = sanitizeStr(req.headers["user-agent"] || "", 512);
-  const subject = `New message from ${name} via SilverSpineStudio.com`;
+  const subject =
+    kind === "list"
+      ? `Launch list signup — ${name}`
+      : `New message from ${name} via SilverSpineStudio.com`;
   const text = [
+    kind === "list" ? "Type: Launch email list signup" : "Type: Contact form",
     `Name: ${name}`,
     `Email: ${email}`,
     "",

@@ -82,18 +82,60 @@ export default function Blog() {
   const [showPlan, setShowPlan] = useState(false);
   const [showBrandNotes, setShowBrandNotes] = useState(false);
   const [showArc, setShowArc] = useState(false);
+  const [showList, setShowList] = useState(false);
   const [showPress, setShowPress] = useState(false);
   const [arcName, setArcName] = useState("");
   const [arcEmail, setArcEmail] = useState("");
   const [arcFormat, setArcFormat] = useState("EPUB");
   const [arcReviewSpot, setArcReviewSpot] = useState("Social media");
   const [arcAgree, setArcAgree] = useState(false);
+  const [listName, setListName] = useState("");
+  const [listEmail, setListEmail] = useState("");
+  const [listHp, setListHp] = useState("");
+  const [listStartedAt] = useState(() => Date.now());
+  const [listStatus, setListStatus] = useState({ state: "idle", msg: "" });
   const [pressName, setPressName] = useState("");
   const [pressOutlet, setPressOutlet] = useState("");
   const [pressEmail, setPressEmail] = useState("");
   const [pressNeeds, setPressNeeds] = useState("Interview, logo usage, and cover art");
   const [pressDeadline, setPressDeadline] = useState("");
   const [pressAgree, setPressAgree] = useState(false);
+
+  const submitList = async (e) => {
+    e.preventDefault();
+    setListStatus({ state: "sending", msg: "" });
+    try {
+      const res = await fetch("/api/contact-safe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "list",
+          name: listName,
+          email: listEmail,
+          message:
+            "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle.",
+          hp: listHp,
+          startedAt: listStartedAt,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setListStatus({
+          state: "success",
+          msg: "You're on the list. Watch your inbox for launch updates.",
+        });
+        setListName("");
+        setListEmail("");
+      } else {
+        setListStatus({
+          state: "error",
+          msg: data.error || "Something went wrong. Please try again.",
+        });
+      }
+    } catch {
+      setListStatus({ state: "error", msg: "Network error. Please try again." });
+    }
+  };
 
   const submitArc = (e) => {
     e.preventDefault();
@@ -346,6 +388,17 @@ export default function Blog() {
 
                   <button
                     type="button"
+                    onClick={() => {
+                      setListStatus({ state: "idle", msg: "" });
+                      setShowList(true);
+                    }}
+                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
+                  >
+                    Join the launch list
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={() => setShowArc(true)}
                     className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
                   >
@@ -470,6 +523,65 @@ export default function Blog() {
       </main>
 
       {/* Modals */}
+      {showList && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Join the launch list</h3>
+              <button onClick={() => setShowList(false)} className="text-gray-300 hover:text-white">✕</button>
+            </div>
+            <p className="text-sm text-gray-300 mb-4 leading-relaxed">
+              Get launch updates for The Beautiful Beast and the seven-fold chronicle — sneak peek news, preorder windows, and release day alerts.
+            </p>
+            <form onSubmit={submitList} className="space-y-4">
+              <div className="hidden" aria-hidden="true">
+                <label>Leave empty</label>
+                <input type="text" value={listHp} onChange={(e) => setListHp(e.target.value)} autoComplete="off" tabIndex={-1} />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-300 mb-1">Name</label>
+                <input
+                  required
+                  value={listName}
+                  onChange={(e) => setListName(e.target.value)}
+                  className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-300 mb-1">Email</label>
+                <input
+                  required
+                  type="email"
+                  value={listEmail}
+                  onChange={(e) => setListEmail(e.target.value)}
+                  className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+                />
+              </div>
+              {listStatus.msg && (
+                <p className={`text-sm ${listStatus.state === "error" ? "text-red-400" : "text-green-400"}`}>
+                  {listStatus.msg}
+                </p>
+              )}
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onClick={() => setShowList(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  disabled={listStatus.state === "sending"}
+                  className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50"
+                >
+                  {listStatus.state === "sending" ? "Joining…" : "Join the list"}
+                </button>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">
+                This is separate from ARC requests. Signups are sent to {REQUEST_EMAIL}.
+              </p>
+            </form>
+          </div>
+        </div>
+      )}
+
       {showArc && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
           <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
