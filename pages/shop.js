@@ -210,11 +210,19 @@ export default function Shop() {
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-xs md:text-sm text-gray-300 leading-relaxed">
-                <p className="font-semibold text-white mb-1">Copyright &amp; license</p>
+                <p className="font-semibold text-white mb-1">Copyright &amp; purchase terms</p>
                 <p>
                   © {new Date().getFullYear()} Silver Spine Studio™ / Leameso James. All rights reserved.
-                  Purchase grants a personal, non-transferable license to read the sneak peek.
-                  Files may not be copied, uploaded, resold, or shared. Buyer-stamped PDFs help deter unauthorized distribution.
+                  The work is protected by U.S. copyright. Purchase grants personal reading access only — not copyright ownership.
+                  Files may not be copied, uploaded, resold, or shared. Digital sales are final after download/access.{" "}
+                  <Link href="/refunds" className="text-[#a77a23] hover:underline">
+                    Refund Policy
+                  </Link>
+                  {" · "}
+                  <Link href="/faq" className="text-[#a77a23] hover:underline">
+                    FAQ
+                  </Link>
+                  .
                 </p>
               </div>
 

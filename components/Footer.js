@@ -1,7 +1,15 @@
 // /components/Footer.js
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import LogoHub from "@/components/LogoHub";
 import { GOLD, CORE_ICONS, HUB_ITEMS } from "@/lib/socials";
+
+const LEGAL_LINKS = [
+  { href: "/privacy", label: "Privacy" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/refunds", label: "Refunds" },
+  { href: "/contact", label: "Contact" },
+];
 
 export default function Footer({ note, ...props }) {
   const [open, setOpen] = useState(false);
@@ -79,6 +87,20 @@ export default function Footer({ note, ...props }) {
             <span style={{ color: GOLD }}>Tailwind&nbsp;CSS</span>.
           </p>
         </div>
+
+        <nav
+          aria-label="Legal"
+          className="mt-2.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] md:text-xs text-gray-400"
+        >
+          {LEGAL_LINKS.map((item, i) => (
+            <span key={item.href} className="inline-flex items-center gap-x-3">
+              {i > 0 ? <span className="text-gray-600" aria-hidden="true">·</span> : null}
+              <Link href={item.href} className="hover:text-[#a77a23] transition-colors">
+                {item.label}
+              </Link>
+            </span>
+          ))}
+        </nav>
 
         {/* Optional page note — kept rare/short so footer stays thin */}
         {note ? (
