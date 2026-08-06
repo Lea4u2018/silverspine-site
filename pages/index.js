@@ -37,10 +37,12 @@ export default function Home() {
     };
   }, []);
 
-  const THUNDER_VOLUME = 0.22;
+  const THUNDER_VOLUME = 0.32;
   const THUNDER_PREF_KEY = "sss-home-thunder-muted";
+  const STORM_GATE_KEY = "sss-storm-entered";
   const [isMuted, setIsMuted] = useState(true);
-  const [showAudioHint, setShowAudioHint] = useState(false);
+  const [showStormGate, setShowStormGate] = useState(true);
+  const [gateLeaving, setGateLeaving] = useState(false);
   const [stars, setStars] = useState([]);
   const userMutedRef = useRef(false);
 
@@ -106,60 +108,52 @@ export default function Home() {
     return () => io.disconnect();
   }, []);
 
-  // Auto-start quiet thunder; browsers may block until a gesture — then unlock once.
+  // Storm gate guarantees a user gesture so thunder can legally start.
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
     let prefMuted = false;
+    let alreadyEntered = false;
     try {
       prefMuted = window.localStorage.getItem(THUNDER_PREF_KEY) === "1";
+      alreadyEntered = window.sessionStorage.getItem(STORM_GATE_KEY) === "1";
     } catch {}
     userMutedRef.current = prefMuted;
     setIsMuted(prefMuted);
-    if (prefMuted) {
-      setShowAudioHint(false);
-      return;
-    }
 
-    const startThunder = async () => {
-      if (userMutedRef.current || !audioRef.current) return false;
+    setShowStormGate(!alreadyEntered);
+    if (alreadyEntered && !prefMuted) {
       const el = audioRef.current;
-      try {
+      if (el) {
         el.muted = false;
         el.volume = THUNDER_VOLUME;
-        await el.play();
+        el.play().catch(() => {});
         setIsMuted(false);
-        setShowAudioHint(false);
-        return true;
+      }
+    }
+  }, []);
+
+  const enterTheStorm = async () => {
+    setGateLeaving(true);
+    try {
+      window.sessionStorage.setItem(STORM_GATE_KEY, "1");
+    } catch {}
+
+    const audio = audioRef.current;
+    if (audio && !userMutedRef.current) {
+      try {
+        audio.muted = false;
+        audio.volume = THUNDER_VOLUME;
+        await audio.play();
+        setIsMuted(false);
       } catch {
         setIsMuted(true);
-        setShowAudioHint(true);
-        return false;
       }
-    };
+    }
 
-    startThunder();
-
-    const unlock = async () => {
-      const ok = await startThunder();
-      if (ok) {
-        window.removeEventListener("pointerdown", unlock);
-        window.removeEventListener("keydown", unlock);
-        window.removeEventListener("touchstart", unlock);
-      }
-    };
-
-    window.addEventListener("pointerdown", unlock, { passive: true });
-    window.addEventListener("keydown", unlock);
-    window.addEventListener("touchstart", unlock, { passive: true });
-
-    return () => {
-      window.removeEventListener("pointerdown", unlock);
-      window.removeEventListener("keydown", unlock);
-      window.removeEventListener("touchstart", unlock);
-    };
-  }, []);
+    window.setTimeout(() => {
+      setShowStormGate(false);
+      setGateLeaving(false);
+    }, 700);
+  };
 
   const TICKER_SENTENCE =
     "Coming soon — The Silver Spine Studio™ Series: The Seven-Fold Chronicle";
@@ -167,6 +161,37 @@ export default function Home() {
 
   return (
     <div className="bg-black text-gray-100">
+      {showStormGate && (
+        <div
+          className={`storm-gate ${gateLeaving ? "leaving" : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Enter Silver Spine Studio"
+        >
+          <div className="storm-gate-flash" aria-hidden="true" />
+          <div className="relative z-10 max-w-xl mx-auto">
+            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
+              Silver Spine Studio™
+            </p>
+            <h2
+              className="text-3xl md:text-5xl font-extrabold tracking-wide mb-3"
+              style={{ color: SILVER, textShadow: "0 2px 16px rgba(0,0,0,0.85)" }}
+            >
+              The storm is already waiting.
+            </h2>
+            <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-2">
+              Step inside for thunder, lightning, and the first pages of the seven-fold chronicle.
+            </p>
+            <button type="button" className="storm-enter-btn" onClick={enterTheStorm}>
+              Enter the storm
+            </button>
+            <p className="mt-4 text-[11px] md:text-xs text-gray-500">
+              Sound starts with entry · you can mute anytime
+            </p>
+          </div>
+        </div>
+      )}
+
       <Head>
         <title>Home | Silver Spine Studio™</title>
         <meta
@@ -224,10 +249,64 @@ export default function Home() {
           }
           @media (prefers-reduced-motion: reduce) {
             .ticker-track { animation: none; }
+            .storm-gate-flash { animation: none !important; }
           }
 
           .hero-frame {
             height: clamp(60vh, calc(100vh - var(--header-h) - var(--footer-h)), 78vh);
+          }
+
+          .storm-gate {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1.5rem;
+            background:
+              radial-gradient(ellipse at 50% 40%, rgba(30,40,70,0.55), rgba(0,0,0,0.92) 62%),
+              #000;
+            transition: opacity 0.65s ease, visibility 0.65s ease;
+          }
+          .storm-gate.leaving {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+          }
+          .storm-gate-flash {
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.08);
+            animation: gateFlash 2.8s ease-in-out infinite;
+            pointer-events: none;
+          }
+          @keyframes gateFlash {
+            0%, 88%, 100% { opacity: 0; }
+            90% { opacity: 1; }
+            93% { opacity: 0.15; }
+            96% { opacity: 0.65; }
+          }
+          .storm-enter-btn {
+            margin-top: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.9rem 1.6rem;
+            border-radius: 999px;
+            border: 1px solid rgba(167,122,35,0.7);
+            background: #a77a23;
+            color: #000;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 10px 30px rgba(167,122,35,0.28);
+            transition: transform 0.2s ease, background 0.2s ease;
+          }
+          .storm-enter-btn:hover {
+            transform: translateY(-2px);
+            background: #c49231;
           }
         `}</style>
       </Head>
@@ -390,7 +469,6 @@ export default function Home() {
                   audio.muted = false;
                   audio.volume = THUNDER_VOLUME;
                   audio.play().catch(() => {});
-                  setShowAudioHint(false);
                 } else {
                   audio.pause();
                   audio.muted = true;
@@ -398,46 +476,12 @@ export default function Home() {
                 return next;
               });
             }}
-            className="absolute top-4 right-4 z-50 text-[#a77a23] hover:text-white text-2xl"
+            className="absolute top-4 right-4 z-[60] text-[#a77a23] hover:text-white text-2xl"
             title={isMuted ? "Turn thunder on" : "Turn thunder off"}
             aria-label={isMuted ? "Turn thunder on" : "Turn thunder off"}
           >
             {isMuted ? "🔇" : "🔊"}
           </button>
-
-          {showAudioHint && isMuted && (
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  const audio = audioRef.current;
-                  if (!audio) return;
-                  userMutedRef.current = false;
-                  try {
-                    window.localStorage.setItem(THUNDER_PREF_KEY, "0");
-                  } catch {}
-                  audio.muted = false;
-                  audio.volume = THUNDER_VOLUME;
-                  await audio.play();
-                  setIsMuted(false);
-                  setShowAudioHint(false);
-                } catch {}
-              }}
-              className="absolute top-4 right-16 z-50 select-none"
-              aria-live="polite"
-              title="Tap to start storm audio"
-            >
-              <div
-                className="flex items-center gap-2 bg-black/70 text-gray-100 border border-[#a77a23]/60 rounded-full px-3 py-1 shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
-                style={{ animation: "softPulse 2.2s ease-in-out infinite" }}
-              >
-                <span className="inline-block w-2 h-2 rounded-full bg-[#a77a23]" />
-                <span className="text-xs md:text-sm tracking-wide">
-                  Tap once to start thunder
-                </span>
-              </div>
-            </button>
-          )}
         </div>
       </main>
     </div>
