@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { LIVE_SNEAK_PEEK_STORES } from "@/lib/store";
+import LaunchListForm from "@/components/LaunchListForm";
 
 export default function Books() {
   const GOLD = "#a77a23";
@@ -405,6 +406,21 @@ export default function Books() {
                 </div>
               </div>
 
+            </div>
+          </section>
+
+          <section
+            className="featured-wrap mb-8"
+            aria-label="Join the launch list"
+          >
+            <div className="max-w-xl mx-auto rounded-2xl border border-[#a77a23]/30 bg-black/50 p-5 md:p-7 shadow-2xl">
+              <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight mb-2">
+                Stay in the storm
+              </h3>
+              <p className="text-sm text-gray-300 mb-5 leading-relaxed">
+                Join the launch list for sneak peek news, the Sep 1 insider window, and release-day alerts.
+              </p>
+              <LaunchListForm />
             </div>
           </section>
 
