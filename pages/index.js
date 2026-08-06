@@ -169,6 +169,11 @@ export default function Home() {
           aria-label="Enter Silver Spine Studio"
         >
           <div className="storm-gate-flash" aria-hidden="true" />
+          <div className="storm-bolts" aria-hidden="true">
+            <span className="bolt bolt-a" />
+            <span className="bolt bolt-b" />
+            <span className="bolt bolt-c" />
+          </div>
           <div className="relative z-10 max-w-xl mx-auto">
             <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
               Silver Spine Studio™
@@ -193,12 +198,70 @@ export default function Home() {
       )}
 
       <Head>
-        <title>Home | Silver Spine Studio™</title>
+        <title>Silver Spine Studio™ | The Beautiful Beast &amp; Seven-Fold Chronicle</title>
         <meta
           name="description"
-          content="Silver Spine Studio™ — thrillers forged in storm and consequence."
+          content="Silver Spine Studio™ by Leameso James — storm-soaked thrillers forged in consequence. Read The Beautiful Beast Extended Sneak Peek and enter the seven-fold chronicle."
+        />
+        <meta
+          name="keywords"
+          content="Silver Spine Studio, Leameso James, The Beautiful Beast, thriller books, rural noir, Colorado thriller, sneak peek, indie author"
         />
         <link rel="canonical" href="https://www.silverspinestudio.com/" />
+        <meta property="og:title" content="Silver Spine Studio™ | The Beautiful Beast" />
+        <meta
+          property="og:description"
+          content="Thrillers forged in storm and consequence. Enter the seven-fold chronicle."
+        />
+        <meta property="og:url" content="https://www.silverspinestudio.com/" />
+        <meta
+          property="og:image"
+          content="https://www.silverspinestudio.com/covers/1-the-beautiful-beast-full-tagged.png"
+        />
+        <meta name="twitter:title" content="Silver Spine Studio™ | The Beautiful Beast" />
+        <meta
+          name="twitter:description"
+          content="Thrillers forged in storm and consequence. Enter the seven-fold chronicle."
+        />
+        <meta
+          name="twitter:image"
+          content="https://www.silverspinestudio.com/covers/1-the-beautiful-beast-full-tagged.png"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  name: "Silver Spine Studio",
+                  url: "https://www.silverspinestudio.com/",
+                  logo: "https://www.silverspinestudio.com/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
+                  sameAs: [
+                    "https://www.facebook.com/SilverSpineStudio/",
+                    "https://www.instagram.com/silverspinestudio/",
+                    "https://www.youtube.com/@silverspinestudio",
+                  ],
+                },
+                {
+                  "@type": "WebSite",
+                  name: "Silver Spine Studio",
+                  url: "https://www.silverspinestudio.com/",
+                  publisher: { "@type": "Organization", name: "Silver Spine Studio" },
+                },
+                {
+                  "@type": "Book",
+                  name: "The Beautiful Beast",
+                  author: { "@type": "Person", name: "Leameso James" },
+                  url: "https://www.silverspinestudio.com/books/the-beautiful-beast",
+                  image: "https://www.silverspinestudio.com/covers/1-the-beautiful-beast-full-tagged.png",
+                  genre: ["Thriller", "Crime", "Rural Noir"],
+                },
+              ],
+            }),
+          }}
+        />
         <style>{`
           :root {
             --header-h: 140px;
@@ -249,7 +312,7 @@ export default function Home() {
           }
           @media (prefers-reduced-motion: reduce) {
             .ticker-track { animation: none; }
-            .storm-gate-flash { animation: none !important; }
+            .storm-gate-flash, .bolt { animation: none !important; opacity: 0 !important; }
           }
 
           .hero-frame {
@@ -287,6 +350,53 @@ export default function Home() {
             90% { opacity: 1; }
             93% { opacity: 0.15; }
             96% { opacity: 0.65; }
+          }
+          .storm-bolts {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+          }
+          .bolt {
+            position: absolute;
+            width: 3px;
+            height: 42%;
+            background: linear-gradient(
+              to bottom,
+              rgba(255,255,255,0) 0%,
+              rgba(230,240,255,0.95) 35%,
+              rgba(167,122,35,0.85) 70%,
+              rgba(255,255,255,0) 100%
+            );
+            filter: drop-shadow(0 0 8px rgba(200,220,255,0.85)) drop-shadow(0 0 18px rgba(167,122,35,0.45));
+            transform-origin: top center;
+            opacity: 0;
+            clip-path: polygon(40% 0, 70% 0, 55% 38%, 85% 38%, 20% 100%, 40% 48%, 15% 48%);
+          }
+          .bolt-a {
+            left: 18%;
+            top: -5%;
+            animation: boltStrike 4.8s ease-in-out infinite;
+          }
+          .bolt-b {
+            left: 62%;
+            top: -8%;
+            height: 50%;
+            animation: boltStrike 6.2s ease-in-out 1.6s infinite;
+          }
+          .bolt-c {
+            left: 78%;
+            top: 0;
+            height: 36%;
+            animation: boltStrike 5.4s ease-in-out 3.1s infinite;
+          }
+          @keyframes boltStrike {
+            0%, 86%, 100% { opacity: 0; transform: translateY(-8%) scaleY(0.7); }
+            88% { opacity: 1; transform: translateY(0) scaleY(1); }
+            90% { opacity: 0.25; }
+            92% { opacity: 0.9; transform: translateY(2%) scaleY(1.05); }
+            95% { opacity: 0; }
           }
           .storm-enter-btn {
             margin-top: 1.5rem;
