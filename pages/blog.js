@@ -44,82 +44,6 @@ export default function Blog() {
     };
   }, []);
 
-  // ---- MOVE THE GLOBAL FOOTER INTO THIS PAGE (right under bottom nebula) ----
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-
-    const getFooter = () =>
-      document.querySelector(
-        "#site-footer, footer.site-footer, footer#footer, footer.Footer, .site-footer, .footer, [data-site-footer]"
-      );
-
-    const mount = document.getElementById("blog-footer-mount");
-    const footer = getFooter();
-
-    if (!mount || !footer) return;
-
-    // Normalize footer positioning/styles so it becomes part of page flow
-    Object.assign(footer.style, {
-      position: "static",
-      left: "auto",
-      right: "auto",
-      bottom: "auto",
-      top: "auto",
-      transform: "none",
-      zIndex: "auto",
-      marginTop: "0",
-      paddingBottom: "max(12px, env(safe-area-inset-bottom))",
-    });
-
-    // Record original parent & next sibling to restore on unmount
-    const originalParent = footer.parentNode;
-    const originalNext = footer.nextSibling;
-
-    // Move footer node into our mount point (no clone -> single footer, not duplicate)
-    mount.appendChild(footer);
-
-    // 🔧 “Pull icons fresh”: remove inline SVG fill/stroke so CSS can drive hover
-    try {
-      const socialSvgs = footer.querySelectorAll(
-        'a[href*="facebook.com" i] svg, a[href*="instagram.com" i] svg, a[href*="tiktok.com" i] svg, a[aria-label*="facebook" i] svg, a[aria-label*="instagram" i] svg, a[aria-label*="tiktok" i] svg'
-      );
-      socialSvgs.forEach((svg) => {
-        svg.removeAttribute("color");
-        svg.style.color = ""; // let CSS win
-        svg.querySelectorAll("*").forEach((n) => {
-          n.removeAttribute("fill");
-          n.removeAttribute("stroke");
-          n.style.fill = "";
-          n.style.stroke = "";
-        });
-      });
-    } catch {}
-
-    // Update CSS var with *actual* footer height after move
-    const updateFooterVar = () => {
-      const fH = Math.round(footer.getBoundingClientRect().height) || 220;
-      document.documentElement.style.setProperty("--footer-h", `${fH}px`);
-    };
-    updateFooterVar();
-
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(updateFooterVar);
-      ro.observe(footer);
-    }
-    window.addEventListener("resize", updateFooterVar);
-
-    return () => {
-      // Put footer back where it was (safety if user navigates away)
-      if (originalParent) {
-        if (originalNext) originalParent.insertBefore(footer, originalNext);
-        else originalParent.appendChild(footer);
-      }
-      if (ro) ro.disconnect();
-      window.removeEventListener("resize", updateFooterVar);
-    };
-  }, []);
-
   // ---- thunder (center chip, responsive left nudge) ----
   const [siteAudioMuted, setSiteAudioMuted] = useState(true);
   useEffect(() => {
@@ -210,7 +134,7 @@ export default function Blog() {
         <style>{`
           :root {
             --header-h: 140px; /* JS updates */
-            --footer-h: 220px; /* updated after we mount/move footer */
+            --footer-h: 72px;
             --gold: ${GOLD};
           }
 
@@ -256,27 +180,6 @@ export default function Blog() {
                     mask-image: linear-gradient(to top, rgba(0,0,0,1) 80%, transparent);
           }
 
-          /* Tighten the gap ABOVE the footer a touch, but don't collide */
-          #blog-footer-mount { margin-top: -6px; }
-
-          /* Footer: ensure normal flow + a tiny bottom pad so last line isn't off-screen */
-          #site-footer,
-          footer.site-footer,
-          footer#footer,
-          footer.Footer,
-          .site-footer,
-          .footer,
-          [data-site-footer] {
-            position: static !important;
-            bottom: auto !important;
-            left: auto !important;
-            right: auto !important;
-            z-index: auto !important;
-            transform: none !important;
-            margin-top: 0 !important;
-            padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
-          }
-
           /* Thunder chip */
           .chip {
             display:inline-flex; align-items:center; gap:.5rem;
@@ -299,14 +202,6 @@ export default function Blog() {
             overflow: visible;                   /* show full content when open */
           }
 
-          /* =============================== */
-          /* SOCIAL HOVER — LIGHT & SCOPED   */
-          /* =============================== */
-          #blog-footer-mount a:hover svg {
-            color: var(--gold) !important;
-            filter: drop-shadow(0 0 8px rgba(167,122,35,0.85));
-            transition: color .18s ease, filter .18s ease;
-          }
         `}</style>
       </Head>
 
@@ -550,9 +445,6 @@ export default function Blog() {
 
         {/* Bottom ribbon */}
         <div className="nebula nebula-bottom" aria-hidden="true" />
-
-        {/* FOOTER MOUNT */}
-        <div id="blog-footer-mount" />
       </main>
 
       {/* Modals */}

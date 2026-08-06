@@ -73,64 +73,6 @@ export default function ReviewsPage() {
     setIsMuted(v => !v);
   };
 
-  // move & de-dupe GLOBAL FOOTER and ensure it sits ABOVE the bottom nebula
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const selectors =
-      "#site-footer, footer.site-footer, footer#footer, footer.Footer, .site-footer, .footer, [data-site-footer]";
-    const mount = document.getElementById("reviews-footer-mount");
-    const all = Array.from(document.querySelectorAll(selectors));
-    if (!mount || all.length === 0) return;
-
-    // keep the first, remove the rest
-    const footer = all[0];
-    all.slice(1).forEach(el => {
-      try { el.parentNode && el.parentNode.removeChild(el); } catch {}
-    });
-
-    // normalize + ensure visibility
-    Object.assign(footer.style, {
-      position: "static",
-      left: "auto",
-      right: "auto",
-      bottom: "auto",
-      top: "auto",
-      transform: "none",
-      zIndex: "40",                 // keep over nebula
-      marginTop: "0",
-      marginBottom: "0",
-      paddingTop: "12px",
-      paddingBottom: "16px",
-      lineHeight: "1.35",
-    });
-
-    // remember original (if you navigate away)
-    const parent = footer.parentNode;
-    const next = footer.nextSibling;
-
-    // move real node (no clone)
-    mount.appendChild(footer);
-
-    // update CSS var with actual height (if needed elsewhere)
-    const setVar = () => {
-      const h = Math.round(footer.getBoundingClientRect().height) || 220;
-      document.documentElement.style.setProperty("--footer-h", `${h}px`);
-    };
-    setVar();
-    let ro;
-    if (typeof ResizeObserver !== "undefined") { ro = new ResizeObserver(setVar); ro.observe(footer); }
-    window.addEventListener("resize", setVar);
-
-    return () => {
-      if (parent) {
-        if (next) parent.insertBefore(footer, next);
-        else parent.appendChild(footer);
-      }
-      if (ro) ro.disconnect();
-      window.removeEventListener("resize", setVar);
-    };
-  }, []);
-
   // form
   const [rating, setRating] = useState(5.0);
   const [name, setName] = useState("");
@@ -176,7 +118,7 @@ export default function ReviewsPage() {
         <title>Reviews | Silver Spine Studio™</title>
         <meta name="description" content="Leave a review and read what others are saying." />
         <style>{`
-          :root { --gold: ${GOLD}; --header-h: 140px; --footer-h: 220px; }
+          :root { --gold: ${GOLD}; --header-h: 140px; --footer-h: 72px; }
 
           @keyframes twinkle {
             0%, 100% { opacity: 0.3; transform: scale(1); }
@@ -225,32 +167,15 @@ export default function ReviewsPage() {
           /* tighter spacing around the thunder toggle */
           .toggle-tight { margin-top: -4px; margin-bottom: 10px; } /* was mb-20ish accumulative */
 
-          /* footer visibility boost + hover gold (icons) */
-          .footer-boost footer, .footer-boost footer a, .footer-boost footer p { color:#ffffff !important; }
-          .footer-boost footer a svg { color:#ffffff !important; transition: color .2s ease; }
-          .footer-boost footer a:hover svg { color: var(--gold) !important; }
-
-          /* compress footer padding a hair */
-          .footer-tight #site-footer { padding-top: 12px !important; padding-bottom: 16px !important; line-height: 1.35 !important; }
-
           @media (max-width: 768px){
             .nebula-ribbon, .bottom-nebula { height: 110px; }
             .nebula-ribbon { margin: 16px 0 18px; }
             .bottom-nebula { margin: 10px 0 0; outline-width: 8px; }
-            .footer-tight #site-footer { padding-top: 10px !important; padding-bottom: 14px !important; }
           }
 
           /* Ensure page scrolls normally */
           html, body { margin:0; background:#000; height:auto; overflow-y:auto; }
           #__next { height:auto; overflow:visible; }
-
-          /* Pull the footer a LITTLE, but keep it over the nebula and fully visible */
-          #reviews-footer-mount { 
-            margin-top: -28px;            /* gentler pull (previous -64px hid icons) */
-            position: relative; 
-            z-index: 40;                  /* keeps icons above the nebula band */
-            pointer-events: auto;
-          }
         `}</style>
       </Head>
 
@@ -479,13 +404,10 @@ export default function ReviewsPage() {
         </section>
       </main>
 
-      {/* bottom ribbon (unchanged position) */}
+      {/* bottom ribbon */}
       <div className="bottom-nebula">
         <img src={NEBULA} alt="Nebula footer ribbon" />
       </div>
-
-      {/* FOOTER MOUNT — sits above the nebula so icons are visible */}
-      <div id="reviews-footer-mount" className="footer-boost footer-tight" />
     </div>
   );
 }

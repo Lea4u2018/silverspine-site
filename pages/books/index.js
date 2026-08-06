@@ -16,7 +16,7 @@ export default function Books() {
       const header = headerRef.current;
       const footer = document.getElementById("site-footer");
       const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 220;
+      const fH = footer ? footer.getBoundingClientRect().height : 72;
       document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
       document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
     };
@@ -180,7 +180,7 @@ export default function Books() {
         <title>Books | Silver Spine Studio™</title>
         <meta name="description" content="The Silver Spine Studio™ Series — The seven-fold chronicle. Stories forged in storm and consequence." />
         <style>{`
-          :root { --header-h: 140px; --footer-h: 220px; }
+          :root { --header-h: 140px; --footer-h: 72px; }
           .page-frame { min-height: calc(100vh - var(--header-h) - var(--footer-h)); display: flex; flex-direction: column; }
           .nebula { position: relative; width: 100%; background-image: url('/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg'); background-size: cover; background-position: center; filter: saturate(1.15) contrast(1.1); }
           .nebula-top { height: 48px; }

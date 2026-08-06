@@ -18,7 +18,7 @@ export default function Contact() {
       const header = headerRef.current;
       const footer = document.getElementById("site-footer");
       const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 220;
+      const fH = footer ? footer.getBoundingClientRect().height : 72;
       document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
       document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
     };
@@ -104,7 +104,7 @@ export default function Contact() {
         <title>Contact | Silver Spine Studio™</title>
         <meta name="description" content="Get in touch with Silver Spine Studio™ — collaborations, book news, and more." />
         <style>{`
-          :root { --header-h: 140px; --footer-h: 220px; }
+          :root { --header-h: 140px; --footer-h: 72px; }
 
           /* Frame that keeps the global footer visible (same math as About) */
           .page-frame {
@@ -164,7 +164,7 @@ export default function Contact() {
       {/* HEADER (disc logo) */}
      <header
   ref={headerRef}
-  className="relative z-10 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
+  className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
 >
   <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
   <Link

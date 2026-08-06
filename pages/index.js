@@ -16,7 +16,7 @@ export default function Home() {
       const header = headerRef.current;
       const footer = document.getElementById("site-footer");
       const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 220;
+      const fH = footer ? footer.getBoundingClientRect().height : 72;
       document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
       document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
     };
@@ -120,7 +120,7 @@ export default function Home() {
         <style>{`
           :root {
             --header-h: 140px;
-            --footer-h: 220px;
+            --footer-h: 72px;
           }
 
           @keyframes twinkle { 0%,100% { opacity: .3 } 50% { opacity: 1 } }
@@ -177,7 +177,7 @@ export default function Home() {
 
       <header
         ref={headerRef}
-        className="relative z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
+        className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
         <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-2 md:py-3">
           <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
