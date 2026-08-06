@@ -155,9 +155,12 @@ export default function Home() {
     }, 700);
   };
 
-  const TICKER_SENTENCE =
-    "Coming soon — The Silver Spine Studio™ Series: The Seven-Fold Chronicle";
-  const TICKER_ITEMS = Array.from({ length: 8 }, () => TICKER_SENTENCE);
+  const SERIES_TICKER =
+    "The Silver Spine Studio™ Series: The Seven-Fold Chronicle — thrillers forged in storm and consequence";
+  const LAUNCH_TICKER =
+    "The Beautiful Beast Extended Sneak Peek ($4.99) • Insider full novel $14.99 Sep 1–Oct 19, 2026 • Full retail $24.99 starts Oct 20, 2026";
+  const SERIES_TICKER_ITEMS = Array.from({ length: 8 }, () => SERIES_TICKER);
+  const LAUNCH_TICKER_ITEMS = Array.from({ length: 8 }, () => LAUNCH_TICKER);
 
   return (
     <div className="bg-black text-gray-100">
@@ -466,35 +469,37 @@ export default function Home() {
           </nav>
         </div>
 
-       <div className="ticker-wrap">
-   {/* Row 1: Original Series Chronicle Tracker */}
-   <div
-     className="ticker-track text-[0.9rem] md:text-base tracking-wide border-b border-white/5"
-     style={{ color: "#f5edd7", padding: "6px 0" }}
-     aria-label="Announcement ticker: Coming soon"
-   >
-     {TICKER_ITEMS.map((t, i) => (
-       <span className="ticker-item" key={`a-${i}`}>{t}</span>
-     ))}
-     {TICKER_ITEMS.map((t, i) => (
-       <span className="ticker-item" key={`b-${i}`}>{t}</span>
-     ))}
-   </div>
+        <div className="ticker-wrap">
+          <div
+            className="ticker-track text-[0.9rem] md:text-base tracking-wide border-b border-white/5"
+            style={{ color: "#f5edd7", padding: "6px 0" }}
+            aria-label="Series announcement ticker"
+          >
+            {SERIES_TICKER_ITEMS.map((t, i) => (
+              <span className="ticker-item" key={`a-${i}`}>{t}</span>
+            ))}
+            {SERIES_TICKER_ITEMS.map((t, i) => (
+              <span className="ticker-item" key={`b-${i}`}>{t}</span>
+            ))}
+          </div>
 
-     {/* Row 2: Premium Book 1 Live Pricing Blast */}
-   <div
-     className="ticker-track text-[0.85rem] md:text-sm tracking-widest font-semibold uppercase"
-     style={{ color: "#f5edd7", padding: "4px 0", background: "rgba(0,0,0,0.2)" }}
-     aria-label="Launch Alert: Out Now"
-   >
-     {TICKER_ITEMS.map((t, i) => (
-       <span className="ticker-item" key={`c-${i}`}>
-         <span style={{ color: "#ef4444", fontWeight: "800" }}>🚨 OUT NOW:</span> THE BEAUTIFUL BEAST EXTENDED SNEAK PEEK ($4.99) • INSIDER FULL NOVEL $14.99 SEP 1–OCT 19 • FULL RETAIL $24.99 STARTS OCT 20 •
-       </span>
-     ))}
-   </div>
-
- </div>
+          <div
+            className="ticker-track text-[0.85rem] md:text-sm tracking-widest font-semibold uppercase"
+            style={{ color: "#f5edd7", padding: "4px 0", background: "rgba(0,0,0,0.2)" }}
+            aria-label="Launch alert: out now"
+          >
+            {LAUNCH_TICKER_ITEMS.map((t, i) => (
+              <span className="ticker-item" key={`c-${i}`}>
+                <span style={{ color: "#ef4444", fontWeight: "800" }}>OUT NOW:</span> {t}
+              </span>
+            ))}
+            {LAUNCH_TICKER_ITEMS.map((t, i) => (
+              <span className="ticker-item" key={`d-${i}`}>
+                <span style={{ color: "#ef4444", fontWeight: "800" }}>OUT NOW:</span> {t}
+              </span>
+            ))}
+          </div>
+        </div>
 
       </header>
 
