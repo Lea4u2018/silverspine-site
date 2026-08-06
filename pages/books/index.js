@@ -268,16 +268,21 @@ export default function Books() {
               <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-black/40 p-6 rounded-2xl border border-white/5 shadow-2xl">
 
-                              {/* VIDEO TRAILER COLUMN (Left Side) */}
-              <div className="md:col-span-4 max-w-[280px] md:max-w-full mx-auto w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative z-30 flex items-center justify-center">
-                <iframe
-                  src="https://streamable.com"
-                  title="The Beautiful Beast Official Trailer"
-                  className="absolute inset-0 w-full h-full rounded-xl border-0 z-40"
+                          {/* VIDEO TRAILER COLUMN (Left Side) */}
+              <div className="md:col-span-4 max-w-[280px] md:max-w-full mx-auto w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative z-30">
+                <video
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="w-full h-full object-cover absolute inset-0 z-40"
                   style={{ width: "100%", height: "100%", pointerEvents: "auto" }}
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+                >
+                  <source src="https://streamable.com" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </div>
 
 
