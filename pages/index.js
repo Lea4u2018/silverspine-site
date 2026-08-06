@@ -38,6 +38,9 @@ export default function Home() {
   }, []);
 
   const THUNDER_VOLUME = 0.32;
+  const THUNDER_BURST_MS = 5500; // short rumble, then silence
+  const THUNDER_GAP_MIN_MS = 16000;
+  const THUNDER_GAP_MAX_MS = 28000;
   const THUNDER_PREF_KEY = "sss-home-thunder-muted";
   const STORM_GATE_KEY = "sss-storm-entered";
   const [isMuted, setIsMuted] = useState(true);
@@ -45,8 +48,81 @@ export default function Home() {
   const [gateLeaving, setGateLeaving] = useState(false);
   const [stars, setStars] = useState([]);
   const userMutedRef = useRef(false);
+  const thunderBurstTimerRef = useRef(null);
+  const thunderGapTimerRef = useRef(null);
+  const thunderFadeTimerRef = useRef(null);
 
   const SILVER = "#c9ced6";
+
+  const clearThunderTimers = () => {
+    if (thunderBurstTimerRef.current) {
+      window.clearTimeout(thunderBurstTimerRef.current);
+      thunderBurstTimerRef.current = null;
+    }
+    if (thunderGapTimerRef.current) {
+      window.clearTimeout(thunderGapTimerRef.current);
+      thunderGapTimerRef.current = null;
+    }
+    if (thunderFadeTimerRef.current) {
+      window.clearInterval(thunderFadeTimerRef.current);
+      thunderFadeTimerRef.current = null;
+    }
+  };
+
+  const stopThunder = () => {
+    clearThunderTimers();
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.muted = true;
+    audio.volume = 0;
+    try {
+      audio.currentTime = 0;
+    } catch {}
+  };
+
+  const playThunderBurst = async () => {
+    const audio = audioRef.current;
+    if (!audio || userMutedRef.current) return;
+
+    clearThunderTimers();
+    audio.loop = false;
+    audio.muted = false;
+    audio.volume = THUNDER_VOLUME;
+    try {
+      audio.currentTime = 0;
+    } catch {}
+    try {
+      await audio.play();
+    } catch {
+      return;
+    }
+
+    // Fade out and stop so it never becomes a nonstop rumble bed.
+    thunderBurstTimerRef.current = window.setTimeout(() => {
+      const el = audioRef.current;
+      if (!el || userMutedRef.current) return;
+      const startVol = el.volume;
+      let step = 0;
+      thunderFadeTimerRef.current = window.setInterval(() => {
+        step += 1;
+        el.volume = Math.max(0, startVol * (1 - step / 8));
+        if (step >= 8) {
+          window.clearInterval(thunderFadeTimerRef.current);
+          thunderFadeTimerRef.current = null;
+          el.pause();
+          try {
+            el.currentTime = 0;
+          } catch {}
+        }
+      }, 70);
+    }, THUNDER_BURST_MS);
+
+    const gap = THUNDER_GAP_MIN_MS + Math.random() * (THUNDER_GAP_MAX_MS - THUNDER_GAP_MIN_MS);
+    thunderGapTimerRef.current = window.setTimeout(() => {
+      if (!userMutedRef.current) playThunderBurst();
+    }, gap);
+  };
 
  const CANDIDATES = [
   "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
@@ -121,14 +197,12 @@ export default function Home() {
 
     setShowStormGate(!alreadyEntered);
     if (alreadyEntered && !prefMuted) {
-      const el = audioRef.current;
-      if (el) {
-        el.muted = false;
-        el.volume = THUNDER_VOLUME;
-        el.play().catch(() => {});
-        setIsMuted(false);
-      }
+      setIsMuted(false);
+      playThunderBurst();
     }
+
+    return () => stopThunder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const enterTheStorm = async () => {
@@ -137,22 +211,30 @@ export default function Home() {
       window.sessionStorage.setItem(STORM_GATE_KEY, "1");
     } catch {}
 
-    const audio = audioRef.current;
-    if (audio && !userMutedRef.current) {
-      try {
-        audio.muted = false;
-        audio.volume = THUNDER_VOLUME;
-        await audio.play();
-        setIsMuted(false);
-      } catch {
-        setIsMuted(true);
-      }
+    if (!userMutedRef.current) {
+      setIsMuted(false);
+      await playThunderBurst();
     }
 
     window.setTimeout(() => {
       setShowStormGate(false);
       setGateLeaving(false);
     }, 700);
+  };
+
+  const toggleThunder = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    setIsMuted((prev) => {
+      const next = !prev;
+      userMutedRef.current = next;
+      try {
+        window.localStorage.setItem(THUNDER_PREF_KEY, next ? "1" : "0");
+      } catch {}
+      if (next) stopThunder();
+      else playThunderBurst();
+      return next;
+    });
   };
 
   const SERIES_TICKER_ITEMS = Array.from(
@@ -341,18 +423,41 @@ export default function Home() {
             overflow: hidden;
             isolation: isolate;
           }
-          /* Soft-fade storm video at the top so lightning never pokes through the letterbox as scratch lines */
+          /*
+            Storm video = flash highlights only.
+            Hard vertical bolts read like old-TV tracking lines, so we:
+            - keep video out of the top band
+            - blur bolts into soft sheet-lightning flashes
+          */
+          .hero-storm-wrap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 22%;
+            bottom: 0;
+            z-index: 10;
+            overflow: hidden;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+          }
           .hero-storm {
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 100%);
+            width: 100%;
+            height: 120%;
+            object-fit: cover;
+            object-position: center 70%;
+            opacity: 0.5;
+            mix-blend-mode: soft-light;
+            /* Blur hard bolts into sheet flashes (no old-TV drop lines) */
+            filter: blur(10px) brightness(1.25) contrast(1.02) saturate(1.05);
           }
           .hero-top-shade {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 5.5rem;
-            background: linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0) 100%);
+            height: 26%;
+            background: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0,0,0,0) 100%);
             z-index: 40;
             pointer-events: none;
           }
@@ -509,17 +614,19 @@ export default function Home() {
             className="absolute inset-0 w-full h-full object-cover object-center z-0 contrast-110 saturate-125"
           />
 
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            className="hero-storm absolute inset-0 w-full h-full object-cover object-center mix-blend-screen opacity-80 z-10 overlay-fix contrast-115 brightness-105 saturate-120"
-          >
-            <source src="/storm-lightning.mp4" type="video/mp4" />
-          </video>
+          <div className="hero-storm-wrap overlay-fix" aria-hidden="true">
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              className="hero-storm"
+            >
+              <source src="/storm-lightning.mp4" type="video/mp4" />
+            </video>
+          </div>
 
           <div className="absolute inset-0 z-20 overlay-fix">
             {stars.map((s, i) => (
@@ -563,33 +670,14 @@ export default function Home() {
             </div>
           </div>
 
-          <audio ref={audioRef} loop preload="auto" playsInline>
+          <audio ref={audioRef} preload="auto" playsInline>
             <source src="/thunder_rumble.mp3" type="audio/mpeg" />
           </audio>
 
           <button
             type="button"
-            onClick={() => {
-              const audio = audioRef.current;
-              if (!audio) return;
-              setIsMuted((prev) => {
-                const next = !prev;
-                userMutedRef.current = next;
-                try {
-                  window.localStorage.setItem(THUNDER_PREF_KEY, next ? "1" : "0");
-                } catch {}
-                if (!next) {
-                  audio.muted = false;
-                  audio.volume = THUNDER_VOLUME;
-                  audio.play().catch(() => {});
-                } else {
-                  audio.pause();
-                  audio.muted = true;
-                }
-                return next;
-              });
-            }}
-            className="absolute top-4 right-4 z-[60] text-[#a77a23] hover:text-white text-2xl"
+            onClick={toggleThunder}
+            className="absolute top-4 right-4 z-[60] pointer-events-auto text-[#a77a23] hover:text-white text-2xl"
             title={isMuted ? "Turn thunder on" : "Turn thunder off"}
             aria-label={isMuted ? "Turn thunder on" : "Turn thunder off"}
           >
