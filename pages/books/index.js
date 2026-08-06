@@ -165,6 +165,61 @@ export default function Books() {
     }
   };
 
+  // ===== Trailer: start with sound when the browser allows; mute toggle for visitors =====
+  const trailerRef = useRef(null);
+  const [trailerMuted, setTrailerMuted] = useState(false);
+  const [showTrailerSoundHint, setShowTrailerSoundHint] = useState(false);
+
+  useEffect(() => {
+    const vid = trailerRef.current;
+    if (!vid) return;
+
+    let cancelled = false;
+    const startWithSound = async () => {
+      vid.muted = false;
+      vid.volume = 0.85;
+      try {
+        await vid.play();
+        if (!cancelled) {
+          setTrailerMuted(false);
+          setShowTrailerSoundHint(false);
+        }
+      } catch {
+        // Autoplay with sound is blocked — keep picture playing, ask for one tap.
+        try {
+          vid.muted = true;
+          await vid.play();
+        } catch {}
+        if (!cancelled) {
+          setTrailerMuted(true);
+          setShowTrailerSoundHint(true);
+        }
+      }
+    };
+
+    startWithSound();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const toggleTrailerMute = async () => {
+    const vid = trailerRef.current;
+    if (!vid) return;
+    if (trailerMuted) {
+      vid.muted = false;
+      vid.volume = 0.85;
+      try {
+        await vid.play();
+      } catch {}
+      setTrailerMuted(false);
+      setShowTrailerSoundHint(false);
+    } else {
+      vid.muted = true;
+      setTrailerMuted(true);
+    }
+  };
+
   // ===== Page data =====
   const books = [
     { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-full-tagged.png", motion: "/covers/1-the-beautiful-beast-motion.mp4", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
@@ -274,10 +329,10 @@ export default function Books() {
               {/* VIDEO TRAILER COLUMN (Left Side) */}
               <div className="md:col-span-4 max-w-[280px] md:max-w-full mx-auto w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative z-30">
                 <video
+                  ref={trailerRef}
                   controls
                   autoPlay
                   loop
-                  muted
                   playsInline
                   preload="auto"
                   className="w-full h-full object-cover absolute inset-0 z-40"
@@ -286,6 +341,26 @@ export default function Books() {
                   <source src="/videos/00_OFFICIAL_SNEAK_PEEK_TRAILER_1.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
+
+                <button
+                  type="button"
+                  onClick={toggleTrailerMute}
+                  className="absolute top-3 right-3 z-50 inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/70 border border-[#a77a23]/60 text-[#a77a23] hover:text-white hover:bg-black/85 shadow-lg"
+                  title={trailerMuted ? "Unmute trailer" : "Mute trailer"}
+                  aria-label={trailerMuted ? "Unmute trailer" : "Mute trailer"}
+                >
+                  {trailerMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+                </button>
+
+                {showTrailerSoundHint && trailerMuted && (
+                  <button
+                    type="button"
+                    onClick={toggleTrailerMute}
+                    className="absolute bottom-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-full bg-black/80 border border-[#a77a23]/70 px-3 py-1.5 text-xs md:text-sm text-gray-100 shadow-lg"
+                  >
+                    Tap for sound
+                  </button>
+                )}
               </div>
 
               {/* DESCRIPTION & DOWNLOAD DETAILS (Right Side) */}
