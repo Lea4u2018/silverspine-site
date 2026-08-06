@@ -11,7 +11,7 @@ export default function Admin() {
     { href: "/contact", label: "Contact" },
     { href: "/blog", label: "Blog" },
     { href: "/reviews", label: "Reviews" },
-    { href: "/books#featured-book", label: "Shop" },
+    { href: "/shop", label: "Shop" },
     { href: "/admin", label: "Admin" },
   ];
 
