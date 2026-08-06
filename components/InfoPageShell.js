@@ -117,8 +117,8 @@ export default function InfoPageShell({ title, description, eyebrow, children })
           .faq-item summary {
             cursor: pointer;
             list-style: none;
-            color: #f3f4f6;
-            font-weight: 650;
+            color: ${GOLD};
+            font-weight: 700;
             font-size: 1rem;
             display: flex;
             justify-content: space-between;
@@ -134,7 +134,10 @@ export default function InfoPageShell({ title, description, eyebrow, children })
             line-height: 1;
           }
           .faq-item[open] summary::after { content: "–"; }
-          .faq-item p { margin-top: 0.55rem; }
+          .faq-item p {
+            margin-top: 0.55rem;
+            color: #ffffff !important;
+          }
         `}</style>
       </Head>
 
