@@ -331,20 +331,6 @@ export default function Books() {
             </div>
           </section>
 
-
-
-{/* HISTORICAL TIMELINE RECOVERY MODULE */}
-
-Timeline
-
-11/22/2018
-Thanksgiving night. On the Million-Dollar Highway, one crash buys a town a secret—a debt that won’t stop collecting. The cover-up begins.
-11/28/2019
-A year later, someone refuses to let the lie sleep.
-12/01/2019
-Three days later, the bridge returns what the night tried to keep.
-
-
           <section className="book-grid">
             {books.map((b) => (
               <div key={b.id} style={{ textAlign: "center", "--glow": b.color }}>
