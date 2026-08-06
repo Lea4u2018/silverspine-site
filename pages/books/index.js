@@ -166,7 +166,7 @@ export default function Books() {
 
   // ===== Page data =====
   const books = [
-    { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-blank-cover.jpg", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
+    { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-full-tagged.png", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
     { id: 2, title: "SHADOWS OF A GHOST", tagline: "A shadow doesn’t vanish — it just learns to wait.", img: "/covers/2-shadows-of-a-ghost-arthur-blank-cover.jpg", whisper: "/audio/ghost_whisper_01.mp3", color: "#E5C877", ribbon: "IN THE WORKS" },
     { id: 3, title: "THE GATHERING STORM", tagline: "The sting of lightning before the clap of thunder.", img: "/covers/3-the-gathering-storm-bee-blank-cover.jpg", whisper: "/audio/storm_whisper_01.mp3", color: "#D4A24B", ribbon: "SIMMERING" },
     { id: 4, title: "FRAGILE UNBROKEN", tagline: "What doesn’t shatter learns how to cut.", img: "/covers/4-fragile-unbroken-elliot-blank-cover.jpg", whisper: "/audio/fragile_whisper_01.mp3", color: "#C57A2A", ribbon: "WHEELS TURNING" },
@@ -355,8 +355,12 @@ Three days later, the bridge returns what the night tried to keep.
                       <span className="ribbon-text">{b.ribbon}</span>
                     </div>
                   )}
-                  <p className="book-title">{b.title}</p>
-                  <p className="author-name" style={{ color: GOLD }}>LEAMESO JAMES</p>
+                  {b.id !== 1 && (
+                    <>
+                      <p className="book-title">{b.title}</p>
+                      <p className="author-name" style={{ color: GOLD }}>LEAMESO JAMES</p>
+                    </>
+                  )}
                   <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
                 </div>
                 <p className="tagline">{b.tagline}</p>

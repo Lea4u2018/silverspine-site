@@ -8,7 +8,7 @@ export default function TheBeautifulBeast() {
   const description =
     "A storm-soaked thriller set against the Million-Dollar Highway, dragging secrets into the light. A novel by Leameso James.";
   const url = "https://www.silverspinestudio.com/books/the-beautiful-beast";
-  const ogImage = "https://www.silverspinestudio.com/covers/beautiful-beast.jpg";
+  const ogImage = "https://www.silverspinestudio.com/covers/1-the-beautiful-beast-full-tagged.png";
 
   const bookJsonLd = {
     "@context": "https://schema.org",
@@ -58,7 +58,7 @@ export default function TheBeautifulBeast() {
       <main className="flex-1 px-6 py-10 text-center max-w-3xl mx-auto">
         <div className="relative w-full h-[500px] mb-6">
           <Image
-            src="/covers/beautiful-beast.jpg"
+            src="/covers/1-the-beautiful-beast-full-tagged.png"
             alt="The Beautiful Beast cover"
             layout="fill"
             objectFit="contain"
