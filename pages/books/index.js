@@ -40,6 +40,7 @@ export default function Books() {
   // ===== Updated logo first =====
   const [logoSrc, setLogoSrc] = useState(null);
   const [useTextLogo, setUseTextLogo] = useState(false);
+  const [selectedBookId, setSelectedBookId] = useState(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
@@ -198,15 +199,15 @@ export default function Books() {
           @media (max-width: 1024px) { .book-grid { grid-template-columns: repeat(3, 1fr); } }
           @media (max-width: 768px) { .heading { font-size: 2.2rem; } .nebula-top { height: 44px; } .nebula-bottom { height: 92px; margin-top: -14px; } .book-grid { grid-template-columns: repeat(2, 1fr); max-width: 94%; } }
           @media (max-width: 480px) { .book-grid { grid-template-columns: 1fr; } }
-          .book-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 300px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease; }
-          .book-card:hover { transform: translateY(-3px) scale(1.015); box-shadow: 0 0 45px var(--glow), 0 0 75px var(--glow); }
+          .book-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 300px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; }
+          .book-card:hover, .book-card.selected { transform: translateY(-3px) scale(1.015); box-shadow: 0 0 45px var(--glow), 0 0 75px var(--glow); border-color: var(--glow); }
           .book-card img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
           .ribbon { position:absolute; top:50%; left:50%; width:250%; height:58%; transform:translate(-50%,-50%) rotate(-45deg); background:#000; display:flex; align-items:center; justify-content:center; z-index:6; }
           .ribbon-text { color:#fff; font:700 1rem/1 'Libre Baskerville', Georgia, serif; letter-spacing:.22em; text-transform:uppercase; opacity:.95; }
           .book-title { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 2rem/1.16 'Libre Baskerville', Georgia, serif; color:var(--glow); text-shadow:0 0 18px rgba(0,0,0,.6); z-index:4; }
           .author-name { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 1.2rem/1.2 'Libre Baskerville', Georgia, serif; color:var(--glow); letter-spacing:.18em; z-index:4; }
-          .tagline { margin-top:.6rem; text-align:center; color: var(--glow); font-style:italic; font-size:1rem; opacity:0; transition:opacity .6s ease-in-out; }
-          .book-card:hover + .tagline { opacity:.9; }
+          .tagline { margin-top:.55rem; min-height: 2.6em; text-align:center; color: #f5f5f5; font-style:italic; font-size:0.95rem; line-height:1.35; opacity:0; transition:opacity .35s ease-in-out; }
+          .book-card:hover + .tagline, .tagline.visible { opacity:1; }
           .chip { display:inline-flex; align-items:center; gap:.5rem; background: rgba(0,0,0,0.75); border: 1px solid rgba(167,122,35,0.45); border-radius: 999px; padding: 6px 12px; color: ${GOLD}; box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
           .chip:hover { background: rgba(0,0,0,0.9); }
           .featured-wrap { max-width: 1120px; margin: 0 auto 1.1rem; padding: 0 1rem; }
@@ -264,7 +265,7 @@ export default function Books() {
             The Silver Spine Studio<span className="align-super text-base">™</span> Series: The seven-fold chronicle.
           </h1>
           <h2 className="subheading">
-            Hover or click a book to feel the charge. Narration plays on hover (one-time enable may be required).
+            Click a book to reveal its brief below. Narration plays on hover (one-time enable may be required).
           </h2>
 
               <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
@@ -331,27 +332,46 @@ export default function Books() {
             </div>
           </section>
 
-          <section className="book-grid">
-            {books.map((b) => (
-              <div key={b.id} style={{ textAlign: "center", "--glow": b.color }}>
-                <div className="book-card" style={{ "--glow": b.color }} onMouseEnter={() => tryPlayNarration(b.id)} onMouseLeave={() => stopNarration(b.id)}>
-                  <img src={b.img} alt={b.title} />
-                  {b.id !== 1 && (
-                    <div className="ribbon">
-                      <span className="ribbon-text">{b.ribbon}</span>
-                    </div>
-                  )}
-                  {b.id !== 1 && (
-                    <>
-                      <p className="book-title">{b.title}</p>
-                      <p className="author-name" style={{ color: GOLD }}>LEAMESO JAMES</p>
-                    </>
-                  )}
-                  <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
+          <section className="book-grid" aria-label="Seven-fold chronicle books">
+            {books.map((b) => {
+              const selected = selectedBookId === b.id;
+              return (
+                <div key={b.id} style={{ textAlign: "center", "--glow": b.color }}>
+                  <div
+                    className={`book-card${selected ? " selected" : ""}`}
+                    style={{ "--glow": b.color }}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={selected}
+                    aria-label={`${b.title}. ${b.tagline}`}
+                    onClick={() => setSelectedBookId((prev) => (prev === b.id ? null : b.id))}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedBookId((prev) => (prev === b.id ? null : b.id));
+                      }
+                    }}
+                    onMouseEnter={() => tryPlayNarration(b.id)}
+                    onMouseLeave={() => stopNarration(b.id)}
+                  >
+                    <img src={b.img} alt={b.title} />
+                    {b.id !== 1 && (
+                      <div className="ribbon">
+                        <span className="ribbon-text">{b.ribbon}</span>
+                      </div>
+                    )}
+                    {b.id !== 1 && (
+                      <>
+                        <p className="book-title">{b.title}</p>
+                        <p className="author-name" style={{ color: GOLD }}>LEAMESO JAMES</p>
+                      </>
+                    )}
+                    <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
+                  </div>
+                  <p className={`tagline${selected ? " visible" : ""}`}>{b.tagline}</p>
                 </div>
-                <p className="tagline">{b.tagline}</p>
-              </div>
-            ))}
+              );
+            })}
           </section>
         </main>
         <div className="nebula nebula-bottom mask-bottom relative z-10">
