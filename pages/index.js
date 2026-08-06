@@ -172,7 +172,7 @@ export default function Home() {
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
-    vid.playbackRate = 0.45;
+    vid.playbackRate = 0.22; // slower lightning — less “hospital pulse,” more storm
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) vid.play().catch(() => {});
@@ -424,40 +424,37 @@ export default function Home() {
             isolation: isolate;
           }
           /*
-            Storm video = flash highlights only.
-            Hard vertical bolts read like old-TV tracking lines, so we:
-            - keep video out of the top band
-            - blur bolts into soft sheet-lightning flashes
+            Real lightning bolts through the hero (not a blurry pulse light).
+            Keep the black top band so bolts don’t start at the screen edge.
           */
           .hero-storm-wrap {
             position: absolute;
             left: 0;
             right: 0;
-            top: 22%;
+            top: 14%;
             bottom: 0;
             z-index: 10;
             overflow: hidden;
             pointer-events: none;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 28%, black 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 100%);
           }
           .hero-storm {
             width: 100%;
-            height: 120%;
+            height: 115%;
             object-fit: cover;
-            object-position: center 70%;
-            opacity: 0.5;
-            mix-blend-mode: soft-light;
-            /* Blur hard bolts into sheet flashes (no old-TV drop lines) */
-            filter: blur(10px) brightness(1.25) contrast(1.02) saturate(1.05);
+            object-position: center 55%;
+            opacity: 0.85;
+            mix-blend-mode: screen;
+            filter: contrast(1.2) brightness(1.08) saturate(1.1);
           }
           .hero-top-shade {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 26%;
-            background: linear-gradient(to bottom, #000 0%, #000 70%, rgba(0,0,0,0) 100%);
+            height: 18%;
+            background: linear-gradient(to bottom, #000 0%, #000 58%, rgba(0,0,0,0) 100%);
             z-index: 40;
             pointer-events: none;
           }
