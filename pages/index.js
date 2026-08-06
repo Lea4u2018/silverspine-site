@@ -37,8 +37,12 @@ export default function Home() {
     };
   }, []);
 
+  const THUNDER_VOLUME = 0.22;
+  const THUNDER_PREF_KEY = "sss-home-thunder-muted";
   const [isMuted, setIsMuted] = useState(true);
+  const [showAudioHint, setShowAudioHint] = useState(false);
   const [stars, setStars] = useState([]);
+  const userMutedRef = useRef(false);
 
   const SILVER = "#c9ced6";
 
@@ -76,8 +80,6 @@ export default function Home() {
   const links = NAV_LINKS;
   const isActive = (href) => isNavActive(router.pathname, router.asPath, href);
 
-  const [showAudioHint, setShowAudioHint] = useState(true);
-
   useEffect(() => {
     const newStars = Array.from({ length: 80 }, () => ({
       top: Math.random() * 100,
@@ -102,6 +104,61 @@ export default function Home() {
     );
     io.observe(vid);
     return () => io.disconnect();
+  }, []);
+
+  // Auto-start quiet thunder; browsers may block until a gesture — then unlock once.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    let prefMuted = false;
+    try {
+      prefMuted = window.localStorage.getItem(THUNDER_PREF_KEY) === "1";
+    } catch {}
+    userMutedRef.current = prefMuted;
+    setIsMuted(prefMuted);
+    if (prefMuted) {
+      setShowAudioHint(false);
+      return;
+    }
+
+    const startThunder = async () => {
+      if (userMutedRef.current || !audioRef.current) return false;
+      const el = audioRef.current;
+      try {
+        el.muted = false;
+        el.volume = THUNDER_VOLUME;
+        await el.play();
+        setIsMuted(false);
+        setShowAudioHint(false);
+        return true;
+      } catch {
+        setIsMuted(true);
+        setShowAudioHint(true);
+        return false;
+      }
+    };
+
+    startThunder();
+
+    const unlock = async () => {
+      const ok = await startThunder();
+      if (ok) {
+        window.removeEventListener("pointerdown", unlock);
+        window.removeEventListener("keydown", unlock);
+        window.removeEventListener("touchstart", unlock);
+      }
+    };
+
+    window.addEventListener("pointerdown", unlock, { passive: true });
+    window.addEventListener("keydown", unlock);
+    window.addEventListener("touchstart", unlock, { passive: true });
+
+    return () => {
+      window.removeEventListener("pointerdown", unlock);
+      window.removeEventListener("keydown", unlock);
+      window.removeEventListener("touchstart", unlock);
+    };
   }, []);
 
   const TICKER_SENTENCE =
@@ -243,7 +300,7 @@ export default function Home() {
    >
      {TICKER_ITEMS.map((t, i) => (
        <span className="ticker-item" key={`c-${i}`}>
-         <span style={{ color: "#ef4444", fontWeight: "800" }}>🚨 OUT NOW:</span> THE BEAUTIFUL BEAST EXTENDED SNEAK PEEK ($4.99) • FULL NOVEL PRE-ORDERS OPEN SEPT 1ST • OFFICIAL RELEASE OCT 20TH •
+         <span style={{ color: "#ef4444", fontWeight: "800" }}>🚨 OUT NOW:</span> THE BEAUTIFUL BEAST EXTENDED SNEAK PEEK ($4.99) • INSIDER FULL NOVEL $14.99 SEP 1–OCT 19 • FULL RETAIL $24.99 STARTS OCT 20 •
        </span>
      ))}
    </div>
@@ -314,21 +371,26 @@ export default function Home() {
             </div>
           </div>
 
-          <audio ref={audioRef} muted={isMuted} loop preload="auto">
+          <audio ref={audioRef} loop preload="auto" playsInline>
             <source src="/thunder_rumble.mp3" type="audio/mpeg" />
           </audio>
 
           <button
+            type="button"
             onClick={() => {
               const audio = audioRef.current;
               if (!audio) return;
               setIsMuted((prev) => {
                 const next = !prev;
+                userMutedRef.current = next;
+                try {
+                  window.localStorage.setItem(THUNDER_PREF_KEY, next ? "1" : "0");
+                } catch {}
                 if (!next) {
                   audio.muted = false;
-                  audio.volume = 0.25;
-                  audio.currentTime = 0;
+                  audio.volume = THUNDER_VOLUME;
                   audio.play().catch(() => {});
+                  setShowAudioHint(false);
                 } else {
                   audio.pause();
                   audio.muted = true;
@@ -337,20 +399,25 @@ export default function Home() {
               });
             }}
             className="absolute top-4 right-4 z-50 text-[#a77a23] hover:text-white text-2xl"
-            title={isMuted ? "Enable Thunder" : "Mute Thunder"}
+            title={isMuted ? "Turn thunder on" : "Turn thunder off"}
+            aria-label={isMuted ? "Turn thunder on" : "Turn thunder off"}
           >
             {isMuted ? "🔇" : "🔊"}
           </button>
 
-          {showAudioHint && (
+          {showAudioHint && isMuted && (
             <button
+              type="button"
               onClick={async () => {
                 try {
                   const audio = audioRef.current;
                   if (!audio) return;
+                  userMutedRef.current = false;
+                  try {
+                    window.localStorage.setItem(THUNDER_PREF_KEY, "0");
+                  } catch {}
                   audio.muted = false;
-                  audio.volume = 0.25;
-                  audio.currentTime = 0;
+                  audio.volume = THUNDER_VOLUME;
                   await audio.play();
                   setIsMuted(false);
                   setShowAudioHint(false);
@@ -358,7 +425,7 @@ export default function Home() {
               }}
               className="absolute top-4 right-16 z-50 select-none"
               aria-live="polite"
-              title="To hear thunder, click here"
+              title="Tap to start storm audio"
             >
               <div
                 className="flex items-center gap-2 bg-black/70 text-gray-100 border border-[#a77a23]/60 rounded-full px-3 py-1 shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
@@ -366,7 +433,7 @@ export default function Home() {
               >
                 <span className="inline-block w-2 h-2 rounded-full bg-[#a77a23]" />
                 <span className="text-xs md:text-sm tracking-wide">
-                  To hear thunder, click here
+                  Tap once to start thunder
                 </span>
               </div>
             </button>

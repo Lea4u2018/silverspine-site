@@ -351,7 +351,7 @@ export default function About() {
 
        <div className="bg-black/60 p-4 rounded-xl border border-white/5 text-[0.95rem] text-gray-200 leading-relaxed">
          <p className="mb-2">🚨 <span className="text-white font-semibold">Insider Privilege:</span> Download the instant digital sneak peek today for just <span className="text-[#a77a23] font-bold">$4.99</span>.</p>
-         <p>Purchasing today whitelists your email for the discounted <span className="text-white font-bold">$14.99 insider preorder rate</span> when preorders open September 1st. After that timeline, full retail is <span className="text-white font-bold">$24.99</span>.</p>
+         <p>Purchasing today whitelists your email for the discounted <span className="text-white font-bold">$14.99 insider rate</span> from <span className="text-white font-bold">Sep 1 – Oct 19, 2026</span>. Full retail is <span className="text-white font-bold">$24.99</span> starting <span className="text-white font-bold">Oct 20, 2026</span>.</p>
        </div>
 
        <div className="pt-2 space-y-3">
