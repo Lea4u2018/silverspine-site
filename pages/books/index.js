@@ -286,6 +286,7 @@ export default function Books() {
               </div>
 
 
+
               {/* DESCRIPTION & DOWNLOAD DETAILS (Right Side) */}
               <div className="md:col-span-8 flex flex-col justify-center h-full space-y-5">
                 <div>
