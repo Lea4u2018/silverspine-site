@@ -74,7 +74,7 @@ export default function Books() {
       el.pause();
       el.currentTime = 0;
       el.playbackRate = id === 1 ? 1.02 : 0.92;
-      el.volume = 0.35;
+      el.volume = 0.85;
       await el.play();
     } catch {
       setPendingNarrationId(id);
@@ -92,7 +92,7 @@ export default function Books() {
         } else {
           clearInterval(fade);
           el.pause();
-          el.volume = 0.18;
+          el.volume = 0.85;
         }
       }, 40);
     } else {
