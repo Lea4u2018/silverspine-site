@@ -347,7 +347,7 @@ export default function Blog() {
    <li><span className="font-semibold"> ARC Sign-ups</span> — Aug 7 - Aug 14, 2026. Advanced Review Copy team applications go live. Selection emails go out Aug 17, 2026.</li>
    <li><span className="font-semibold"> Teaser Trailer Drop</span> — Aug 21, 2026. Production loops push live.</li>
    <li><span className="font-semibold"> ARC Delivery Window</span> — Aug 24–26, 2026.</li>
-   <li><span className="font-semibold"> Preorder Goes Live</span> — Sep 1, 2026. Early whitelisted buyers lock in the $14.99 insider novel rate.</li>
+   <li><span className="font-semibold"> Preorder Goes Live</span> — Sep 1, 2026. Early whitelisted buyers lock in the $14.99 insider novel rate. After that insider window, full retail is $24.99.</li>
    <li><span className="font-semibold"> Launch Week Events</span> — Oct 13, 2026.</li>
    <li><span className="font-semibold"> Official Release Day</span> — Oct 20, 2026.</li>
  </ol>

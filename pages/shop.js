@@ -197,9 +197,29 @@ export default function Shop() {
                   Extended Sneak Peek · $4.99
                 </p>
                 <p className="mt-3 text-sm md:text-base text-gray-300 leading-relaxed">
-                  Unedited Prologue + Chapters 1–2. Buy today and whitelist your email for the{" "}
-                  <span className="text-white font-semibold">$14.99 insider pre-order rate</span> when the full novel opens.
+                  Unedited Prologue + Chapters 1–2. Buy the sneak peek today and whitelist your email for the{" "}
+                  <span className="text-white font-semibold">$14.99 insider pre-order rate</span> when preorders open{" "}
+                  <span className="text-white font-semibold">Sep 1, 2026</span>.
                 </p>
+              </div>
+
+              <div className="rounded-xl border border-[#a77a23]/35 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+                <p className="font-semibold text-white mb-1">Full novel pricing</p>
+                <ul className="space-y-1.5 text-xs md:text-sm">
+                  <li>
+                    <span className="text-[#a77a23] font-bold">$14.99</span> — insider rate for sneak-peek buyers (preorder window starting Sep 1, 2026)
+                  </li>
+                  <li>
+                    <span className="text-white font-bold">$24.99</span> — full retail price if purchased after that insider timeline / without the whitelist
+                  </li>
+                  <li className="text-gray-400">
+                    Official release: <span className="text-gray-300">Oct 20, 2026</span>
+                    {" · "}
+                    <Link href="/blog" className="text-[#a77a23] hover:underline">
+                      See full launch timeline on Blog
+                    </Link>
+                  </li>
+                </ul>
               </div>
 
               <div className="space-y-3" role="list" aria-label="Available storefronts">

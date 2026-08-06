@@ -303,7 +303,7 @@ export default function Books() {
 
                 <div className="bg-[#a77a23]/10 border border-[#a77a23]/20 p-4 rounded-xl">
                   <p className="text-xs md:text-sm text-gray-300 leading-normal">
-                    ⚡ <span className="text-white font-semibold">Limited Preview:</span> Get the unedited Prologue + Chapters 1–2 for <span className="text-[#a77a23] font-bold">$4.99</span>. Buying today whitelists your email for the <span className="text-white font-bold">$14.99 insider pre-order rate</span> on launch day.
+                    ⚡ <span className="text-white font-semibold">Limited Preview:</span> Get the unedited Prologue + Chapters 1–2 for <span className="text-[#a77a23] font-bold">$4.99</span>. Buying today whitelists your email for the <span className="text-white font-bold">$14.99 insider pre-order rate</span> (preorders open Sep 1, 2026). After that timeline, the full novel is <span className="text-white font-bold">$24.99</span> retail.
                   </p>
                 </div>
 
