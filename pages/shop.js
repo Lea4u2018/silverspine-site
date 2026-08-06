@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { NAV_LINKS, isNavActive } from "@/lib/nav";
 import { NOVEL_PRICING, SNEAK_PEEK_STORES } from "@/lib/store";
+import LaunchListForm from "@/components/LaunchListForm";
 
 const GOLD = "#a77a23";
 const SILVER = "#c9ced6";
@@ -302,6 +303,19 @@ export default function Shop() {
               </p>
             </div>
           </div>
+        </section>
+
+        <section
+          className="shop-rise shop-rise-delay mt-6 md:mt-8 rounded-2xl border border-[#a77a23]/30 bg-black/50 p-5 md:p-8 shadow-2xl max-w-xl mx-auto"
+          aria-label="Join the launch list"
+        >
+          <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight mb-2">
+            Not buying yet? Stay in the storm.
+          </h2>
+          <p className="text-sm text-gray-300 mb-5 leading-relaxed">
+            Join the launch list for sneak peek news, the Sep 1 insider window, and release-day alerts.
+          </p>
+          <LaunchListForm />
         </section>
       </main>
 
