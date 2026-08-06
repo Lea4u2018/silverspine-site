@@ -177,11 +177,6 @@ export default function Home() {
           aria-label="Enter Silver Spine Studio"
         >
           <div className="storm-gate-flash" aria-hidden="true" />
-          <div className="storm-bolts" aria-hidden="true">
-            <span className="bolt bolt-a" />
-            <span className="bolt bolt-b" />
-            <span className="bolt bolt-c" />
-          </div>
           <div className="relative z-10 max-w-xl mx-auto">
             <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
               Silver Spine Studio™
@@ -338,11 +333,28 @@ export default function Home() {
           }
           @media (prefers-reduced-motion: reduce) {
             .ticker-track { animation: none; }
-            .storm-gate-flash, .bolt { animation: none !important; opacity: 0 !important; }
+            .storm-gate-flash { animation: none !important; opacity: 0 !important; }
           }
 
           .hero-frame {
             height: clamp(60vh, calc(100vh - var(--header-h) - var(--footer-h)), 78vh);
+            overflow: hidden;
+            isolation: isolate;
+          }
+          /* Soft-fade storm video at the top so lightning never pokes through the letterbox as scratch lines */
+          .hero-storm {
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 100%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 100%);
+          }
+          .hero-top-shade {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5.5rem;
+            background: linear-gradient(to bottom, #000 0%, #000 42%, rgba(0,0,0,0) 100%);
+            z-index: 40;
+            pointer-events: none;
           }
 
           .storm-gate {
@@ -376,53 +388,6 @@ export default function Home() {
             90% { opacity: 1; }
             93% { opacity: 0.15; }
             96% { opacity: 0.65; }
-          }
-          .storm-bolts {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
-          }
-          .bolt {
-            position: absolute;
-            width: 3px;
-            height: 42%;
-            background: linear-gradient(
-              to bottom,
-              rgba(255,255,255,0) 0%,
-              rgba(230,240,255,0.95) 35%,
-              rgba(167,122,35,0.85) 70%,
-              rgba(255,255,255,0) 100%
-            );
-            filter: drop-shadow(0 0 8px rgba(200,220,255,0.85)) drop-shadow(0 0 18px rgba(167,122,35,0.45));
-            transform-origin: top center;
-            opacity: 0;
-            clip-path: polygon(40% 0, 70% 0, 55% 38%, 85% 38%, 20% 100%, 40% 48%, 15% 48%);
-          }
-          .bolt-a {
-            left: 18%;
-            top: -5%;
-            animation: boltStrike 4.8s ease-in-out infinite;
-          }
-          .bolt-b {
-            left: 62%;
-            top: -8%;
-            height: 50%;
-            animation: boltStrike 6.2s ease-in-out 1.6s infinite;
-          }
-          .bolt-c {
-            left: 78%;
-            top: 0;
-            height: 36%;
-            animation: boltStrike 5.4s ease-in-out 3.1s infinite;
-          }
-          @keyframes boltStrike {
-            0%, 86%, 100% { opacity: 0; transform: translateY(-8%) scaleY(0.7); }
-            88% { opacity: 1; transform: translateY(0) scaleY(1); }
-            90% { opacity: 0.25; }
-            92% { opacity: 0.9; transform: translateY(2%) scaleY(1.05); }
-            95% { opacity: 0; }
           }
           .storm-enter-btn {
             margin-top: 1.5rem;
@@ -551,7 +516,7 @@ export default function Home() {
             muted
             playsInline
             preload="auto"
-            className="absolute inset-0 w-full h-full object-cover object-center mix-blend-screen opacity-95 z-10 overlay-fix contrast-125 brightness-110 saturate-125"
+            className="hero-storm absolute inset-0 w-full h-full object-cover object-center mix-blend-screen opacity-80 z-10 overlay-fix contrast-115 brightness-105 saturate-120"
           >
             <source src="/storm-lightning.mp4" type="video/mp4" />
           </video>
@@ -562,7 +527,7 @@ export default function Home() {
                 key={i}
                 className="absolute bg-white rounded-full"
                 style={{
-                  top: `${s.top}%`,
+                  top: `${Math.max(8, s.top)}%`,
                   left: `${s.left}%`,
                   width: `${s.size}px`,
                   height: `${s.size}px`,
@@ -574,9 +539,9 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="absolute inset-0 bg-[rgba(10,14,22,0.12)] z-30 overlay-fix" />
+          <div className="absolute inset-0 bg-[rgba(10,14,22,0.16)] z-30 overlay-fix" />
 
-          <div className="absolute top-0 left-0 w-full h-8 md:h-12 bg-black z-40 overlay-fix" />
+          <div className="hero-top-shade" aria-hidden="true" />
 
           <div className="absolute inset-0 flex items-center justify-center z-50 px-4">
             <div className="inline-block rounded-xl bg-black/35 backdrop-blur-[1.5px] px-4 py-3 md:px-6 md:py-4 shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
