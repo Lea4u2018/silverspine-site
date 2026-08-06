@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
+import { NAV_LINKS, isNavActive } from "@/lib/nav";
 
 export default function Home() {
   const router = useRouter();
@@ -72,19 +73,8 @@ export default function Home() {
     };
   }, []);
 
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
-
-  const isActive = (href) => {
-    if (href === "/") return router.pathname === "/";
-    return router.asPath.startsWith(href);
-  };
+  const links = NAV_LINKS;
+  const isActive = (href) => isNavActive(router.pathname, router.asPath, href);
 
   const [showAudioHint, setShowAudioHint] = useState(true);
 

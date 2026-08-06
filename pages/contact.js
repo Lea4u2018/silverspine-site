@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { NAV_LINKS, isNavActive } from "@/lib/nav";
 
 export default function Contact() {
   const router = useRouter();
@@ -94,14 +95,8 @@ export default function Contact() {
     } catch { /* ignore */ }
   };
 
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
+  const links = NAV_LINKS;
+  const isActive = (href) => isNavActive(router.pathname, router.asPath, href);
 
   return (
     <div className="bg-black text-gray-100">
@@ -213,7 +208,7 @@ export default function Contact() {
 
     <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
       {links.map(({ href, label }) => {
-        const active = router.asPath === href;
+        const active = isActive(href);
         return (
           <Link
             key={href}

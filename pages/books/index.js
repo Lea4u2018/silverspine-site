@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { SNEAK_PEEK_STORES } from "@/lib/store";
 
 export default function Books() {
   const GOLD = "#a77a23";
@@ -236,6 +237,7 @@ export default function Books() {
             <Link href="/contact" className="text-gray-200 hover:text-[#a77a23]">Contact</Link>
             <Link href="/blog" className="text-gray-200 hover:text-[#a77a23]">Blog</Link>
             <Link href="/reviews" className="text-gray-200 hover:text-[#a77a23]">Reviews</Link>
+            <Link href="/books#featured-book" className="text-gray-200 hover:text-[#a77a23]">Shop</Link>
           </nav>
         </div>
       </header>
@@ -305,10 +307,18 @@ export default function Books() {
                   </p>
                 </div>
 
-                <div className="pt-2">
-                  <a href="https://gumroad.com" className="gumroad-button w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-white bg-[#a77a23] hover:bg-[#8e661b] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)]">
-                    📖 Download the Extended Sneak Peek
-                  </a>
+                <div className="pt-2 space-y-3">
+                  {SNEAK_PEEK_STORES.map((store) => (
+                    <a
+                      key={store.key}
+                      href={store.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="gumroad-button w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-white bg-[#a77a23] hover:bg-[#8e661b] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)]"
+                    >
+                      📖 {SNEAK_PEEK_STORES.length > 1 ? store.label : store.shortLabel}
+                    </a>
+                  ))}
                 </div>
               </div>
 

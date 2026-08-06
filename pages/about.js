@@ -3,6 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { SNEAK_PEEK_STORES } from "@/lib/store";
 
 export default function About() {
   const GOLD = "#a77a23";
@@ -255,6 +256,7 @@ export default function About() {
       <Link href="/contact" className="nav-link">Contact</Link>
       <Link href="/blog" className="nav-link">Blog</Link>
       <Link href="/reviews" className="nav-link">Reviews</Link>
+      <Link href="/books#featured-book" className="nav-link">Shop</Link>
     </nav>
   </div>
 </header>
@@ -352,15 +354,18 @@ export default function About() {
          <p>Purchasing today whitelists your email in our database ledger, locking in your discounted <span className="text-white font-bold">$14.99 release-day preorder rate</span> for the full book on September 1st!</p>
        </div>
 
-       <div className="pt-2">
-         <a
-           href="https://creativeefficiency.gumroad.com/l/the-beautiful-beast-sneak-peek"
-           target="_blank"
-           rel="noopener noreferrer"
-           className="w-full inline-flex items-center justify-center gap-2 font-bold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)] text-sm"
-         >
-           📖 Claim the Extended Sneak Peek
-         </a>
+       <div className="pt-2 space-y-3">
+         {SNEAK_PEEK_STORES.map((store) => (
+           <a
+             key={store.key}
+             href={store.href}
+             target="_blank"
+             rel="noopener noreferrer"
+             className="w-full inline-flex items-center justify-center gap-2 font-bold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)] text-sm"
+           >
+             📖 {SNEAK_PEEK_STORES.length > 1 ? store.label : "Claim the Extended Sneak Peek"}
+           </a>
+         ))}
        </div>
 
        {/* RESTORED THUNDER AUDIO CONTROLLER (Centered underneath checkout layout) */}

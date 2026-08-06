@@ -1,18 +1,11 @@
 // components/Header.js
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { NAV_LINKS, isNavActive } from "@/lib/nav";
 
 export default function Header() {
   const router = useRouter();
-
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
+  const links = NAV_LINKS;
 
   return (
     <header className="bg-gray-900 shadow-md">
@@ -29,7 +22,7 @@ export default function Header() {
               key={href}
               href={href}
               className={`transition ${
-                router.pathname === href
+                isNavActive(router.pathname, router.asPath, href)
                   ? "text-red-500 font-semibold"
                   : "text-gray-200 hover:text-yellow-400"
               }`}

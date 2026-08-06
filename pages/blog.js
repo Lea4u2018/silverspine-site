@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { NAV_LINKS, isNavActive } from "@/lib/nav";
 
 export default function Blog() {
   const router = useRouter();
@@ -151,15 +152,7 @@ export default function Blog() {
     } catch {}
   };
 
-  // ---- nav links ----
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
+  const links = NAV_LINKS;
 
   // ---- local UI ----
   const [showPlan, setShowPlan] = useState(false);
@@ -373,7 +366,11 @@ export default function Blog() {
           {/* Right: Nav links */}
           <nav className="flex justify-end gap-5 md:gap-10 tracking-wide text-base md:text-lg">
             {links.map(({ href, label }) => (
-              <Link key={href} href={href} className={`transition ${router.asPath === href ? "nav-active" : "nav-link"}`}>
+              <Link
+                key={href}
+                href={href}
+                className={`transition ${isNavActive(router.pathname, router.asPath, href) ? "nav-active" : "nav-link"}`}
+              >
                 {label}
               </Link>
             ))}

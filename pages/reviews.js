@@ -16,6 +16,7 @@ import {
   where,
   serverTimestamp,
 } from "firebase/firestore";
+import { NAV_LINKS, isNavActive } from "@/lib/nav";
 
 export default function ReviewsPage() {
   const router = useRouter();
@@ -153,14 +154,7 @@ export default function ReviewsPage() {
     return { avg: sum / reviews.length, count: reviews.length };
   }, [reviews]);
 
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
+  const links = NAV_LINKS;
 
   // little starfield
   const [stars, setStars] = useState([]);
@@ -313,7 +307,9 @@ export default function ReviewsPage() {
                 key={href}
                 href={href}
                 className={`transition ${
-                  router.asPath === href ? "text-red-500 font-semibold" : "text-gray-200 hover:text-[#a77a23]"
+                  isNavActive(router.pathname, router.asPath, href)
+                    ? "text-red-500 font-semibold"
+                    : "text-gray-200 hover:text-[#a77a23]"
                 }`}
               >
                 {label}
