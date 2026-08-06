@@ -85,8 +85,8 @@ export default function Blog() {
   const [showPress, setShowPress] = useState(false);
   const [arcName, setArcName] = useState("");
   const [arcEmail, setArcEmail] = useState("");
-  const [arcFormat, setArcFormat] = useState("ePub");
-  const [arcReviewSpot, setArcReviewSpot] = useState("Goodreads");
+  const [arcFormat, setArcFormat] = useState("EPUB");
+  const [arcReviewSpot, setArcReviewSpot] = useState("Social media");
   const [pressName, setPressName] = useState("");
   const [pressOutlet, setPressOutlet] = useState("");
   const [pressEmail, setPressEmail] = useState("");
@@ -96,11 +96,20 @@ export default function Blog() {
 
   const submitArc = (e) => {
     e.preventDefault();
-    const subject = encodeURIComponent("ARC Signup — The Beautiful Beast");
+    const subject = encodeURIComponent("Early-release ARC request — The Beautiful Beast");
     const body = encodeURIComponent(
-      `Hi,%0D%0A%0D%0AI'd like to join the ARC.%0D%0A%0D%0AName: ${arcName}%0D` +
-        `Email: ${arcEmail}%0DPreferred format: ${arcFormat}%0D` +
-        `Where I'll review: ${arcReviewSpot}%0D%0AThanks!`
+      [
+        "Hi,",
+        "",
+        "I'd like to request early-release ARC content for The Beautiful Beast.",
+        "",
+        `Name: ${arcName}`,
+        `Email: ${arcEmail}`,
+        `Preferred format: ${arcFormat}`,
+        `Where I'll review: ${arcReviewSpot}`,
+        "",
+        "Thanks!",
+      ].join("\n")
     );
     window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
     setShowArc(false);
@@ -110,13 +119,21 @@ export default function Blog() {
     if (!pressAgree) return;
     const subject = encodeURIComponent("Press Request — The Beautiful Beast / Silver Spine Studio");
     const body = encodeURIComponent(
-      `Hi,%0D%0A%0D%0APress request details:%0D%0A%0D%0A` +
-        `Name: ${pressName}%0D` +
-        `Outlet: ${pressOutlet}%0D` +
-        `Email: ${pressEmail}%0D` +
-        `Deadline: ${pressDeadline || "N/A"}%0D` +
-        `Needs: ${pressNeeds}%0D%0A%0D%0A` +
-        `I acknowledge materials (if shared) are confidential and not for redistribution without written consent.%0D%0A%0D%0AThanks!`
+      [
+        "Hi,",
+        "",
+        "Press request details:",
+        "",
+        `Name: ${pressName}`,
+        `Outlet: ${pressOutlet}`,
+        `Email: ${pressEmail}`,
+        `Deadline: ${pressDeadline || "N/A"}`,
+        `Needs: ${pressNeeds}`,
+        "",
+        "I acknowledge materials (if shared) are confidential and not for redistribution without written consent.",
+        "",
+        "Thanks!",
+      ].join("\n")
     );
     window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
     setShowPress(false);
@@ -327,7 +344,7 @@ export default function Blog() {
                     onClick={() => setShowArc(true)}
                     className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
                   >
-                    Get early access (ARC)
+                    Request early-release ARC
                   </button>
                 </div>
 
@@ -452,7 +469,7 @@ export default function Blog() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
           <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
             <div className="flex items-start justify-between mb-4">
-              <h3 className="text-xl font-semibold" style={{ color: GOLD }}>ARC Signup — The Beautiful Beast</h3>
+              <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Request early-release ARC — The Beautiful Beast</h3>
               <button onClick={() => setShowArc(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <form onSubmit={submitArc} className="space-y-4">
@@ -468,26 +485,27 @@ export default function Blog() {
                 <div>
                   <label className="block text-sm text-gray-300 mb-1">Preferred format</label>
                   <select value={arcFormat} onChange={e => setArcFormat(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60">
-                    <option>ePub</option>
-                    <option>PDF</option>
-                    <option>MOBI</option>
+                    <option value="EPUB">EPUB (phones, tablets, most e-readers)</option>
+                    <option value="PDF">PDF</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-sm text-gray-300 mb-1">Where you’ll review</label>
                   <select value={arcReviewSpot} onChange={e => setArcReviewSpot(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60">
-                    <option>Goodreads</option>
-                    <option>Amazon</option>
-                    <option>BookBub</option>
-                    <option>Personal blog</option>
+                    <option>Social media</option>
+                    <option>Personal blog / website</option>
+                    <option>Amazon (when available)</option>
+                    <option>Other / not sure yet</option>
                   </select>
                 </div>
               </div>
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowArc(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
-                <button type="submit" className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90">Send request</button>
+                <button type="submit" className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90">Open email request</button>
               </div>
-              <p className="text-xs text-gray-400 mt-2">Submitting opens your email client with a prefilled message to {REQUEST_EMAIL}.</p>
+              <p className="text-xs text-gray-400 mt-2">
+                Submitting opens your email client with a prefilled message to {REQUEST_EMAIL} for your request of early-release content info.
+              </p>
             </form>
           </div>
         </div>
