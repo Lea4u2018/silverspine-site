@@ -102,7 +102,7 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
             margin: 1.75rem 0 0.65rem;
           }
           .info-prose.tone-faq h2 {
-            color: #d4a94a;
+            color: #9ca3af;
           }
           .info-prose p, .info-prose li {
             color: #d1d5db;
