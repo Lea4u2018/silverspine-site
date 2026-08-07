@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { LIVE_SNEAK_PEEK_STORES } from "@/lib/store";
 import LaunchListForm from "@/components/LaunchListForm";
+import SiteNav from "@/components/SiteNav";
 
 export default function Books() {
   const GOLD = "#a77a23";
@@ -277,25 +278,17 @@ export default function Books() {
       </Head>
 
       <header ref={headerRef} className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30">
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+          <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
-              <img src={logoSrc} alt="Silver Spine Studio logo" className="h-[88px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]" draggable="false" />
+              <img src={logoSrc} alt="Silver Spine Studio logo" className="h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]" draggable="false" />
             ) : (
               <span className="text-2xl md:text-3xl font-extrabold" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
               </span>
             )}
           </Link>
-          <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-            <Link href="/" className="text-gray-200 hover:text-[#a77a23]">Home</Link>
-            <Link href="/books" className="text-red-600 font-semibold" aria-current="page">Books</Link>
-            <Link href="/about" className="text-gray-200 hover:text-[#a77a23]">About</Link>
-            <Link href="/contact" className="text-gray-200 hover:text-[#a77a23]">Contact</Link>
-            <Link href="/blog" className="text-gray-200 hover:text-[#a77a23]">Blog</Link>
-            <Link href="/reviews" className="text-gray-200 hover:text-[#a77a23]">Reviews</Link>
-            <Link href="/shop" className="text-gray-200 hover:text-[#a77a23]">Shop</Link>
-          </nav>
+          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
       </header>
 

@@ -1,12 +1,10 @@
 // /pages/index.js
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
-import { NAV_LINKS, isNavActive } from "@/lib/nav";
+import SiteNav from "@/components/SiteNav";
 
 export default function Home() {
-  const router = useRouter();
   const audioRef = useRef(null);
   const videoRef = useRef(null);
   const headerRef = useRef(null);
@@ -154,9 +152,6 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
-
-  const links = NAV_LINKS;
-  const isActive = (href) => isNavActive(router.pathname, router.asPath, href);
 
   useEffect(() => {
     const newStars = Array.from({ length: 80 }, () => ({
@@ -518,13 +513,13 @@ export default function Home() {
         ref={headerRef}
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-2 md:py-3">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group" aria-label="Silver Spine Studio — Home">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-2 md:py-3">
+          <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
               <img
                 src={logoSrc}
                 alt="Silver Spine Studio logo"
-                className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
+                className="h-[72px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
                 draggable="false"
               />
             ) : (
@@ -538,25 +533,7 @@ export default function Home() {
             </span>
           </Link>
 
-          <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-            {links.map(({ href, label }) => {
-              const active = isActive(href);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={`transition ${
-                    active
-                      ? "text-red-500 font-semibold"
-                      : "text-gray-200 hover:text-[#a77a23]"
-                  }`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
+          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
 
         <div className="ticker-wrap">

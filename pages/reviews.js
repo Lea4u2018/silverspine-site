@@ -2,7 +2,6 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useState, useMemo, useRef } from "react";
 import { FaRegCommentDots, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import StarRating, { StarDisplay } from "@/components/StarRating";
@@ -16,10 +15,9 @@ import {
   where,
   serverTimestamp,
 } from "firebase/firestore";
-import { NAV_LINKS, isNavActive } from "@/lib/nav";
+import SiteNav from "@/components/SiteNav";
 
 export default function ReviewsPage() {
-  const router = useRouter();
 
   const GOLD = "#a77a23";
   const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
@@ -95,8 +93,6 @@ export default function ReviewsPage() {
     const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
     return { avg: sum / reviews.length, count: reviews.length };
   }, [reviews]);
-
-  const links = NAV_LINKS;
 
   // little starfield
   const [stars, setStars] = useState([]);
@@ -189,58 +185,41 @@ export default function ReviewsPage() {
         ref={headerRef}
         className="sticky top-0 z-header bg-gradient-to-b from-gray-900 to-gray-800 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="mx-auto grid grid-cols-2 md:grid-cols-3 items-center px-6 py-4 md:py-5 max-w-[1400px]">
-          <div className="flex items-center">
-           <Link
-  href="/"
-  aria-label="Silver Spine Studio — Home"
-  className="flex items-center gap-3 md:gap-4"
->
-  <Image
-    src={DISC_LOGO}
-    alt="Silver Spine Studio"
-    width={512}
-    height={512}
-    priority
-    className="disc-logo select-none"
-    style={{
-      height: "clamp(64px, calc(var(--header-h) - 28px), 108px)",
-      width: "auto",
-      filter: "drop-shadow(0 0 18px rgba(220,220,220,0.16))",
-    }}
-  />
-
-  <span
-    className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
-    style={{
-      color: "#eef2f7",
-      textShadow:
-        "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
-    }}
-  >
-    Silver Spine Studio
-    <span className="align-super text-sm md:text-base">™</span>
-  </span>
-</Link>
+        <div className="mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-5 max-w-[1400px]">
+          <div className="flex items-center shrink-0">
+            <Link
+              href="/"
+              aria-label="Silver Spine Studio — Home"
+              className="flex items-center gap-3 md:gap-4"
+            >
+              <Image
+                src={DISC_LOGO}
+                alt="Silver Spine Studio"
+                width={512}
+                height={512}
+                priority
+                className="disc-logo select-none"
+                style={{
+                  height: "clamp(56px, calc(var(--header-h) - 28px), 108px)",
+                  width: "auto",
+                  filter: "drop-shadow(0 0 18px rgba(220,220,220,0.16))",
+                }}
+              />
+              <span
+                className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+                style={{
+                  color: "#eef2f7",
+                  textShadow:
+                    "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+                }}
+              >
+                Silver Spine Studio
+                <span className="align-super text-sm md:text-base">™</span>
+              </span>
+            </Link>
           </div>
 
-          <div className="hidden md:block" />
-
-          <nav className="flex justify-end gap-6 md:gap-10 tracking-wide text-base md:text-lg">
-            {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  isNavActive(router.pathname, router.asPath, href)
-                    ? "text-red-500 font-semibold"
-                    : "text-gray-200 hover:text-[#a77a23]"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end tracking-wide" />
         </div>
       </header>
 

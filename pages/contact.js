@@ -1,13 +1,11 @@
 // /pages/contact.js
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { NAV_LINKS, isNavActive } from "@/lib/nav";
+import SiteNav from "@/components/SiteNav";
 
 export default function Contact() {
-  const router = useRouter();
   const GOLD = "#a77a23";
 
   // ===== Measure header/footer so the GLOBAL footer stays in view (mirrors About) =====
@@ -95,9 +93,6 @@ export default function Contact() {
     } catch { /* ignore */ }
   };
 
-  const links = NAV_LINKS;
-  const isActive = (href) => isNavActive(router.pathname, router.asPath, href);
-
   return (
     <div className="bg-black text-gray-100">
       <Head>
@@ -166,7 +161,7 @@ export default function Contact() {
   ref={headerRef}
   className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
 >
-  <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
+  <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
   <Link
   href="/"
   className="flex items-center gap-3 md:gap-4 group"
@@ -206,21 +201,7 @@ export default function Contact() {
   </span>
 </Link>
 
-    <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-      {links.map(({ href, label }) => {
-        const active = isActive(href);
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={active ? "nav-active" : "nav-link"}
-            aria-current={active ? "page" : undefined}
-          >
-            {label}
-          </Link>
-        );
-      })}
-    </nav>
+    <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
   </div>
 </header>
 

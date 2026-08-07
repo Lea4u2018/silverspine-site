@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import { LIVE_SNEAK_PEEK_STORES } from "@/lib/store";
+import SiteNav from "@/components/SiteNav";
 
 export default function About() {
   const GOLD = "#a77a23";
@@ -207,7 +208,7 @@ export default function About() {
   ref={headerRef}
   className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
 >
-  <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
+  <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
     <Link
       href="/"
       className="flex items-center gap-3 md:gap-4 group"
@@ -247,17 +248,7 @@ export default function About() {
       </span>
     </Link>
 
-    <nav className="flex items-center gap-5 md:gap-6 text-sm md:text-base">
-      <Link href="/" className="nav-link">Home</Link>
-      <Link href="/books" className="nav-link">Books</Link>
-      <Link href="/about" className="nav-active" aria-current="page">
-        About
-      </Link>
-      <Link href="/contact" className="nav-link">Contact</Link>
-      <Link href="/blog" className="nav-link">Blog</Link>
-      <Link href="/reviews" className="nav-link">Reviews</Link>
-      <Link href="/shop" className="nav-link">Shop</Link>
-    </nav>
+    <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
   </div>
 </header>
 

@@ -2,14 +2,12 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { NAV_LINKS, isNavActive } from "@/lib/nav";
 import LaunchListForm from "@/components/LaunchListForm";
+import SiteNav from "@/components/SiteNav";
 
 export default function Blog() {
-  const router = useRouter();
 
   // ---- brand / assets ----
   const GOLD = "#a77a23";
@@ -76,8 +74,6 @@ export default function Blog() {
       }
     } catch {}
   };
-
-  const links = NAV_LINKS;
 
   // ---- local UI ----
   const [showPlan, setShowPlan] = useState(false);
@@ -235,65 +231,52 @@ export default function Blog() {
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-950 to-gray-900 border-b border-[#a77a23]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
       >
         {/* 3 columns: left logo / center chip / right nav */}
-        <div className="nav-wrap mx-auto grid grid-cols-3 items-center px-6 py-3 md:py-4">
-          {/* Left: Logo */}
-          <div className="flex items-center gap-3 md:gap-4">
-           <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
-  <Image
-    src={DISC_LOGO}
-    alt="Silver Spine Studio logo"
-    width={512}
-    height={512}
-    priority
-    className="w-auto select-none"
-    style={{
-      height: "88px",
-      filter:
-        "drop-shadow(0 8px 22px rgba(255,255,255,0.16))",
-    }}
-    sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
-  />
-
-  <span
-    className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
-    style={{
-      color: "#d1d5db",
-      textShadow:
-        "0 0 10px rgba(255,255,255,0.10), 0 0 22px rgba(255,255,255,0.08)",
-    }}
-  >
-    Silver Spine Studio
-    <span className="align-super text-sm md:text-base">™</span>
-  </span>
-</Link>
-          </div>
-
-          {/* Center: Thunder toggle — left shift to sit between logo & "Home" */}
-          <div className="flex items-center justify-center">
-            <button
-              type="button"
-              onClick={toggleThunder}
-              className="chip -translate-x-6 md:-translate-x-8 lg:-translate-x-10 xl:-translate-x-12"
-              aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-              title={siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
-            >
-              {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-              {siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
-            </button>
-          </div>
-
-          {/* Right: Nav links */}
-          <nav className="flex justify-end gap-5 md:gap-10 tracking-wide text-base md:text-lg">
-            {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${isNavActive(router.pathname, router.asPath, href) ? "nav-active" : "nav-link"}`}
-              >
-                {label}
+        <div className="nav-wrap mx-auto flex flex-col gap-2 md:grid md:grid-cols-3 md:items-center px-4 md:px-6 py-3 md:py-4">
+          <div className="flex items-center justify-between gap-3 md:contents">
+            <div className="flex items-center gap-3 md:gap-4">
+              <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
+                <Image
+                  src={DISC_LOGO}
+                  alt="Silver Spine Studio logo"
+                  width={512}
+                  height={512}
+                  priority
+                  className="w-auto select-none"
+                  style={{
+                    height: "72px",
+                    filter: "drop-shadow(0 8px 22px rgba(255,255,255,0.16))",
+                  }}
+                  sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
+                />
+                <span
+                  className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
+                  style={{
+                    color: "#d1d5db",
+                    textShadow:
+                      "0 0 10px rgba(255,255,255,0.10), 0 0 22px rgba(255,255,255,0.08)",
+                  }}
+                >
+                  Silver Spine Studio
+                  <span className="align-super text-sm md:text-base">™</span>
+                </span>
               </Link>
-            ))}
-          </nav>
+            </div>
+
+            <div className="flex items-center justify-center md:justify-center">
+              <button
+                type="button"
+                onClick={toggleThunder}
+                className="chip md:-translate-x-6 lg:-translate-x-8 xl:-translate-x-10"
+                aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
+                title={siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
+              >
+                {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+                {siteAudioMuted ? "Click to hear thunder" : "Turn thunder off"}
+              </button>
+            </div>
+          </div>
+
+          <SiteNav className="w-full justify-center md:justify-end tracking-wide" />
         </div>
       </header>
 

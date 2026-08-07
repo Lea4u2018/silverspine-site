@@ -1,8 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { NAV_LINKS, isNavActive } from "@/lib/nav";
+import SiteNav from "@/components/SiteNav";
 
 const GOLD = "#a77a23";
 const SILVER = "#c9ced6";
@@ -11,7 +10,6 @@ const SILVER = "#c9ced6";
  * Shared shell for Privacy / FAQ / Refunds — one calm reading composition.
  */
 export default function InfoPageShell({ title, description, eyebrow, tone, children }) {
-  const router = useRouter();
   const headerRef = useRef(null);
   const [logoSrc, setLogoSrc] = useState(null);
   const [useTextLogo, setUseTextLogo] = useState(false);
@@ -112,14 +110,6 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
           .info-prose ul { list-style: disc; padding-left: 1.25rem; margin: 0.5rem 0 0; }
           .info-prose li + li { margin-top: 0.35rem; }
           .info-prose a { color: ${GOLD}; text-decoration: underline; text-underline-offset: 2px; }
-          .info-prose.tone-faq a {
-            color: ${GOLD};
-            text-decoration-color: #ffffff;
-          }
-          .info-prose.tone-faq a:hover {
-            color: ${GOLD};
-            text-decoration-color: #ffffff;
-          }
           .faq-item {
             border-top: 1px solid rgba(255,255,255,0.08);
             padding: 0.85rem 0;
@@ -156,13 +146,13 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
         ref={headerRef}
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="max-w-6xl mx-auto flex justify-between items-center px-4 md:px-6 py-3 md:py-4">
-          <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+          <Link href="/" className="flex items-center gap-3 md:gap-4 shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
               <img
                 src={logoSrc}
                 alt="Silver Spine Studio logo"
-                className="h-[72px] md:h-[88px] w-auto select-none shrink-0"
+                className="h-[64px] md:h-[88px] w-auto select-none shrink-0"
                 draggable="false"
               />
             ) : (
@@ -171,21 +161,7 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
               </span>
             )}
           </Link>
-          <nav className="flex flex-wrap items-center justify-end gap-4 md:gap-6 text-sm md:text-base">
-            {NAV_LINKS.map(({ href, label }) => {
-              const active = isNavActive(router.pathname, router.asPath, href);
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  aria-current={active ? "page" : undefined}
-                  className={`transition ${active ? "text-red-500 font-semibold" : "text-gray-200 hover:text-[#a77a23]"}`}
-                >
-                  {label}
-                </Link>
-              );
-            })}
-          </nav>
+          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
       </header>
 
