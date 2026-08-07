@@ -147,7 +147,20 @@ export default function Blog() {
   };
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative">
+      <div className="blog-rain" aria-hidden="true">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/storm-lightning.png"
+        >
+          <source src="/Firefly-Rain.mp4" type="video/mp4" />
+        </video>
+        <div className="blog-rain-shade" />
+      </div>
       <Head>
         <title>Blog | Silver Spine Studio™</title>
         <meta
@@ -181,8 +194,33 @@ export default function Blog() {
           }
           .page-frame > *:last-child { margin-bottom: 0 !important; }
 
+          /* Quiet rain atmosphere — behind content, never louder than the cards */
+          .blog-rain {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+          }
+          .blog-rain video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.30;
+            filter: brightness(0.5) contrast(1.05) saturate(0.8);
+          }
+          .blog-rain-shade {
+            position: absolute;
+            inset: 0;
+            background:
+              radial-gradient(ellipse at 50% 35%, rgba(0,0,0,0.25), rgba(0,0,0,0.72) 70%),
+              rgba(0,0,0,0.45);
+          }
+
           /* Nebula ribbons (unchanged) */
           .nebula {
+            position: relative;
+            z-index: 2;
             width: 100%;
             background-image: url('${NEBULA}');
             background-size: cover;
@@ -232,7 +270,7 @@ export default function Blog() {
       {/* ===== HEADER (GREY GRADIENT) ===== */}
       <header
         ref={headerRef}
-        className="sticky top-0 z-50 bg-gradient-to-b from-gray-950 to-gray-900 border-b border-[#a77a23]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+        className="sticky top-0 z-50 bg-gradient-to-b from-gray-950/95 to-gray-900/95 backdrop-blur-sm border-b border-[#a77a23]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
       >
         {/* 3 columns: left logo / center chip / right nav */}
         <div className="nav-wrap mx-auto grid grid-cols-3 items-center px-6 py-3 md:py-4">
@@ -298,11 +336,11 @@ export default function Blog() {
       </header>
 
       {/* ===== MAIN ===== */}
-      <main className="page-frame">
+      <main className="page-frame relative z-10">
         {/* Top ribbon */}
         <div className="nebula nebula-top" aria-hidden="true" />
 
-        <div className="max-w-7xl mx-auto px-6 md:px-8 pt-6 md:pt-8 pb-8 md:pb-10">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-8 pt-6 md:pt-8 pb-8 md:pb-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-7 items-start">
             {/* LEFT: logo + two cards */}
             <section className="space-y-4">
@@ -319,7 +357,7 @@ export default function Blog() {
               </div>
 
               {/* CARD 1 */}
-              <article className="rounded-xl bg-black/60 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
+              <article className="rounded-xl bg-black/80 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
                 <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
                   <span className="uppercase tracking-wide">Announcement</span>
                   <time dateTime="2025-10-13">Oct 13, 2025</time>
@@ -398,7 +436,7 @@ export default function Blog() {
               </article>
 
               {/* CARD 2 */}
-              <article className="rounded-xl bg-black/60 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
+              <article className="rounded-xl bg-black/80 border border-white/10 p-5 hover:border-[#a77a23]/40 transition">
                 <div className="flex items-center justify-between text:[11px] text-gray-400 mb-2">
                   <span className="uppercase tracking-wide">Behind the Scenes</span>
                   <time dateTime="2025-10-06">Oct 6, 2025</time>
