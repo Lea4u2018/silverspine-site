@@ -167,41 +167,58 @@ export default function Books() {
     }
   };
 
-  // ===== Trailer: start with sound when the browser allows; mute toggle for visitors =====
+  // ===== Trailer: always start muted (phones block unmuted autoplay after ~1s) =====
   const trailerRef = useRef(null);
-  const [trailerMuted, setTrailerMuted] = useState(false);
-  const [showTrailerSoundHint, setShowTrailerSoundHint] = useState(false);
+  const [trailerMuted, setTrailerMuted] = useState(true);
+  const [showTrailerSoundHint, setShowTrailerSoundHint] = useState(true);
 
   useEffect(() => {
     const vid = trailerRef.current;
     if (!vid) return;
 
     let cancelled = false;
-    const startWithSound = async () => {
-      vid.muted = false;
-      vid.volume = 0.85;
+
+    const playMuted = async () => {
+      vid.defaultMuted = true;
+      vid.muted = true;
+      vid.setAttribute("muted", "");
+      vid.playsInline = true;
       try {
         await vid.play();
-        if (!cancelled) {
-          setTrailerMuted(false);
-          setShowTrailerSoundHint(false);
-        }
       } catch {
-        // Autoplay with sound is blocked — keep picture playing, ask for one tap.
-        try {
-          vid.muted = true;
-          await vid.play();
-        } catch {}
-        if (!cancelled) {
-          setTrailerMuted(true);
-          setShowTrailerSoundHint(true);
-        }
+        // Wait for a user tap on the video/controls.
+      }
+      if (!cancelled) {
+        setTrailerMuted(true);
+        setShowTrailerSoundHint(true);
       }
     };
 
-    startWithSound();
+    // If the OS pauses unmuted autoplay, recover as muted so visitors still see it.
+    const onPause = () => {
+      if (cancelled || !vid || document.hidden) return;
+      if (vid.currentTime > 0 && vid.currentTime < 3 && !vid.ended) {
+        vid.muted = true;
+        vid.play().catch(() => {});
+        setTrailerMuted(true);
+        setShowTrailerSoundHint(true);
+      }
+    };
+
+    const onStalled = () => {
+      if (cancelled || !vid) return;
+      vid.muted = true;
+      vid.play().catch(() => {});
+    };
+
+    vid.addEventListener("pause", onPause);
+    vid.addEventListener("stalled", onStalled);
+    playMuted();
+
     return () => {
       cancelled = true;
+      vid.removeEventListener("pause", onPause);
+      vid.removeEventListener("stalled", onStalled);
     };
   }, []);
 
@@ -219,6 +236,7 @@ export default function Books() {
     } else {
       vid.muted = true;
       setTrailerMuted(true);
+      setShowTrailerSoundHint(true);
     }
   };
 
@@ -326,9 +344,10 @@ export default function Books() {
                   ref={trailerRef}
                   controls
                   autoPlay
+                  muted
                   loop
                   playsInline
-                  preload="auto"
+                  preload="metadata"
                   className="w-full h-full object-cover absolute inset-0 z-40"
                   style={{ width: "100%", height: "100%", pointerEvents: "auto" }}
                 >
