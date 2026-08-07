@@ -101,6 +101,9 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
             text-transform: uppercase;
             margin: 1.75rem 0 0.65rem;
           }
+          .info-prose.tone-faq h2 {
+            color: #9ca3af;
+          }
           .info-prose p, .info-prose li {
             color: #d1d5db;
             line-height: 1.65;
