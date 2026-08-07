@@ -101,9 +101,6 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
             text-transform: uppercase;
             margin: 1.75rem 0 0.65rem;
           }
-          .info-prose.tone-faq h2 {
-            color: #9ca3af;
-          }
           .info-prose p, .info-prose li {
             color: #d1d5db;
             line-height: 1.65;
@@ -113,10 +110,12 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
           .info-prose li + li { margin-top: 0.35rem; }
           .info-prose a { color: ${GOLD}; text-decoration: underline; text-underline-offset: 2px; }
           .info-prose.tone-faq a {
-            color: #ffffff;
+            color: ${GOLD};
+            text-decoration-color: #ffffff;
           }
           .info-prose.tone-faq a:hover {
             color: ${GOLD};
+            text-decoration-color: #ffffff;
           }
           .faq-item {
             border-top: 1px solid rgba(255,255,255,0.08);
