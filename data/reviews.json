@@ -24,8 +24,9 @@
       "text": "Checking that free review storage works after deploy.",
       "rating": 5,
       "approved": false,
-      "rejected": false,
-      "createdAt": "2026-08-08T04:54:49.174Z"
+      "rejected": true,
+      "createdAt": "2026-08-08T04:54:49.174Z",
+      "rejectedAt": "2026-08-08T04:59:43.194Z"
     }
   ]
 }
