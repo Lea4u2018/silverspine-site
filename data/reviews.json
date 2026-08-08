@@ -5,9 +5,10 @@
       "name": "Lee  James",
       "text": "Test for the reviews. I am the admin.",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-08T04:58:31.092Z"
+      "createdAt": "2026-08-08T04:58:31.092Z",
+      "approvedAt": "2026-08-08T04:59:59.242Z"
     },
     {
       "id": "b941b7d80048e73d",
