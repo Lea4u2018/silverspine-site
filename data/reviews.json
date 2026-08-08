@@ -15,8 +15,9 @@
       "text": "Browser-context check that review submit works.",
       "rating": 5,
       "approved": false,
-      "rejected": false,
-      "createdAt": "2026-08-08T04:56:19.207Z"
+      "rejected": true,
+      "createdAt": "2026-08-08T04:56:19.207Z",
+      "rejectedAt": "2026-08-08T04:59:46.954Z"
     },
     {
       "id": "c41d549b69d77000",
