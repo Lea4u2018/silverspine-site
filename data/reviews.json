@@ -1,6 +1,15 @@
 {
   "reviews": [
     {
+      "id": "b941b7d80048e73d",
+      "name": "Browser Diag",
+      "text": "Browser-context check that review submit works.",
+      "rating": 5,
+      "approved": false,
+      "rejected": false,
+      "createdAt": "2026-08-08T04:56:19.207Z"
+    },
+    {
       "id": "c41d549b69d77000",
       "name": "Setup Test",
       "text": "Checking that free review storage works after deploy.",
