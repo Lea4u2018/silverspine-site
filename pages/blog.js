@@ -9,6 +9,7 @@ import BlogFigures from "@/components/BlogFigures";
 import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import { bindChromeVars } from "@/lib/chromeVars";
+import { readPreferredLang } from "@/lib/i18n";
 
 /**
  * One distinct hero per blog card (no repeats across the feed).
@@ -133,6 +134,9 @@ export default function Blog() {
   const [pressNeeds, setPressNeeds] = useState("Interview, logo usage, and cover art");
   const [pressDeadline, setPressDeadline] = useState("");
   const [pressAgree, setPressAgree] = useState(false);
+  const [pressStatus, setPressStatus] = useState({ state: "idle", msg: "" });
+  const [pressStartedAt] = useState(() => Date.now());
+  const [pressHp, setPressHp] = useState("");
 
   // Twin clocks — Colorado mountain time + visitor's local time
   const [clockPair, setClockPair] = useState({ mountain: "", local: "" });
@@ -161,29 +165,58 @@ export default function Blog() {
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
-  const submitPress = (e) => {
+  const submitPress = async (e) => {
     e.preventDefault();
     if (!pressAgree) return;
-    const subject = encodeURIComponent("Press Request — The Beautiful Beast / Silver Spine Studio");
-    const body = encodeURIComponent(
-      [
-        "Hi,",
-        "",
-        "Press request details:",
-        "",
-        `Name: ${pressName}`,
-        `Outlet: ${pressOutlet}`,
-        `Email: ${pressEmail}`,
-        `Deadline: ${pressDeadline || "N/A"}`,
-        `Needs: ${pressNeeds}`,
-        "",
-        "I acknowledge materials (if shared) are confidential and not for redistribution without written consent.",
-        "",
-        "Thanks!",
-      ].join("\n")
-    );
-    window.location.href = `mailto:${REQUEST_EMAIL}?subject=${subject}&body=${body}`;
-    setShowPress(false);
+    setPressStatus({ state: "sending", msg: "" });
+    try {
+      const response = await fetch("/api/contact-safe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "media",
+          name: pressName,
+          email: pressEmail,
+          outlet: pressOutlet,
+          deadline: pressDeadline,
+          message: [
+            "Press / media request from the Blog press kit form.",
+            `Needs: ${pressNeeds || "Interview, logo usage, and cover art"}`,
+            "Agreed to confidential materials terms on the site form.",
+          ].join("\n"),
+          language: readPreferredLang(),
+          hp: pressHp,
+          startedAt: pressStartedAt,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok && data.ok) {
+        setPressStatus({
+          state: "success",
+          msg: data.message || "Thanks — your press request was sent.",
+        });
+        setPressName("");
+        setPressOutlet("");
+        setPressEmail("");
+        setPressNeeds("Interview, logo usage, and cover art");
+        setPressDeadline("");
+        setPressAgree(false);
+        window.setTimeout(() => {
+          setShowPress(false);
+          setPressStatus({ state: "idle", msg: "" });
+        }, 2200);
+      } else {
+        setPressStatus({
+          state: "error",
+          msg: data.error || "Something went wrong. Please try again.",
+        });
+      }
+    } catch {
+      setPressStatus({
+        state: "error",
+        msg: "Network error. Please check your connection.",
+      });
+    }
   };
 
   return (
@@ -1212,6 +1245,15 @@ export default function Blog() {
               <button onClick={() => setShowPress(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <form onSubmit={submitPress} className="space-y-4">
+              <div className="hidden" aria-hidden="true">
+                <label>Leave this empty</label>
+                <input
+                  type="text"
+                  value={pressHp}
+                  onChange={(e) => setPressHp(e.target.value)}
+                  autoComplete="off"
+                />
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-gray-300 mb-1">Your name</label>
@@ -1229,8 +1271,8 @@ export default function Blog() {
                   <input type="email" value={pressEmail} onChange={e => setPressEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
                 <div>
-                  <label className="block text sm text-gray-300 mb-1">Deadline (optional)</label>
-                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2025" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                  <label className="block text-sm text-gray-300 mb-1">Deadline (optional)</label>
+                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2026" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
               </div>
 
@@ -1244,12 +1286,30 @@ export default function Blog() {
                 <span>I acknowledge materials (if shared) are confidential and not for redistribution without written consent.</span>
               </label>
 
+              {pressStatus.msg ? (
+                <p
+                  className={`text-sm font-semibold ${
+                    pressStatus.state === "success" ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {pressStatus.msg}
+                </p>
+              ) : null}
+
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowPress(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
-                <button type="submit" disabled={!pressAgree} className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50">Send request</button>
+                <button type="submit" disabled={!pressAgree || pressStatus.state === "sending"} className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50">
+                  {pressStatus.state === "sending" ? "Sending…" : "Send request"}
+                </button>
               </div>
 
-              <p className="text-xs text-gray-400 mt-2">Submitting opens your email client with a prefilled message to {REQUEST_EMAIL}. No files are shared on this page.</p>
+              <p className="text-xs text-gray-400 mt-2">
+                Sends securely to the studio inbox (tagged [MEDIA REQUEST]). Or use{" "}
+                <Link href="/contact?topic=media" className="text-[#a77a23] font-semibold hover:underline">
+                  Contact → Media request &amp; interviews
+                </Link>
+                . No files are shared on this page.
+              </p>
             </form>
           </div>
         </div>

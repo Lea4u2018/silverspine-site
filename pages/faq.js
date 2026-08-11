@@ -58,11 +58,11 @@ const SECTIONS = [
     items: [
       {
         q: "What is the benefit of buying the Extended Sneak Peek today?",
-        a: `Buying the limited preview for ${NOVEL_PRICING.sneakPeek} helps whitelist your email for the ${NOVEL_PRICING.insider} insider full-novel rate from ${NOVEL_PRICING.insiderStartLabel} through ${NOVEL_PRICING.insiderEndLabel}. After that window, full retail is ${NOVEL_PRICING.retail} starting ${NOVEL_PRICING.retailFromLabel}.`,
+        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full novel for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) during preorder, ${NOVEL_PRICING.insiderStartLabel} – ${NOVEL_PRICING.insiderEndLabel}. Official release is ${NOVEL_PRICING.releaseLabel} at regular price ${NOVEL_PRICING.retail} — well timed for holiday gifting.`,
       },
       {
         q: "How much does everything cost?",
-        a: `Sneak peek: ${NOVEL_PRICING.sneakPeek}. Insider full novel: ${NOVEL_PRICING.insider} (${NOVEL_PRICING.insiderStartLabel} – ${NOVEL_PRICING.insiderEndLabel}). Full retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}.`,
+        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist). Insider Deal / preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.insiderStartLabel} – ${NOVEL_PRICING.insiderEndLabel}, sneak-peek buyers). Regular price: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}.`,
       },
       {
         q: "Can I get a refund after I buy?",
@@ -70,15 +70,48 @@ const SECTIONS = [
       },
       {
         q: "How do I join the launch list?",
-        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, preorder-window reminders, and release-day alerts.",
+        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, preorder-window reminders, and release-day alerts. Launch-list members are also entered for a drawing: 3 lucky sleuths win a free FULL digital copy of The Beautiful Beast (readable on your devices). Winners announced mid-October 2026 by email and on social.",
+      },
+      {
+        q: "How do I enter the free digital copy giveaway?",
+        a: "Join the launch list on the website before the drawing. Three winners receive a free full digital novel. Announcement mid-October 2026; winners notified in their inbox and on Silver Spine socials. Separate from ARC applications.",
       },
       {
         q: "What is an ARC request?",
-        a: "ARC means Advanced Review Copy / early-release review access for selected readers. That is separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
+        a: "ARC means Advanced Review Copy / early-release review access. We select 25 sleuths from applications (Aug 7–14, 2026; selection emails Aug 17). Delivery is Sep 21–23, 2026. Separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
       },
       {
         q: "How do I contact Silver Spine Studio?",
-        a: "Use the Contact page or email contact@silverspinestudio.com for support and questions.",
+        a: "Use the Contact page or email contact@silverspinestudio.com for support and questions. On Contact choose Book launch & general, Media request & interviews, or Website build inquiry (for custom site requests).",
+      },
+      {
+        q: "How do I request a press kit or interview?",
+        a: "Use Contact → Media request & interviews (or open /contact?topic=media). You can also use Request press kit on the Blog. Those messages are tagged [MEDIA REQUEST] in the studio inbox.",
+      },
+    ],
+  },
+  {
+    title: "This website & custom site questions",
+    items: [
+      {
+        q: "Did you design this website yourself?",
+        a: "Yes. Silver Spine Studio™ was hand-built by the author with PyCharm, Next.js, React, and Tailwind CSS — the same credit shown in the site footer.",
+      },
+      {
+        q: "Do you build websites for other people?",
+        a: "Site projects for others are considered by inquiry only — not an open storefront right now. Book launch comes first. For a custom site request, use Contact → Website build inquiry (or open /contact?topic=sites). Those messages are tagged [WEBSITE INQUIRY] in the studio inbox.",
+      },
+      {
+        q: "How does acceptance work for a site project?",
+        a: "Acceptance varies based on project criteria, fit, and timing. A clear brief helps: what you’re launching (author brand, book series, business), the scope you need, and your preferred timeframe. Not every request can be taken.",
+      },
+      {
+        q: "What is a typical turnaround time?",
+        a: "If a project is accepted, turnaround is at least one month — often longer depending on scope, content readiness, and calendar. Exact timing is confirmed only after reviewing the brief.",
+      },
+      {
+        q: "What should I include if I message about a website?",
+        a: "Share what you’re building, who it’s for, whether you need a full site or a focused landing page, any must-have pages, and your ideal timing. Questions-only notes are welcome too — you don’t have to be ready to hire.",
       },
     ],
   },
@@ -90,10 +123,14 @@ export default function FAQ() {
       title="FAQ"
       eyebrow="Help"
       tone="faq"
-      description="Answers about The Beautiful Beast, the Seven-Fold Chronicle, digital downloads, pricing windows, and how to stay updated."
+      description="Answers about The Beautiful Beast, the Seven-Fold Chronicle, digital downloads, pricing windows, launch updates, and questions about this website."
     >
       {SECTIONS.map((section) => (
-        <section key={section.title} className="mb-2">
+        <section
+          key={section.title}
+          id={section.title === "This website & custom site questions" ? "website-custom-sites" : undefined}
+          className="mb-2 scroll-mt-28"
+        >
           <h2>{section.title}</h2>
           <div>
             {section.items.map((item) => (

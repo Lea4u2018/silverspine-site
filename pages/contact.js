@@ -1,97 +1,47 @@
 // /pages/contact.js
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
+import { readPreferredLang } from "@/lib/i18n";
+import { bindChromeVars } from "@/lib/chromeVars";
 
 export default function Contact() {
   const GOLD = "#a77a23";
 
-  // ===== Measure header/footer so the GLOBAL footer stays in view (mirrors About) =====
+  // ===== Measure header (footer read once) — do not observe footer (jump loop) =====
   const headerRef = useRef(null);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer");
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(setVars);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const footerEl = document.getElementById("site-footer");
-      if (footerEl) ro.observe(footerEl);
-    }
-    window.addEventListener("load", setVars);
-    window.addEventListener("resize", setVars);
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("load", setVars);
-      window.removeEventListener("resize", setVars);
-    };
-  }, []);
-
-  // ---------- Disc logo loader ----------
-  const [logoSrc, setLogoSrc] = useState(null);
+  // ---------- Disc logo (instant primary — no cache-bust delay) ----------
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-    const CANDIDATES = [
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-      "/SilverSpine_FB_Profile_1024.png",
-      "/Silver_Spine_Studio_Logo_2025_10_11.png",
-    ];
     const tryLoad = (i = 0) => {
-      if (i >= CANDIDATES.length) { if (!cancelled) setUseTextLogo(true); return; }
+      if (i >= DISC_LOGO_CANDIDATES.length) {
+        if (!cancelled) setUseTextLogo(true);
+        return;
+      }
       const img = new Image();
-      img.onload = () => !cancelled && setLogoSrc(CANDIDATES[i]);
+      img.onload = () => {
+        if (!cancelled) {
+          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
+          setUseTextLogo(false);
+        }
+      };
       img.onerror = () => tryLoad(i + 1);
-      img.src = CANDIDATES[i] + `?v=${Date.now()}`;
+      img.src = DISC_LOGO_CANDIDATES[i];
     };
     tryLoad();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
-
-  // ---------- Thunder audio (button under the form) ----------
-  const audioRef = useRef(null);
-  const [siteAudioMuted, setSiteAudioMuted] = useState(true);
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    let el = document.getElementById("site-audio");
-    if (!el) {
-      el = document.createElement("audio");
-      el.id = "site-audio";
-      el.src = "/thunder_rumble.mp3";
-      el.loop = true;
-      el.preload = "auto";
-      document.body.appendChild(el);
-    }
-    audioRef.current = el;
-  }, []);
-  const toggleSiteAudio = async () => {
-    const a = audioRef.current;
-    if (!a) return;
-    try {
-      if (a.paused) {
-        a.muted = false;
-        a.volume = 0.12;
-        if (a.readyState < 2) a.load();
-        await a.play();
-        setSiteAudioMuted(false);
-      } else {
-        a.pause();
-        setSiteAudioMuted(true);
-      }
-    } catch { /* ignore */ }
-  };
 
   return (
     <div className="bg-black text-gray-100">
@@ -153,6 +103,7 @@ export default function Contact() {
           .nav-link { color: #e5e7eb; }
           .nav-link:hover { color: ${GOLD}; }
           .nav-active { color: #b91c1c; font-weight: 600; }
+
         `}</style>
       </Head>
 
@@ -168,12 +119,14 @@ export default function Contact() {
   aria-label="Silver Spine Studio — Home"
 >
   {logoSrc && !useTextLogo ? (
-    <img
-      src="/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png"
-      alt="Silver Spine Studio logo"
-      className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(238,242,247,0.22)]"
-      draggable="false"
-    />
+    <span className="sss-logo-halo">
+      <img
+        src="/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png"
+        alt="Silver Spine Studio logo"
+        className="sss-logo-glow h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none"
+        draggable="false"
+      />
+    </span>
   ) : (
     <span
       className="text-2xl md:text-3xl font-extrabold"
@@ -205,6 +158,8 @@ export default function Contact() {
   </div>
 </header>
 
+      <StormAtmosphere mood="porch" />
+
       {/* TOP NEBULA (band) */}
       <div className="nebula nebula-top mask-top relative z-10">
         <div className="letterbox-bar top-edge" />
@@ -213,7 +168,10 @@ export default function Contact() {
       {/* CONTENT (reserves space so footer is visible; balanced vertically) */}
       <div className="page-frame relative z-10">
         <section className="relative max-w-6xl mx-auto w-full px-4 md:px-6 pt-2 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold drop-shadow-lg" style={{ color: GOLD, letterSpacing: ".02em" }}>
+          <h1
+            className="mx-auto w-full text-center text-4xl md:text-5xl font-extrabold drop-shadow-lg"
+            style={{ color: GOLD, letterSpacing: ".02em" }}
+          >
             Get In Touch
           </h1>
         <p
@@ -224,9 +182,8 @@ export default function Contact() {
       "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)",
   }}
 >
-  Whether it’s about <em>The Beautiful Beast</em>, upcoming releases, or
-  collaborations — I’d love to hear from you. Fill out the form below,
-  and I’ll get back as soon as I can.
+  Book launch questions, collaborations, media &amp; interviews, reader notes — or questions about
+  this site. Pick a topic below and I’ll get back as soon as I can.
 </p>
         </section>
 
@@ -235,19 +192,8 @@ export default function Contact() {
           <section className="max-w-3xl mx-auto px-4 md:px-6">
             <div className="panel mt-2 mb-2">
               <div className="content">
-
-                {/* WIRE THE SECURE FORM INTERFACE ENGINE HOOK */}
                 <ContactFormEngine />
-
               </div>
-            </div>
-
-            {/* Thunder control */}
-            <div className="flex justify-center mt-2 mb-1">
-              <button type="button" onClick={toggleSiteAudio} className="inline-flex items-center gap-2 px-4 py-2 rounded-full" style={{ background: "rgba(0,0,0,0.75)", color: GOLD, border: "1px solid rgba(167,122,35,0.45)", boxShadow: "0 6px 24px rgba(0,0,0,0.45)" }} aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"} title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}>
-                {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-                {siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-              </button>
             </div>
           </section>
         </main>
@@ -260,31 +206,62 @@ export default function Contact() {
 
 // ========== THE ACTIVE SECURE INTERACTION HANDSHAKE MODULE ==========
 function ContactFormEngine() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [topic, setTopic] = useState("contact");
+  const [outlet, setOutlet] = useState("");
+  const [deadline, setDeadline] = useState("");
   const [message, setMessage] = useState("");
   const [hp, setHp] = useState("");
   const [startedAt] = useState(() => Date.now());
   const [status, setStatus] = useState({ state: "idle", msg: "" });
 
+  useEffect(() => {
+    if (!router.isReady) return;
+    const t = String(router.query.topic || "").toLowerCase();
+    if (t === "site" || t === "sites" || t === "website") {
+      setTopic("sites");
+    } else if (t === "media" || t === "press" || t === "interview" || t === "interviews") {
+      setTopic("media");
+    }
+  }, [router.isReady, router.query.topic]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ state: "sending", msg: "" });
+    const kind = topic === "sites" ? "sites" : topic === "media" ? "media" : "contact";
 
     try {
       const response = await fetch("/api/contact-safe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message, hp, startedAt }),
+        body: JSON.stringify({
+          kind,
+          name,
+          email,
+          message,
+          outlet: kind === "media" ? outlet : undefined,
+          deadline: kind === "media" ? deadline : undefined,
+          language: readPreferredLang(),
+          hp,
+          startedAt,
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.ok) {
-        setStatus({ state: "success", msg: "Thanks! Your message has been sent successfully." });
+        setStatus({
+          state: "success",
+          msg: data.message || "Thanks! Your message has been sent successfully.",
+        });
         setName("");
         setEmail("");
         setMessage("");
+        setOutlet("");
+        setDeadline("");
+        setTopic("contact");
       } else {
         setStatus({ state: "error", msg: data.error || "Something went wrong. Please try again." });
       }
@@ -293,11 +270,71 @@ function ContactFormEngine() {
     }
   };
 
+  const messagePlaceholder =
+    topic === "sites"
+      ? "Tell me about the site you need (or your question): what you’re launching, pages you want, timing, and any links/examples…"
+      : topic === "media"
+        ? "Interview format (podcast / written Q&A / live), what you need (press kit, cover art, bio), and any timing notes…"
+        : "Write your message here...";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5 text-left">
       <div className="hidden" aria-hidden="true">
         <label>Leave this empty</label>
         <input type="text" value={hp} onChange={(e) => setHp(e.target.value)} autoComplete="off" />
+      </div>
+
+      <div>
+        <label className="block mb-2 text-gray-300" htmlFor="contact-topic">
+          Topic
+        </label>
+        <select
+          id="contact-topic"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white"
+        >
+          <option value="contact">Book launch &amp; general</option>
+          <option value="media">Media request &amp; interviews</option>
+          <option value="sites">Website build inquiry</option>
+        </select>
+        {topic === "sites" ? (
+          <p className="mt-2 text-xs text-gray-400 leading-relaxed">
+            For custom site requests or questions about building a website. Your email to the studio is tagged{" "}
+            <span className="text-gray-300 font-semibold">[WEBSITE INQUIRY]</span> so it’s easy to spot.
+            Projects are by inquiry only — acceptance and timing vary (see{" "}
+            <Link
+              href="/faq#website-custom-sites"
+              className="font-semibold text-[#a77a23] underline decoration-[#a77a23]/50 underline-offset-2 hover:text-[#c49231] hover:decoration-[#c49231] transition-colors"
+            >
+              FAQ
+            </Link>
+            ).
+          </p>
+        ) : topic === "media" ? (
+          <p className="mt-2 text-xs text-gray-400 leading-relaxed">
+            For press kits, interviews, podcasts, and media features. Tagged{" "}
+            <span className="text-gray-300 font-semibold">[MEDIA REQUEST]</span> in the studio inbox. Direct link:{" "}
+            <Link
+              href="/contact?topic=media"
+              className="font-semibold text-[#a77a23] underline decoration-[#a77a23]/50 underline-offset-2 hover:text-[#c49231] hover:decoration-[#c49231] transition-colors"
+            >
+              /contact?topic=media
+            </Link>
+            .
+          </p>
+        ) : (
+          <p className="mt-2 text-xs text-gray-400 leading-relaxed">
+            Common answers on pricing, downloads, ARC, and launch updates are in the{" "}
+            <Link
+              href="/faq"
+              className="font-semibold text-[#a77a23] underline decoration-[#a77a23]/50 underline-offset-2 hover:text-[#c49231] hover:decoration-[#c49231] transition-colors"
+            >
+              FAQ
+            </Link>
+            .
+          </p>
+        )}
       </div>
 
       <div>
@@ -308,9 +345,36 @@ function ContactFormEngine() {
         <label className="block mb-2 text-gray-300">Email</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="you@example.com" />
       </div>
+
+      {topic === "media" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block mb-2 text-gray-300">Outlet / publication</label>
+            <input
+              type="text"
+              value={outlet}
+              onChange={(e) => setOutlet(e.target.value)}
+              required
+              className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white"
+              placeholder="Podcast, blog, magazine…"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 text-gray-300">Deadline (optional)</label>
+            <input
+              type="text"
+              value={deadline}
+              onChange={(e) => setDeadline(e.target.value)}
+              className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white"
+              placeholder="e.g., Oct 20, 2026"
+            />
+          </div>
+        </div>
+      )}
+
       <div>
         <label className="block mb-2 text-gray-300">Message</label>
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="Write your message here..." />
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder={messagePlaceholder} />
       </div>
 
       {status.msg && (

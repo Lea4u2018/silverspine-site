@@ -26,6 +26,11 @@ const EMAIL_TAGS = [
     outlook: "Rule: subject contains CONTACT-SSS → [CONTACT-SSS] folder",
   },
   {
+    tag: "[MEDIA REQUEST]",
+    meaning: "Press kit, interview, or media feature request",
+    outlook: "Rule: subject contains MEDIA REQUEST → [MEDIA REQUEST] folder",
+  },
+  {
     tag: "[WEBSITE INQUIRY]",
     meaning: "Custom website inquiry",
     outlook: "Rule: subject contains WEBSITE INQUIRY → [WEBSITE INQUIRY] folder",
@@ -60,7 +65,8 @@ export default function AdminNextUpPanel() {
             <li>
               Folders (with brackets, matching your setup):{" "}
               <strong>[ARC]</strong> · <strong>[LAUNCH LIST]</strong> · <strong>[REVIEWS]</strong> ·{" "}
-              <strong>[CONTACT-SSS]</strong> · <strong>[WEBSITE INQUIRY]</strong> · <strong>[AUTO REPLIED]</strong>
+              <strong>[CONTACT-SSS]</strong> · <strong>[MEDIA REQUEST]</strong> ·{" "}
+              <strong>[WEBSITE INQUIRY]</strong> · <strong>[AUTO REPLIED]</strong>
             </li>
             <li>
               Rule (run first): subject contains <code className="text-[#a77a23]">AUTO-REPLY SENT</code> → move to{" "}
@@ -74,6 +80,9 @@ export default function AdminNextUpPanel() {
             </li>
             <li>
               Rule: <code className="text-[#a77a23]">REVIEW</code> → <strong>[REVIEWS]</strong>
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">MEDIA REQUEST</code> → <strong>[MEDIA REQUEST]</strong>
             </li>
             <li>
               Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>[WEBSITE INQUIRY]</strong>

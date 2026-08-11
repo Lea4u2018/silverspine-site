@@ -95,11 +95,20 @@ export default async function handler(req, res) {
 
   // Fields: name, email, message, kind, hp (honeypot), startedAt (ms timestamp)
   // Optional ARC fields: format, reviewSpot
+  // Optional media fields: outlet, deadline
   // Only these kinds are allowed — unknown values become contact (never mis-tagged).
   const rawKind = sanitizeStr(payload.kind, 40).trim().toLowerCase();
   const kind =
-    rawKind === "arc" || rawKind === "list" || rawKind === "contact" || rawKind === "sites"
-      ? rawKind
+    rawKind === "arc" ||
+    rawKind === "list" ||
+    rawKind === "contact" ||
+    rawKind === "sites" ||
+    rawKind === "media" ||
+    rawKind === "press" ||
+    rawKind === "interview"
+      ? rawKind === "press" || rawKind === "interview"
+        ? "media"
+        : rawKind
       : "contact";
   const name = sanitizeStr(payload.name, 200).trim();
   const email = sanitizeStr(payload.email, 320).trim();
@@ -107,6 +116,8 @@ export default async function handler(req, res) {
   const preferredLang = normalizeLang(sanitizeStr(payload.language || payload.lang || "en", 16));
   const format = kind === "arc" ? sanitizeStr(payload.format, 40).trim() : "";
   const reviewSpot = kind === "arc" ? sanitizeStr(payload.reviewSpot, 80).trim() : "";
+  const outlet = kind === "media" ? sanitizeStr(payload.outlet, 200).trim() : "";
+  const deadline = kind === "media" ? sanitizeStr(payload.deadline, 120).trim() : "";
   const hp = String(payload.hp || "").trim(); // bots often fill this
   const startedAt = Number(payload.startedAt || 0);
 
@@ -129,6 +140,17 @@ export default async function handler(req, res) {
   if (kind === "sites" && !message) {
     message =
       "I'm interested in a custom website built in the Silver Spine Studio style (author / brand / business site). Please tell me about availability and next steps.";
+  }
+
+  if (kind === "media" && !message) {
+    message = [
+      "Media / interview / press-kit request for Silver Spine Studio™.",
+      outlet ? `Outlet / publication: ${outlet}` : "",
+      deadline ? `Deadline: ${deadline}` : "",
+      "Agreed to confidential materials terms on the site form.",
+    ]
+      .filter(Boolean)
+      .join("\n");
   }
 
   // Honeypot: must be empty
@@ -306,6 +328,32 @@ export default async function handler(req, res) {
         "https://www.silverspinestudio.com",
       ].join("\n"),
     },
+    media: {
+      studioSubject: `[MEDIA REQUEST] Press / interview — ${name}${outlet ? ` (${outlet})` : ""}`,
+      typeLabel: "MEDIA / INTERVIEW / PRESS REQUEST",
+      typeTag: "[MEDIA REQUEST]",
+      folderHint: "Sort to: [MEDIA REQUEST] folder (filter subject: MEDIA REQUEST)",
+      successMessage:
+        "Thanks — your media / interview request was received. Check your email for a confirmation; I’ll reply as soon as I can.",
+      customerSubject: "We received your media request — Silver Spine Studio™",
+      customerText: [
+        `Hi ${firstName},`,
+        "",
+        "Thank you for reaching out to Silver Spine Studio™ about media, interviews, or press materials for The Beautiful Beast / Seven-Fold Chronicle.",
+        "",
+        "Your request arrived safely. I’ll review outlet details, timing, and what you need, then follow up as soon as I can.",
+        "",
+        "If your deadline is tight, reply to this email with the date and any interview format notes (podcast, written Q&A, live, etc.).",
+        "",
+        "Materials shared for press use (if any) are confidential and not for redistribution without written consent.",
+        "",
+        "With appreciation,",
+        "Leameso James",
+        "Silver Spine Studio™",
+        "contact@silverspinestudio.com",
+        "https://www.silverspinestudio.com",
+      ].join("\n"),
+    },
   };
 
   const mail = mailByKind[kind];
@@ -345,6 +393,8 @@ export default async function handler(req, res) {
       : "Visitor is reading in English — reply normally.",
     kind === "arc" && format ? `Preferred format: ${format}` : "",
     kind === "arc" && reviewSpot ? `Review spot: ${reviewSpot}` : "",
+    kind === "media" && outlet ? `Outlet / publication: ${outlet}` : "",
+    kind === "media" && deadline ? `Deadline: ${deadline}` : "",
     "",
     preferredLang !== "en" ? "Message (ENGLISH for you):" : "Message:",
     englishMessage,
