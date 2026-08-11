@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StarDisplay } from "@/components/StarRating";
+import AdminBlogPanel from "@/components/AdminBlogPanel";
 import { SITE_LANGUAGES, languageLabel, normalizeLang } from "@/lib/i18n";
 
 const GOLD = "#a77a23";
@@ -328,32 +329,7 @@ export default function AdminPage() {
             </div>
 
             {adminTab === "blog" ? (
-              <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-8">
-                <h2 className="text-xl font-extrabold mb-2" style={{ color: GOLD }}>
-                  Manage Blog
-                </h2>
-                <p className="text-sm text-gray-300 leading-relaxed mb-5">
-                  Open the public Blog / launch timeline. Tell me when you want wording, timeline, or ARC section
-                  updates — I’ll edit the Blog page for you.
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2 mb-4">
-                  <Link
-                    href="/blog"
-                    className="rounded-xl border border-[#a77a23]/45 bg-[#a77a23] text-black px-4 py-4 font-bold text-center hover:bg-[#c49231] transition-colors"
-                  >
-                    Open public Blog →
-                  </Link>
-                  <Link
-                    href="/blog#arc"
-                    className="rounded-xl border border-white/15 bg-white/[0.03] px-4 py-4 font-semibold text-center text-gray-100 hover:border-[#a77a23]/50 transition-colors"
-                  >
-                    ARC / launch timeline
-                  </Link>
-                </div>
-                <p className="text-xs text-gray-500">
-                  Tip: after any Blog change we deploy, hard-refresh the Blog page (pull to refresh on phone).
-                </p>
-              </section>
+              <AdminBlogPanel />
             ) : (
               <>
                 <div className="mb-6 rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/15 px-4 py-3 text-sm">
