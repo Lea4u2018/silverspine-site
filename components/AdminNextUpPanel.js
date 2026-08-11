@@ -8,32 +8,32 @@ const EMAIL_TAGS = [
   {
     tag: "[ARC REQUEST]",
     meaning: "New ARC application to your inbox",
-    outlook: "Rule: subject contains ARC REQUEST → ARC folder",
+    outlook: "Rule: subject contains ARC REQUEST → [ARC] folder",
   },
   {
     tag: "[AUTO-REPLY SENT]",
     meaning: "Automatic confirmation already emailed to the visitor",
-    outlook: "Search Sent or inbox for AUTO-REPLY SENT — do not treat as a new human reply",
+    outlook: "Rule: subject contains AUTO-REPLY SENT → [AUTO REPLIED] folder",
   },
   {
     tag: "[LAUNCH LIST]",
     meaning: "Launch-list signup",
-    outlook: "Rule: subject contains LAUNCH LIST",
+    outlook: "Rule: subject contains LAUNCH LIST → [LAUNCH LIST] folder",
   },
   {
     tag: "[CONTACT-SSS]",
     meaning: "Silver Spine contact form (unique code — won’t catch other emails with the word contact)",
-    outlook: "Rule: subject contains CONTACT-SSS → CONTACT-SSS folder",
+    outlook: "Rule: subject contains CONTACT-SSS → [CONTACT-SSS] folder",
   },
   {
     tag: "[WEBSITE INQUIRY]",
     meaning: "Custom website inquiry",
-    outlook: "Rule: subject contains WEBSITE INQUIRY",
+    outlook: "Rule: subject contains WEBSITE INQUIRY → [WEBSITE INQUIRY] folder",
   },
   {
     tag: "[REVIEW]",
     meaning: "New review submitted (if configured)",
-    outlook: "Rule: subject contains REVIEW",
+    outlook: "Rule: subject contains REVIEW → [REVIEWS] folder",
   },
 ];
 
@@ -57,30 +57,35 @@ export default function AdminNextUpPanel() {
         <div className="mb-4 rounded-xl border border-[#a77a23]/30 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
           <p className="font-semibold text-[#a77a23] mb-1">Setup once in Outlook</p>
           <ol className="list-decimal ml-5 space-y-1 text-gray-300">
-            <li>Create folders: ARC · LAUNCH LIST · REVIEWS · CONTACT-SSS · WEBSITE INQUIRY · AUTO REPLIED</li>
+            <li>
+              Folders (with brackets, matching your setup):{" "}
+              <strong>[ARC]</strong> · <strong>[LAUNCH LIST]</strong> · <strong>[REVIEWS]</strong> ·{" "}
+              <strong>[CONTACT-SSS]</strong> · <strong>[WEBSITE INQUIRY]</strong> · <strong>[AUTO REPLIED]</strong>
+            </li>
             <li>
               Rule (run first): subject contains <code className="text-[#a77a23]">AUTO-REPLY SENT</code> → move to{" "}
-              <strong>AUTO REPLIED</strong> · stop processing
+              <strong>[AUTO REPLIED]</strong> · stop processing
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">ARC REQUEST</code> → <strong>ARC</strong>
+              Rule: <code className="text-[#a77a23]">ARC REQUEST</code> → <strong>[ARC]</strong>
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">LAUNCH LIST</code> → <strong>LAUNCH LIST</strong>
+              Rule: <code className="text-[#a77a23]">LAUNCH LIST</code> → <strong>[LAUNCH LIST]</strong>
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">REVIEW</code> → <strong>REVIEWS</strong>
+              Rule: <code className="text-[#a77a23]">REVIEW</code> → <strong>[REVIEWS]</strong>
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>WEBSITE INQUIRY</strong>
+              Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>[WEBSITE INQUIRY]</strong>
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">CONTACT-SSS</code> → <strong>CONTACT-SSS</strong>
+              Rule: <code className="text-[#a77a23]">CONTACT-SSS</code> → <strong>[CONTACT-SSS]</strong>
             </li>
           </ol>
           <p className="text-xs text-gray-500 mt-2">
-            Auto-confirmations to visitors are clean. You get a separate internal email tagged{" "}
-            <code className="text-[#a77a23]">[AUTO-REPLY SENT]</code> for the AUTO REPLIED folder.
+            Folder names can keep the <code className="text-[#a77a23]">[]</code>. Rule conditions match the text
+            inside the subject tag (e.g. CONTACT-SSS). Auto-confirmations to visitors stay clean; you get a
+            separate internal email tagged <code className="text-[#a77a23]">[AUTO-REPLY SENT]</code>.
           </p>
         </div>
         <div className="space-y-3">
