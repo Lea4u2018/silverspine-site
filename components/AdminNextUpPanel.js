@@ -51,9 +51,37 @@ export default function AdminNextUpPanel() {
           Email tags (definitive)
         </h2>
         <p className="text-sm text-gray-400 mb-4">
-          Use these in Outlook search / rules. Auto-confirmations always start with{" "}
-          <strong className="text-gray-200">[AUTO-REPLY SENT]</strong>.
+          The site tags subjects. <strong className="text-gray-200">Outlook rules</strong> move them into folders
+          (the website cannot file your inbox by itself).
         </p>
+        <div className="mb-4 rounded-xl border border-[#a77a23]/30 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+          <p className="font-semibold text-[#a77a23] mb-1">Setup once in Outlook</p>
+          <ol className="list-decimal ml-5 space-y-1 text-gray-300">
+            <li>Create folders: ARC · LAUNCH LIST · REVIEWS · CONTACT · WEBSITE INQUIRY · AUTO REPLIED</li>
+            <li>
+              Rule (run first): subject contains <code className="text-[#a77a23]">AUTO-REPLY SENT</code> → move to{" "}
+              <strong>AUTO REPLIED</strong> · stop processing
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">ARC REQUEST</code> → <strong>ARC</strong>
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">LAUNCH LIST</code> → <strong>LAUNCH LIST</strong>
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">REVIEW</code> → <strong>REVIEWS</strong>
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>WEBSITE INQUIRY</strong>
+            </li>
+            <li>
+              Rule: <code className="text-[#a77a23]">[CONTACT]</code> → <strong>CONTACT</strong>
+            </li>
+          </ol>
+          <p className="text-xs text-gray-500 mt-2">
+            Auto-replies are BCC’d to you with [AUTO-REPLY SENT] so they can leave the main Inbox.
+          </p>
+        </div>
         <div className="space-y-3">
           {EMAIL_TAGS.map((row) => (
             <div

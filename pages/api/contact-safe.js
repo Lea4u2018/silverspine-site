@@ -410,6 +410,8 @@ export default async function handler(req, res) {
         await transporter.sendMail({
           from: MAIL_FROM,
           to: email,
+          // Copy lands in YOUR inbox too — Outlook rule moves [AUTO-REPLY SENT] → AUTO REPLIED folder
+          bcc: extractEmail(MAIL_TO) || undefined,
           replyTo: extractEmail(MAIL_TO) || extractEmail(MAIL_FROM),
           subject: customerSubject,
           text: customerTextFinal,
