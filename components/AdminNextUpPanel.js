@@ -21,9 +21,9 @@ const EMAIL_TAGS = [
     outlook: "Rule: subject contains LAUNCH LIST",
   },
   {
-    tag: "[CONTACT]",
-    meaning: "General contact form",
-    outlook: "Rule: subject contains CONTACT",
+    tag: "[CONTACT-SSS]",
+    meaning: "Silver Spine contact form (unique code — won’t catch other emails with the word contact)",
+    outlook: "Rule: subject contains CONTACT-SSS → CONTACT-SSS folder",
   },
   {
     tag: "[WEBSITE INQUIRY]",
@@ -57,7 +57,7 @@ export default function AdminNextUpPanel() {
         <div className="mb-4 rounded-xl border border-[#a77a23]/30 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
           <p className="font-semibold text-[#a77a23] mb-1">Setup once in Outlook</p>
           <ol className="list-decimal ml-5 space-y-1 text-gray-300">
-            <li>Create folders: ARC · LAUNCH LIST · REVIEWS · CONTACT · WEBSITE INQUIRY · AUTO REPLIED</li>
+            <li>Create folders: ARC · LAUNCH LIST · REVIEWS · CONTACT-SSS · WEBSITE INQUIRY · AUTO REPLIED</li>
             <li>
               Rule (run first): subject contains <code className="text-[#a77a23]">AUTO-REPLY SENT</code> → move to{" "}
               <strong>AUTO REPLIED</strong> · stop processing
@@ -75,11 +75,12 @@ export default function AdminNextUpPanel() {
               Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>WEBSITE INQUIRY</strong>
             </li>
             <li>
-              Rule: <code className="text-[#a77a23]">[CONTACT]</code> → <strong>CONTACT</strong>
+              Rule: <code className="text-[#a77a23]">CONTACT-SSS</code> → <strong>CONTACT-SSS</strong>
             </li>
           </ol>
           <p className="text-xs text-gray-500 mt-2">
-            Auto-replies are BCC’d to you with [AUTO-REPLY SENT] so they can leave the main Inbox.
+            Auto-confirmations to visitors are clean. You get a separate internal email tagged{" "}
+            <code className="text-[#a77a23]">[AUTO-REPLY SENT]</code> for the AUTO REPLIED folder.
           </p>
         </div>
         <div className="space-y-3">

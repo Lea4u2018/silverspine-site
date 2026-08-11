@@ -260,10 +260,10 @@ export default async function handler(req, res) {
       ].join("\n"),
     },
     contact: {
-      studioSubject: `[CONTACT] Website message — ${name}`,
+      studioSubject: `[CONTACT-SSS] Website message — ${name}`,
       typeLabel: "CONTACT FORM MESSAGE",
-      typeTag: "[CONTACT]",
-      folderHint: "Sort to: Contact Form folder (filter subject: CONTACT)",
+      typeTag: "[CONTACT-SSS]",
+      folderHint: "Sort to: CONTACT-SSS folder (filter subject: CONTACT-SSS — unique, won’t match other mail)",
       successMessage: "Thanks! Your message has been sent. Check your email for a confirmation.",
       customerSubject: "Thank you for contacting Silver Spine Studio™",
       customerText: [
@@ -325,16 +325,16 @@ export default async function handler(req, res) {
     }
   }
 
-  // Final auto-reply subject (English tags stay first so Outlook can always filter)
-  const autoReplySubjectPreview = `${AUTO_REPLY_TAG} ${mail.typeTag} ${mail.customerSubject}`;
+  // What YOU will see in the AUTO REPLIED folder (visitor never sees these tags)
+  const autoReplySubjectPreview = `${AUTO_REPLY_TAG} ${mail.typeTag} Auto-confirmation sent → ${email}`;
 
   const text = [
     `REQUEST TYPE: ${mail.typeLabel}`,
     `Outlook: ${mail.folderHint}`,
     inboundMeta,
     "",
-    `AUTO-REPLY TO VISITOR: WILL SEND`,
-    `AUTO-REPLY SUBJECT (exact tag to search): ${autoReplySubjectPreview}`,
+    `AUTO-REPLY TO VISITOR: WILL SEND (clean email — no internal tags)`,
+    `YOUR RECORD subject (for AUTO REPLIED folder): ${autoReplySubjectPreview}`,
     `How to spot already-answered confirmations: subject contains ${AUTO_REPLY_TAG}`,
     "",
     `Name: ${name}`,
@@ -394,24 +394,13 @@ export default async function handler(req, res) {
           }
         }
 
-        // English tags FIRST so you can always identify auto-replies in Sent / search
-        const customerSubject = `${AUTO_REPLY_TAG} ${mail.typeTag} ${customerSubjectBody}`;
-        const customerTextFinal = [
-          "=== AUTOMATIC CONFIRMATION ===",
-          `Tag: ${AUTO_REPLY_TAG}`,
-          `Request type: ${mail.typeTag}`,
-          "This email was sent automatically when the form was received.",
-          "It is NOT a personal follow-up from Leameso.",
-          "==============================",
-          "",
-          customerText,
-        ].join("\n");
+        // Clean message for the visitor (no internal tags in the body)
+        const customerSubject = customerSubjectBody;
+        const customerTextFinal = customerText;
 
         await transporter.sendMail({
           from: MAIL_FROM,
           to: email,
-          // Copy lands in YOUR inbox too — Outlook rule moves [AUTO-REPLY SENT] → AUTO REPLIED folder
-          bcc: extractEmail(MAIL_TO) || undefined,
           replyTo: extractEmail(MAIL_TO) || extractEmail(MAIL_FROM),
           subject: customerSubject,
           text: customerTextFinal,
@@ -423,6 +412,36 @@ export default async function handler(req, res) {
             "Auto-Submitted": "auto-replied",
           },
         });
+
+        // Separate copy to YOU only — for Outlook AUTO REPLIED folder (customers never see this)
+        try {
+          await transporter.sendMail({
+            from: MAIL_FROM,
+            to: extractEmail(MAIL_TO),
+            subject: `${AUTO_REPLY_TAG} ${mail.typeTag} Auto-confirmation sent → ${email}`,
+            text: [
+              "INTERNAL — AUTO-REPLY RECORD (not sent to the visitor as this message)",
+              "",
+              `Tag: ${AUTO_REPLY_TAG}`,
+              `Request type: ${mail.typeTag}`,
+              `Visitor: ${name} <${email}>`,
+              `Visitor-facing subject: ${customerSubject}`,
+              `Sent at: ${new Date().toISOString()}`,
+              "",
+              "Outlook: move messages with AUTO-REPLY SENT into the AUTO REPLIED folder.",
+              "",
+              "— End of record —",
+            ].join("\n"),
+            headers: {
+              "X-SilverSpine-Auto-Reply": "true",
+              "X-SilverSpine-Request-Type": mail.typeTag,
+              "X-Auto-Response-Suppress": "All",
+              "Auto-Submitted": "auto-replied",
+            },
+          });
+        } catch (bccErr) {
+          console.error(`Studio auto-reply record error (${kind}):`, bccErr);
+        }
       } catch (autoErr) {
         console.error(`Customer auto-reply error (${kind}):`, autoErr);
         // Studio notification already sent — don't fail the whole request.
