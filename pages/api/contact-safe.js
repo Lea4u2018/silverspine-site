@@ -10,6 +10,8 @@
 // You'll test it later with /contact-safe on your branch.
 
 import nodemailer from "nodemailer";
+import { languageLabel, normalizeLang } from "@/lib/i18n";
+import { fromEnglish, toEnglish } from "@/lib/translate";
 
 // ---------- Simple in-memory rate limiter (per runtime instance) ----------
 const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -92,16 +94,41 @@ export default async function handler(req, res) {
   }
 
   // Fields: name, email, message, kind, hp (honeypot), startedAt (ms timestamp)
-  const kind = sanitizeStr(payload.kind, 40).trim().toLowerCase() || "contact";
+  // Optional ARC fields: format, reviewSpot
+  // Only these kinds are allowed — unknown values become contact (never mis-tagged).
+  const rawKind = sanitizeStr(payload.kind, 40).trim().toLowerCase();
+  const kind =
+    rawKind === "arc" || rawKind === "list" || rawKind === "contact" || rawKind === "sites"
+      ? rawKind
+      : "contact";
   const name = sanitizeStr(payload.name, 200).trim();
   const email = sanitizeStr(payload.email, 320).trim();
   let message = sanitizeStr(payload.message, 5000).trim();
+  const preferredLang = normalizeLang(sanitizeStr(payload.language || payload.lang || "en", 16));
+  const format = kind === "arc" ? sanitizeStr(payload.format, 40).trim() : "";
+  const reviewSpot = kind === "arc" ? sanitizeStr(payload.reviewSpot, 80).trim() : "";
   const hp = String(payload.hp || "").trim(); // bots often fill this
   const startedAt = Number(payload.startedAt || 0);
 
   if (kind === "list" && !message) {
     message =
       "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle.";
+  }
+
+  if (kind === "arc" && !message) {
+    message = [
+      "Early-release ARC request for The Beautiful Beast.",
+      format ? `Preferred format: ${format}` : "",
+      reviewSpot ? `Where they'll review: ${reviewSpot}` : "",
+      "Agreed to personal-review-only license terms on the site form.",
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  if (kind === "sites" && !message) {
+    message =
+      "I'm interested in a custom website built in the Silver Spine Studio style (author / brand / business site). Please tell me about availability and next steps.";
   }
 
   // Honeypot: must be empty
@@ -165,35 +192,245 @@ export default async function handler(req, res) {
     },
   });
 
-  // Compose message
+  // Compose message to the studio inbox — one config per kind so titles never cross.
   const ua = sanitizeStr(req.headers["user-agent"] || "", 512);
-  const subject =
-    kind === "list"
-      ? `Launch list signup — ${name}`
-      : `New message from ${name} via SilverSpineStudio.com`;
+  const firstName = name.split(/\s+/)[0] || name;
+
+  const mailByKind = {
+    arc: {
+      studioSubject: `[ARC REQUEST] Early-release request — ${name}`,
+      typeLabel: "EARLY-RELEASE ARC REQUEST",
+      typeTag: "[ARC REQUEST]",
+      folderHint: "Sort to: ARC folder (Outlook rule: subject contains ARC REQUEST)",
+      successMessage:
+        "Thanks — your ARC request was received. Check your email for confirmation.",
+      customerSubject: "We received your early-release request — Silver Spine Studio™",
+      customerText: [
+        `Hi ${firstName},`,
+        "",
+        "Thank you for requesting an early-release ARC for The Beautiful Beast from Silver Spine Studio™. We’re glad you’re interested in reading with us — that means a lot.",
+        "",
+        "WHAT YOU APPLIED FOR",
+        "• An Advanced Review Copy (ARC) of The Beautiful Beast for personal review use",
+        `• Preferred format on file: ${format || "EPUB or PDF"}`,
+        "• This is separate from the paid Extended Sneak Peek (Prologue + Chapters 1–2)",
+        "",
+        "WHAT HAPPENS NEXT",
+        "1) ARC sign-up window: August 7–14, 2026",
+        "2) Selection emails go out: August 17, 2026 (25 sleuths)",
+        "3) If selected, ARC delivery window: September 21–23, 2026",
+        "4) Official release day: November 1, 2026",
+        "",
+        "Applying does not guarantee a spot. If you’re selected, you’ll get a separate email with download details.",
+        "",
+        "REMINDER",
+        "ARC / early-release files are licensed for your personal review only. Please do not copy, upload, resell, or share the files (or substantial excerpts), except as part of a fair review.",
+        "",
+        "With appreciation,",
+        "Leameso James",
+        "Silver Spine Studio™",
+        "contact@silverspinestudio.com",
+        "https://www.silverspinestudio.com",
+      ].join("\n"),
+    },
+    list: {
+      studioSubject: `[LAUNCH LIST] Email list signup — ${name}`,
+      typeLabel: "LAUNCH EMAIL LIST SIGNUP",
+      typeTag: "[LAUNCH LIST]",
+      folderHint: "Sort to: Launch List folder (filter subject: LAUNCH LIST)",
+      successMessage: "Thanks! You're on the list. Watch your inbox for a confirmation.",
+      customerSubject: "You're on the launch list — Silver Spine Studio™",
+      customerText: [
+        `Hi ${firstName},`,
+        "",
+        "You’re on the Silver Spine Studio™ launch list. Thank you for joining us.",
+        "",
+        "You’ll get updates on The Beautiful Beast sneak peek news, the Sep 30 Insider preorder window, and release-day alerts.",
+        "",
+        "BONUS — THREE FREE FULL DIGITAL COPIES:",
+        "Three lucky sleuths will win a free digital copy of the FULL novel (readable on your devices).",
+        "Your launch-list signup enters you. Winners will be announced mid-October 2026 by email inbox and on Silver Spine socials.",
+        "",
+        "This list is separate from ARC / early-release review requests.",
+        "",
+        "With appreciation,",
+        "Leameso James",
+        "Silver Spine Studio™",
+        "https://www.silverspinestudio.com",
+      ].join("\n"),
+    },
+    contact: {
+      studioSubject: `[CONTACT] Website message — ${name}`,
+      typeLabel: "CONTACT FORM MESSAGE",
+      typeTag: "[CONTACT]",
+      folderHint: "Sort to: Contact Form folder (filter subject: CONTACT)",
+      successMessage: "Thanks! Your message has been sent. Check your email for a confirmation.",
+      customerSubject: "Thank you for contacting Silver Spine Studio™",
+      customerText: [
+        `Hi ${firstName},`,
+        "",
+        "Thank you for contacting Silver Spine Studio™.",
+        "",
+        "Your message arrived safely, and it matters to us. I’ll review what you sent and follow up as soon as I can.",
+        "",
+        "If your note is about a purchase, file access, or something time-sensitive, please keep this email handy so we can continue the conversation in one thread.",
+        "",
+        "With appreciation,",
+        "Leameso James",
+        "Silver Spine Studio™",
+        "contact@silverspinestudio.com",
+        "https://www.silverspinestudio.com",
+      ].join("\n"),
+    },
+    sites: {
+      studioSubject: `[WEBSITE INQUIRY] Custom site / website question — ${name}`,
+      typeLabel: "WEBSITE BUILD INQUIRY",
+      typeTag: "[WEBSITE INQUIRY]",
+      folderHint: "Sort to: Website Inquiries folder (filter subject: WEBSITE INQUIRY)",
+      successMessage:
+        "Thanks — your website inquiry was received. Check your email for a confirmation; I’ll reply as soon as I can.",
+      customerSubject: "Thank you for contacting Silver Spine Studio™ — website inquiry",
+      customerText: [
+        `Hi ${firstName},`,
+        "",
+        "Thank you for contacting Silver Spine Studio™ about a website / custom site question.",
+        "",
+        "Your inquiry arrived safely. Book launch comes first, and projects are considered by inquiry, fit, and timing — I’ll review what you sent and reply as soon as I can.",
+        "",
+        "If you haven’t already, you can include: what you’re launching, pages you need, and your preferred timing.",
+        "",
+        "With appreciation,",
+        "Leameso James",
+        "Silver Spine Studio™",
+        "contact@silverspinestudio.com",
+        "https://www.silverspinestudio.com",
+      ].join("\n"),
+    },
+  };
+
+  const mail = mailByKind[kind];
+  const AUTO_REPLY_TAG = "[AUTO-REPLY SENT]";
+
+  // Visitor chose a language: translate THEIR message → English for the studio inbox.
+  // Keep the original below so nothing is lost.
+  let englishMessage = message;
+  let inboundMeta = "Language: English (no translation needed)";
+  if (preferredLang !== "en") {
+    const inbound = await toEnglish(message, preferredLang);
+    if (inbound.translated && inbound.text) {
+      englishMessage = inbound.text;
+      inboundMeta = `Visitor language: ${languageLabel(preferredLang)} · inbound translated to English via ${inbound.provider || "unknown"}`;
+    } else {
+      inboundMeta = `Visitor language: ${languageLabel(preferredLang)} · ENGLISH TRANSLATION UNAVAILABLE (${inbound.note || "add DEEPL_AUTH_KEY or GOOGLE_TRANSLATE_API_KEY in Vercel"}) — original shown below`;
+    }
+  }
+
+  // Final auto-reply subject (English tags stay first so Outlook can always filter)
+  const autoReplySubjectPreview = `${AUTO_REPLY_TAG} ${mail.typeTag} ${mail.customerSubject}`;
+
   const text = [
-    kind === "list" ? "Type: Launch email list signup" : "Type: Contact form",
+    `REQUEST TYPE: ${mail.typeLabel}`,
+    `Outlook: ${mail.folderHint}`,
+    inboundMeta,
+    "",
+    `AUTO-REPLY TO VISITOR: WILL SEND`,
+    `AUTO-REPLY SUBJECT (exact tag to search): ${autoReplySubjectPreview}`,
+    `How to spot already-answered confirmations: subject contains ${AUTO_REPLY_TAG}`,
+    "",
     `Name: ${name}`,
     `Email: ${email}`,
+    `Reply language for this visitor: ${languageLabel(preferredLang)}`,
+    preferredLang !== "en"
+      ? `TO REPLY IN THEIR LANGUAGE: write English at https://www.silverspinestudio.com/admin?replyLang=${encodeURIComponent(preferredLang)}&to=${encodeURIComponent(email)} → Reply translator → Copy / open email`
+      : "Visitor is reading in English — reply normally.",
+    kind === "arc" && format ? `Preferred format: ${format}` : "",
+    kind === "arc" && reviewSpot ? `Review spot: ${reviewSpot}` : "",
     "",
-    "Message:",
-    message,
+    preferredLang !== "en" ? "Message (ENGLISH for you):" : "Message:",
+    englishMessage,
+    preferredLang !== "en" ? "" : null,
+    preferredLang !== "en" ? "Message (ORIGINAL as typed by visitor):" : null,
+    preferredLang !== "en" ? message : null,
     "",
     `—`,
     `IP: ${ip}`,
     `User-Agent: ${ua}`,
     `Received: ${new Date().toISOString()}`,
-  ].join("\n");
+  ]
+    .filter((line) => line !== "" && line !== null)
+    .join("\n");
 
   try {
     await transporter.sendMail({
       from: MAIL_FROM,
       to: MAIL_TO,
       replyTo: `${name} <${email}>`,
-      subject,
+      subject: mail.studioSubject,
       text,
+      headers: {
+        "X-SilverSpine-Request-Type": mail.typeTag,
+        "X-SilverSpine-Kind": kind,
+      },
     });
-    return res.status(200).json({ ok: true, message: "Thanks! Your message has been sent." });
+
+    // Auto-acknowledge to the visitor — in THEIR language whenever translation works.
+    if (mail.customerSubject && mail.customerText) {
+      try {
+        let customerSubjectBody = mail.customerSubject;
+        let customerText = mail.customerText;
+        let replyLangNote = "en";
+        if (preferredLang !== "en") {
+          const sub = await fromEnglish(mail.customerSubject, preferredLang);
+          const body = await fromEnglish(mail.customerText, preferredLang);
+          if (sub.translated && sub.text) customerSubjectBody = sub.text;
+          if (body.translated && body.text) {
+            customerText = body.text;
+            replyLangNote = preferredLang;
+          } else {
+            console.error(
+              `Customer auto-reply stayed English (${kind}) for lang=${preferredLang}:`,
+              body.note || "no translation"
+            );
+          }
+        }
+
+        // English tags FIRST so you can always identify auto-replies in Sent / search
+        const customerSubject = `${AUTO_REPLY_TAG} ${mail.typeTag} ${customerSubjectBody}`;
+        const customerTextFinal = [
+          "=== AUTOMATIC CONFIRMATION ===",
+          `Tag: ${AUTO_REPLY_TAG}`,
+          `Request type: ${mail.typeTag}`,
+          "This email was sent automatically when the form was received.",
+          "It is NOT a personal follow-up from Leameso.",
+          "==============================",
+          "",
+          customerText,
+        ].join("\n");
+
+        await transporter.sendMail({
+          from: MAIL_FROM,
+          to: email,
+          replyTo: extractEmail(MAIL_TO) || extractEmail(MAIL_FROM),
+          subject: customerSubject,
+          text: customerTextFinal,
+          headers: {
+            "X-SilverSpine-Reply-Language": replyLangNote,
+            "X-SilverSpine-Auto-Reply": "true",
+            "X-SilverSpine-Request-Type": mail.typeTag,
+            "X-Auto-Response-Suppress": "All",
+            "Auto-Submitted": "auto-replied",
+          },
+        });
+      } catch (autoErr) {
+        console.error(`Customer auto-reply error (${kind}):`, autoErr);
+        // Studio notification already sent — don't fail the whole request.
+      }
+    }
+
+    return res.status(200).json({
+      ok: true,
+      message: mail.successMessage,
+    });
   } catch (err) {
     console.error("Email send error:", err);
     return res.status(502).json({ ok: false, error: "Email service error. Please try again later." });

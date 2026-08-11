@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { StarDisplay } from "@/components/StarRating";
 import AdminBlogPanel from "@/components/AdminBlogPanel";
+import AdminNextUpPanel from "@/components/AdminNextUpPanel";
 import { SITE_LANGUAGES, languageLabel, normalizeLang } from "@/lib/i18n";
 
 const GOLD = "#a77a23";
@@ -30,7 +31,7 @@ export default function AdminPage() {
   const [storage, setStorage] = useState("");
   const [busyId, setBusyId] = useState("");
   const [actionMsg, setActionMsg] = useState("");
-  const [adminTab, setAdminTab] = useState("reviews"); // "reviews" | "blog"
+  const [adminTab, setAdminTab] = useState("reviews"); // "reviews" | "blog" | "next"
 
   const [replyLang, setReplyLang] = useState("es");
   const [replyTo, setReplyTo] = useState("");
@@ -294,7 +295,7 @@ export default function AdminPage() {
         ) : (
           <>
             <div
-              className="mb-8 flex gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-black/60 sticky top-0 z-20"
+              className="mb-8 flex flex-wrap gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-black/60 sticky top-0 z-20"
               role="tablist"
               aria-label="Admin sections"
             >
@@ -304,7 +305,7 @@ export default function AdminPage() {
                 id="admin-tab-reviews"
                 aria-selected={adminTab === "reviews"}
                 onClick={() => setAdminTab("reviews")}
-                className={`flex-1 rounded-lg px-4 py-3.5 text-base font-extrabold tracking-wide transition-colors ${
+                className={`flex-1 min-w-[30%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
                   adminTab === "reviews"
                     ? "bg-[#a77a23] text-black shadow"
                     : "text-gray-200 hover:bg-white/5"
@@ -318,7 +319,7 @@ export default function AdminPage() {
                 id="admin-tab-blog"
                 aria-selected={adminTab === "blog"}
                 onClick={() => setAdminTab("blog")}
-                className={`flex-1 rounded-lg px-4 py-3.5 text-base font-extrabold tracking-wide transition-colors ${
+                className={`flex-1 min-w-[30%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
                   adminTab === "blog"
                     ? "bg-[#a77a23] text-black shadow"
                     : "text-gray-200 hover:bg-white/5"
@@ -326,10 +327,26 @@ export default function AdminPage() {
               >
                 Blog
               </button>
+              <button
+                type="button"
+                role="tab"
+                id="admin-tab-next"
+                aria-selected={adminTab === "next"}
+                onClick={() => setAdminTab("next")}
+                className={`flex-1 min-w-[30%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                  adminTab === "next"
+                    ? "bg-[#a77a23] text-black shadow"
+                    : "text-gray-200 hover:bg-white/5"
+                }`}
+              >
+                Next Up
+              </button>
             </div>
 
             {adminTab === "blog" ? (
               <AdminBlogPanel />
+            ) : adminTab === "next" ? (
+              <AdminNextUpPanel />
             ) : (
               <>
                 <div className="mb-6 rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/15 px-4 py-3 text-sm">
