@@ -1,19 +1,21 @@
 {
-  "people": 3,
-  "visits": 4,
+  "people": 4,
+  "visits": 5,
   "days": {
     "2026-08-13": {
-      "visits": 4,
+      "visits": 5,
       "ids": [
         "1188348fd38bca05",
         "8f3531ba0befcf04",
-        "2deb74b2da68a004"
+        "2deb74b2da68a004",
+        "b0348faaaf4c27b0"
       ]
     }
   },
   "known": {
     "1188348fd38bca05": "2026-08-13",
     "8f3531ba0befcf04": "2026-08-13",
-    "2deb74b2da68a004": "2026-08-13"
+    "2deb74b2da68a004": "2026-08-13",
+    "b0348faaaf4c27b0": "2026-08-13"
   }
 }
