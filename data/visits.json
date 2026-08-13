@@ -1,9 +1,9 @@
 {
   "people": 3,
-  "visits": 3,
+  "visits": 4,
   "days": {
     "2026-08-13": {
-      "visits": 3,
+      "visits": 4,
       "ids": [
         "1188348fd38bca05",
         "8f3531ba0befcf04",
