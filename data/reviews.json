@@ -1,3 +1,45 @@
 {
-  "reviews": []
+  "reviews": [
+    {
+      "id": "d619e3b763aec7bb",
+      "name": "Jose Menendez",
+      "text": "So far so good! I can sense that this will be a very good book. Can't wait to read it all.",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-14T06:35:11.752Z",
+      "approvedAt": "2026-08-14T07:09:17.680Z"
+    },
+    {
+      "id": "8ddf4c1821bf8efe",
+      "name": "Lee  James",
+      "text": "Test for the reviews. I am the admin.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:58:31.092Z",
+      "approvedAt": "2026-08-08T04:59:59.242Z",
+      "rejectedAt": "2026-08-08T05:00:31.941Z"
+    },
+    {
+      "id": "b941b7d80048e73d",
+      "name": "Browser Diag",
+      "text": "Browser-context check that review submit works.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:56:19.207Z",
+      "rejectedAt": "2026-08-08T04:59:46.954Z"
+    },
+    {
+      "id": "c41d549b69d77000",
+      "name": "Setup Test",
+      "text": "Checking that free review storage works after deploy.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:54:49.174Z",
+      "rejectedAt": "2026-08-08T04:59:43.194Z"
+    }
+  ]
 }
