@@ -1,4 +1,4 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
 import { SEARCH_MONITOR, SITE_ORIGIN } from "@/lib/searchMonitor";
 
 async function probe(url, { expectIncludes } = {}) {
@@ -35,10 +35,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method Not Allowed" });
   }
 
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    return res.status(401).json({ ok: false, error: "Unauthorized" });
-  }
+  if (!requireAuth(req, res, { ownerOnly: true })) return;
 
   const verifyUrl = `${SITE_ORIGIN}/${SEARCH_MONITOR.googleVerificationFile}`;
   const [googleVerify, sitemap, robots] = await Promise.all([

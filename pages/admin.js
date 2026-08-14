@@ -7,8 +7,10 @@ import AdminBlogPanel from "@/components/AdminBlogPanel";
 import AdminLaunchPanel from "@/components/AdminLaunchPanel";
 import AdminNeighborsPanel from "@/components/AdminNeighborsPanel";
 import AdminNextUpPanel from "@/components/AdminNextUpPanel";
+import AdminPromoPanel from "@/components/AdminPromoPanel";
 import AdminReviewsPanel from "@/components/AdminReviewsPanel";
 import AdminSearchMonitorPanel from "@/components/AdminSearchMonitorPanel";
+import { ADMIN_ROLE, tabsForRole } from "@/lib/adminRoles";
 import { languageLabel, normalizeLang } from "@/lib/i18n";
 
 const GOLD = "#a77a23";
@@ -28,9 +30,13 @@ export default function AdminPage() {
   const router = useRouter();
   const [checking, setChecking] = useState(true);
   const [authed, setAuthed] = useState(false);
-  const [password, setPassword] = useState("");
+  const [adminRole, setAdminRole] = useState(null);
+  const [ownerPassword, setOwnerPassword] = useState("");
+  const [assistantPassword, setAssistantPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [assistantLoginError, setAssistantLoginError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
+  const [loggingInAssistant, setLoggingInAssistant] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [storage, setStorage] = useState("");
   const [busyId, setBusyId] = useState("");
@@ -82,12 +88,14 @@ export default function AdminPage() {
       const data = await res.json();
       const ok = Boolean(data.ok);
       setAuthed(ok);
+      setAdminRole(ok ? data.role || ADMIN_ROLE.OWNER : null);
       if (ok) {
         await loadReviews();
         await loadVisits();
       }
     } catch {
       setAuthed(false);
+      setAdminRole(null);
     } finally {
       setChecking(false);
     }
@@ -106,36 +114,54 @@ export default function AdminPage() {
     [reviews]
   );
 
-  const login = async (e) => {
+  const visibleTabs = useMemo(() => tabsForRole(adminRole), [adminRole]);
+
+  const loginAs = async (e, role) => {
     e.preventDefault();
-    setLoggingIn(true);
-    setLoginError("");
+    const isAssistant = role === ADMIN_ROLE.ASSISTANT;
+    if (isAssistant) {
+      setLoggingInAssistant(true);
+      setAssistantLoginError("");
+    } else {
+      setLoggingIn(true);
+      setLoginError("");
+    }
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({
+          password: isAssistant ? assistantPassword : ownerPassword,
+          role,
+        }),
       });
       const data = await res.json();
       if (res.ok && data.ok) {
-        setPassword("");
+        if (isAssistant) setAssistantPassword("");
+        else setOwnerPassword("");
         setAuthed(true);
-        setAdminTab("reviews");
+        setAdminRole(data.role || role);
+        setAdminTab(isAssistant ? "launch" : "reviews");
         await loadReviews();
         await loadVisits();
+      } else if (isAssistant) {
+        setAssistantLoginError(data.error || "Login failed.");
       } else {
         setLoginError(data.error || "Login failed.");
       }
     } catch {
-      setLoginError("Network error. Please try again.");
+      if (isAssistant) setAssistantLoginError("Network error. Please try again.");
+      else setLoginError("Network error. Please try again.");
     } finally {
-      setLoggingIn(false);
+      if (isAssistant) setLoggingInAssistant(false);
+      else setLoggingIn(false);
     }
   };
 
   const logout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
     setAuthed(false);
+    setAdminRole(null);
     setReviews([]);
   };
 
@@ -238,6 +264,11 @@ export default function AdminPage() {
             <div>
               <p className="text-xs uppercase tracking-widest" style={{ color: GOLD }}>
                 Private · password required
+                {authed && adminRole === ADMIN_ROLE.ASSISTANT ? (
+                  <span className="ml-2 text-emerald-400">· Assistant</span>
+                ) : authed ? (
+                  <span className="ml-2 text-[#f5edd7]">· Owner</span>
+                ) : null}
               </p>
               <h1 className="text-xl md:text-2xl font-extrabold">Studio Admin</h1>
             </div>
@@ -264,55 +295,105 @@ export default function AdminPage() {
         {checking ? (
           <p className="text-gray-400">Checking session…</p>
         ) : !authed ? (
-          <div className="max-w-md mx-auto rounded-2xl border border-white/10 bg-gray-950/80 p-6">
-            <h2 className="text-lg font-semibold mb-2" style={{ color: GOLD }}>
-              Admin login
-            </h2>
-            <p className="text-sm text-gray-400 mb-5">
-              Customers do not see this page in the site menu. Bookmark{" "}
-              <span className="text-gray-200">silverspinestudio.com/admin</span>.
-            </p>
-            <form onSubmit={login} className="space-y-4" autoComplete="on">
-              <div>
-                <label htmlFor="admin-user" className="block text-sm mb-1">
-                  Username <span className="text-gray-500 font-normal">(for Keychain / Touch ID)</span>
-                </label>
-                <input
-                  id="admin-user"
-                  name="username"
-                  type="text"
-                  autoComplete="username"
-                  defaultValue="admin"
-                  className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-[#a77a23]"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Use <strong className="text-gray-300">admin</strong> when Keychain asks. The site only checks your password.
-                </p>
-              </div>
-              <div>
-                <label htmlFor="admin-pass" className="block text-sm mb-1">
-                  Password
-                </label>
-                <input
-                  id="admin-pass"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-[#a77a23]"
-                  required
-                />
-              </div>
-              {loginError ? <p className="text-sm text-red-400">{loginError}</p> : null}
-              <button
-                type="submit"
-                disabled={loggingIn}
-                className="w-full rounded-xl bg-[#a77a23] text-black font-semibold py-3 hover:opacity-90 disabled:opacity-60"
-              >
-                {loggingIn ? "Signing in…" : "Sign in"}
-              </button>
-            </form>
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6">
+            <div className="rounded-2xl border border-[#a77a23]/40 bg-gray-950/80 p-6">
+              <h2 className="text-lg font-semibold mb-2" style={{ color: GOLD }}>
+                Studio owner
+              </h2>
+              <p className="text-sm text-gray-400 mb-5">
+                Full access — Leameso only. Bookmark{" "}
+                <span className="text-gray-200">silverspinestudio.com/admin</span>.
+              </p>
+              <form onSubmit={(e) => loginAs(e, ADMIN_ROLE.OWNER)} className="space-y-4" autoComplete="on">
+                <div>
+                  <label htmlFor="admin-user" className="block text-sm mb-1">
+                    Username <span className="text-gray-500 font-normal">(Keychain)</span>
+                  </label>
+                  <input
+                    id="admin-user"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    defaultValue="admin"
+                    className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-[#a77a23]"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="admin-pass" className="block text-sm mb-1">
+                    Owner password
+                  </label>
+                  <input
+                    id="admin-pass"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={ownerPassword}
+                    onChange={(e) => setOwnerPassword(e.target.value)}
+                    className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-[#a77a23]"
+                    required
+                  />
+                </div>
+                {loginError ? <p className="text-sm text-red-400">{loginError}</p> : null}
+                <button
+                  type="submit"
+                  disabled={loggingIn}
+                  className="w-full rounded-xl bg-[#a77a23] text-black font-semibold py-3 hover:opacity-90 disabled:opacity-60"
+                >
+                  {loggingIn ? "Signing in…" : "Sign in as owner"}
+                </button>
+              </form>
+            </div>
+
+            <div className="rounded-2xl border border-emerald-400/35 bg-gray-950/80 p-6">
+              <h2 className="text-lg font-semibold mb-2 text-emerald-300">Administrative assistant</h2>
+              <p className="text-sm text-gray-400 mb-5">
+                Limited access for travel days — inbox, follow-up letters, reviews, and community approvals only.
+                You choose the password in Vercel as <code className="text-gray-300">ASSISTANT_PASSWORD</code>.
+              </p>
+              <form onSubmit={(e) => loginAs(e, ADMIN_ROLE.ASSISTANT)} className="space-y-4" autoComplete="on">
+                <div>
+                  <label htmlFor="assistant-user" className="block text-sm mb-1">
+                    Username <span className="text-gray-500 font-normal">(Keychain)</span>
+                  </label>
+                  <input
+                    id="assistant-user"
+                    name="username"
+                    type="text"
+                    autoComplete="username"
+                    defaultValue="assistant"
+                    className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-emerald-400/50"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="assistant-pass" className="block text-sm mb-1">
+                    Assistant password
+                  </label>
+                  <input
+                    id="assistant-pass"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={assistantPassword}
+                    onChange={(e) => setAssistantPassword(e.target.value)}
+                    className="w-full rounded-xl border border-gray-700 bg-black px-4 py-3 focus:outline-none focus:border-emerald-400/50"
+                    required
+                  />
+                </div>
+                {assistantLoginError ? <p className="text-sm text-red-400">{assistantLoginError}</p> : null}
+                <button
+                  type="submit"
+                  disabled={loggingInAssistant}
+                  className="w-full rounded-xl bg-emerald-600 text-white font-semibold py-3 hover:opacity-90 disabled:opacity-60"
+                >
+                  {loggingInAssistant ? "Signing in…" : "Sign in as assistant"}
+                </button>
+              </form>
+              <ul className="mt-5 text-xs text-gray-500 space-y-1 list-disc pl-4">
+                <li>Contact hub, tracking notes, pre-written follow-ups</li>
+                <li>Approve reviews &amp; community porch requests</li>
+                <li>No blog edits, file sends, or launch schedule changes</li>
+              </ul>
+            </div>
           </div>
         ) : (
           <>
@@ -339,11 +420,18 @@ export default function AdminPage() {
                 after you log out. Numbers start from today forward.
               </p>
             </div>
+            {adminRole === ADMIN_ROLE.ASSISTANT ? (
+              <p className="mb-4 text-sm text-emerald-200/90 rounded-xl border border-emerald-400/30 bg-emerald-950/30 px-4 py-3">
+                Assistant mode — you can run day-to-day inbox and follow-ups. File sends, blog, and launch schedule are
+                owner-only.
+              </p>
+            ) : null}
             <div
               className="mb-8 flex flex-wrap gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-black/60 sticky top-0 z-20"
               role="tablist"
               aria-label="Admin sections"
             >
+              {visibleTabs.includes("reviews") ? (
               <button
                 type="button"
                 role="tab"
@@ -358,6 +446,8 @@ export default function AdminPage() {
               >
                 Reviews
               </button>
+              ) : null}
+              {visibleTabs.includes("blog") ? (
               <button
                 type="button"
                 role="tab"
@@ -372,6 +462,8 @@ export default function AdminPage() {
               >
                 Blog
               </button>
+              ) : null}
+              {visibleTabs.includes("launch") ? (
               <button
                 type="button"
                 role="tab"
@@ -386,6 +478,24 @@ export default function AdminPage() {
               >
                 Launch
               </button>
+              ) : null}
+              {visibleTabs.includes("promo") ? (
+              <button
+                type="button"
+                role="tab"
+                id="admin-tab-promo"
+                aria-selected={adminTab === "promo"}
+                onClick={() => setAdminTab("promo")}
+                className={`flex-1 min-w-[22%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                  adminTab === "promo"
+                    ? "bg-[#a77a23] text-black shadow"
+                    : "text-gray-200 hover:bg-white/5"
+                }`}
+              >
+                Promo
+              </button>
+              ) : null}
+              {visibleTabs.includes("next") ? (
               <button
                 type="button"
                 role="tab"
@@ -400,6 +510,8 @@ export default function AdminPage() {
               >
                 Next Up
               </button>
+              ) : null}
+              {visibleTabs.includes("neighbors") ? (
               <button
                 type="button"
                 role="tab"
@@ -414,6 +526,8 @@ export default function AdminPage() {
               >
                 Community
               </button>
+              ) : null}
+              {visibleTabs.includes("search") ? (
               <button
                 type="button"
                 role="tab"
@@ -428,12 +542,15 @@ export default function AdminPage() {
               >
                 Search
               </button>
+              ) : null}
             </div>
 
             {adminTab === "blog" ? (
               <AdminBlogPanel />
             ) : adminTab === "launch" ? (
-              <AdminLaunchPanel />
+              <AdminLaunchPanel adminRole={adminRole || ADMIN_ROLE.OWNER} />
+            ) : adminTab === "promo" ? (
+              <AdminPromoPanel />
             ) : adminTab === "next" ? (
               <AdminNextUpPanel />
             ) : adminTab === "neighbors" ? (

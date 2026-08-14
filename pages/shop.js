@@ -18,8 +18,27 @@ export default function Shop() {
   const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
   const [countdownMatrix, setCountdownMatrix] = useState(LAUNCH_COUNTDOWN_MATRIX);
+  const [activePromos, setActivePromos] = useState([]);
 
   useEffect(() => bindChromeVars(headerRef.current), []);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/promo/active");
+        const data = await res.json();
+        if (!cancelled && res.ok && data.ok && Array.isArray(data.codes)) {
+          setActivePromos(data.codes);
+        }
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -241,6 +260,21 @@ export default function Shop() {
             Open the <span className="text-white font-semibold">Where to BUY</span> tab and choose your store. Live doors go straight to checkout. Grey doors unlock as more retailers finish publishing.
           </p>
         </div>
+
+        {activePromos.length ? (
+          <div className="shop-rise shop-rise-delay mb-6 rounded-xl border border-emerald-400/35 bg-emerald-950/25 px-4 py-3 text-center">
+            <p className="text-xs uppercase tracking-widest text-emerald-300 font-bold mb-1">Active offer</p>
+            {activePromos.map((p) => (
+              <p key={p.code} className="text-sm text-gray-200">
+                Use code{" "}
+                <strong className="font-mono text-[#a77a23] tracking-wide">{p.code}</strong> at checkout — {p.summary}
+                {p.expiresAt ? (
+                  <span className="text-gray-500"> · through {new Date(p.expiresAt).toLocaleDateString()}</span>
+                ) : null}
+              </p>
+            ))}
+          </div>
+        ) : null}
 
         <section
           className="shop-rise shop-rise-delay rounded-2xl border border-white/10 bg-black/50 p-5 md:p-8 shadow-2xl"

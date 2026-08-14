@@ -1,30 +1,37 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
+import { ADMIN_ROLE, assistantCanLaunchAction } from "@/lib/adminRoles";
 import { assertDistributionFile, sendDistributionEmail, sendFollowUpEmail, sendSelectionEmail } from "@/lib/launchAdminMail";
 import {
   addRecipient,
   addRecipientsBulk,
+  addContact,
+  addDiscountCode,
   dismissSubmissions,
   importSubmissions,
   launchAdminStorageMode,
   markRecipientSent,
   markSubmissionFollowUpSent,
   readLaunchAdminStore,
+  removeContact,
+  removeDiscountCode,
   removeRecipient,
   saveCountdown,
   saveDistributionFiles,
   saveDistributionUpload,
   saveEmailTemplates,
+  saveTrackingNote,
+  updateContact,
+  updateDiscountCode,
   updateRecipient,
 } from "@/lib/launchAdminStore";
 import { defaultEmailTemplates } from "@/lib/launchEmailTemplates";
 
 function requireAdmin(req, res) {
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
-    return false;
-  }
-  return true;
+  return requireAuth(req, res);
+}
+
+function requireOwner(req, res) {
+  return requireAuth(req, res, { ownerOnly: true });
 }
 
 function copyFileForType(store, copyType) {
@@ -40,7 +47,24 @@ function copyFileForType(store, copyType) {
 }
 
 export default async function handler(req, res) {
-  if (!requireAdmin(req, res)) return;
+  if (req.method === "GET") {
+    const session = requireAdmin(req, res);
+    if (!session) return;
+  } else if (req.method === "POST") {
+    const body = req.body && typeof req.body === "object" ? req.body : {};
+    const action = String(body.action || "").trim();
+    const session =
+      assistantCanLaunchAction(action) || !action
+        ? requireAdmin(req, res)
+        : requireOwner(req, res);
+    if (!session) return;
+    if (session.role === ADMIN_ROLE.ASSISTANT && action && !assistantCanLaunchAction(action)) {
+      return res.status(403).json({ ok: false, error: "Studio owner access required for this action." });
+    }
+  } else {
+    res.setHeader("Allow", "GET, POST");
+    return res.status(405).json({ ok: false, error: "Method Not Allowed" });
+  }
 
   try {
     if (req.method === "GET") {
@@ -71,6 +95,32 @@ export default async function handler(req, res) {
 
       if (action === "save-templates") {
         await saveEmailTemplates(body.emailTemplates || {});
+        return res.status(200).json({ ok: true });
+      }
+
+      if (action === "save-tracking-note") {
+        const email = String(body.email || "").trim();
+        if (!email) return res.status(400).json({ ok: false, error: "Email is required." });
+        const saved = await saveTrackingNote({ email, note: body.note });
+        return res.status(200).json({ ok: true, note: saved });
+      }
+
+      if (action === "add-contact") {
+        const row = await addContact(body);
+        return res.status(200).json({ ok: true, contact: row });
+      }
+
+      if (action === "update-contact") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing contact id." });
+        const row = await updateContact(id, body);
+        return res.status(200).json({ ok: true, contact: row });
+      }
+
+      if (action === "remove-contact") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing contact id." });
+        await removeContact(id);
         return res.status(200).json({ ok: true });
       }
 
@@ -301,6 +351,25 @@ export default async function handler(req, res) {
           results,
           errors,
         });
+      }
+
+      if (action === "add-discount-code") {
+        const code = await addDiscountCode(body);
+        return res.status(200).json({ ok: true, code });
+      }
+
+      if (action === "update-discount-code") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing code id." });
+        const code = await updateDiscountCode(id, body);
+        return res.status(200).json({ ok: true, code });
+      }
+
+      if (action === "remove-discount-code") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing code id." });
+        await removeDiscountCode(id);
+        return res.status(200).json({ ok: true });
       }
 
       return res.status(400).json({ ok: false, error: "Unknown action." });

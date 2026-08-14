@@ -7,6 +7,8 @@ import {
   catalogEntry,
   personMatchesLetter,
 } from "@/lib/launchEmailTemplates";
+import { buildLaunchActivityLog, buildTrackingProfiles, filterActivityLog, filterTrackingProfiles, replyOptionsForProfile } from "@/lib/launchActivityLog";
+import { buildContactBook, contactMailto, contactTel, filterContactBook } from "@/lib/launchContactBook";
 
 const GOLD = "#a77a23";
 
@@ -53,6 +55,16 @@ function formatWhen(iso) {
   }
 }
 
+function StatusChip({ status }) {
+  if (status === "needs-reply") {
+    return <span className="text-[10px] uppercase font-bold text-amber-400">Needs reply</span>;
+  }
+  if (status === "sent") {
+    return <span className="text-[10px] uppercase font-bold text-emerald-400">Emailed</span>;
+  }
+  return <span className="text-[10px] uppercase font-bold text-gray-500">On file</span>;
+}
+
 function SendBadge({ sent }) {
   if (!sent?.sentAt) {
     return <span className="text-gray-500">Not sent</span>;
@@ -64,7 +76,8 @@ function SendBadge({ sent }) {
   );
 }
 
-export default function AdminLaunchPanel() {
+export default function AdminLaunchPanel({ adminRole = "owner" }) {
+  const isOwner = adminRole !== "assistant";
   const [store, setStore] = useState(null);
   const [storage, setStorage] = useState("");
   const [busy, setBusy] = useState(false);
@@ -93,8 +106,50 @@ export default function AdminLaunchPanel() {
   const [templateTab, setTemplateTab] = useState("followUp-arcApplicationReceived");
   const [letterSendSelected, setLetterSendSelected] = useState({});
   const [letterSendFilter, setLetterSendFilter] = useState("suggested");
+  const [logSearch, setLogSearch] = useState("");
+  const [logKindFilter, setLogKindFilter] = useState("all");
+  const [logViewMode, setLogViewMode] = useState("people");
+  const [logStatusFilter, setLogStatusFilter] = useState("all");
+  const [noteDrafts, setNoteDrafts] = useState({});
+  const [expandedProfile, setExpandedProfile] = useState("");
+  const [rolodexTagFilter, setRolodexTagFilter] = useState("all");
+  const [editingContactId, setEditingContactId] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactCompany, setContactCompany] = useState("");
+  const [contactNotes, setContactNotes] = useState("");
+  const [contactTags, setContactTags] = useState("");
 
   const activeLetter = useMemo(() => catalogEntry(templateTab), [templateTab]);
+
+  const activityLog = useMemo(() => buildLaunchActivityLog(store), [store]);
+  const trackingProfiles = useMemo(() => buildTrackingProfiles(store), [store]);
+
+  const filteredActivityLog = useMemo(
+    () => filterActivityLog(activityLog, { query: logSearch, kind: logKindFilter }),
+    [activityLog, logSearch, logKindFilter]
+  );
+
+  const filteredProfiles = useMemo(
+    () => filterTrackingProfiles(trackingProfiles, { query: logSearch, status: logStatusFilter }),
+    [trackingProfiles, logSearch, logStatusFilter]
+  );
+
+  const contactBook = useMemo(() => buildContactBook(store), [store]);
+
+  const filteredContacts = useMemo(
+    () => filterContactBook(contactBook, { query: logSearch, tag: rolodexTagFilter }),
+    [contactBook, logSearch, rolodexTagFilter]
+  );
+
+  const rolodexTags = useMemo(() => {
+    const tags = new Set();
+    for (const c of contactBook) {
+      for (const t of c.tags || []) tags.add(t);
+    }
+    return [...tags].sort();
+  }, [contactBook]);
 
   const load = useCallback(async () => {
     const res = await fetch("/api/admin/launch");
@@ -422,6 +477,11 @@ export default function AdminLaunchPanel() {
       return;
     }
 
+    if (!isOwner) {
+      setMsg("File sends and selection notices are owner-only — use follow-up letters instead.");
+      return;
+    }
+
     if (entry.group === "selection") {
       if (submissionIds.length) {
         setMsg("Selection notices can only go to people on your send list — import inbox entries first.");
@@ -516,6 +576,97 @@ export default function AdminLaunchPanel() {
     setInboxSelected({});
   };
 
+  const profileForContact = (contact) => ({
+    name: contact.name,
+    email: contact.email,
+    recipientId: contact.recipientId || "",
+    submissionIds: contact.submissionIds || [],
+    submissionKind: contact.submissionKind || "",
+    role: contact.role || "",
+    events: contact.events || [],
+    note: contact.note,
+  });
+
+  const sendProfileFollowUp = async (profile, followUpKey, label) => {
+    const recipientIds = profile.recipientId ? [profile.recipientId] : [];
+    const submissionIds = profile.submissionIds || [];
+    if (!recipientIds.length && !submissionIds.length) {
+      setMsg("Add them to the send list first, or use Reply in mail app.");
+      return;
+    }
+    if (!window.confirm(`Send “${label}” to ${profile.name}?`)) return;
+    await post({
+      action: "send-follow-up",
+      followUpKey,
+      recipientIds,
+      submissionIds,
+    });
+  };
+
+  const saveProfileNote = async (profile) => {
+    if (!profile.email) {
+      setMsg("Need an email to save a tracking note.");
+      return;
+    }
+    const note = noteDrafts[profile.email] ?? profile.note ?? "";
+    await post({ action: "save-tracking-note", email: profile.email, note });
+  };
+
+  const clearContactForm = () => {
+    setEditingContactId("");
+    setContactName("");
+    setContactEmail("");
+    setContactPhone("");
+    setContactCompany("");
+    setContactNotes("");
+    setContactTags("");
+  };
+
+  const startEditContact = (c) => {
+    if (!c.manual) {
+      setMsg("Site contacts are edited via notes below — use Add contact for pure rolodex entries.");
+      return;
+    }
+    setEditingContactId(c.id);
+    setContactName(c.name);
+    setContactEmail(c.email);
+    setContactPhone(c.phone);
+    setContactCompany(c.company);
+    setContactNotes(c.note);
+    setContactTags((c.tags || []).join(", "));
+  };
+
+  const saveRolodexContact = async (e) => {
+    e.preventDefault();
+    const payload = {
+      name: contactName,
+      email: contactEmail,
+      phone: contactPhone,
+      company: contactCompany,
+      notes: contactNotes,
+      tags: contactTags,
+    };
+    if (editingContactId) {
+      const data = await post({ action: "update-contact", id: editingContactId, ...payload });
+      if (data?.ok) {
+        setMsg(`Updated ${contactName} in rolodex.`);
+        clearContactForm();
+      }
+      return;
+    }
+    const data = await post({ action: "add-contact", ...payload });
+    if (data?.ok) {
+      setMsg(`Added ${contactName} to rolodex.`);
+      clearContactForm();
+    }
+  };
+
+  const deleteRolodexContact = async (id, name) => {
+    if (!window.confirm(`Remove ${name} from your rolodex?`)) return;
+    await post({ action: "remove-contact", id });
+    if (editingContactId === id) clearContactForm();
+  };
+
   if (!store) {
     return <p className="text-gray-400 text-sm">Loading launch admin…</p>;
   }
@@ -526,6 +677,465 @@ export default function AdminLaunchPanel() {
     <div className="space-y-8">
       {msg ? <p className="text-sm text-gray-300 rounded-lg border border-white/10 bg-black/40 px-4 py-3">{msg}</p> : null}
 
+      <section className="rounded-2xl border border-emerald-400/35 bg-gray-950/90 p-5 md:p-6">
+        <h2 className="text-xl font-extrabold mb-1 text-emerald-300">Contact hub — tracking, replies &amp; rolodex</h2>
+        <p className="text-sm text-gray-400 mb-4">
+          Search anyone by name, email, phone, or subject. See when they wrote in, when you emailed them, jot call
+          notes, send a studio letter, or pull them up later from your contact book.
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {[
+            { id: "people", label: "By person" },
+            { id: "timeline", label: "Timeline" },
+            { id: "rolodex", label: "Contact book" },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setLogViewMode(tab.id)}
+              className={`px-3 py-1.5 rounded-lg text-sm border ${
+                logViewMode === tab.id
+                  ? "border-emerald-400/60 bg-emerald-500/15 text-white"
+                  : "border-white/15 text-gray-400"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-3 mb-4">
+          <div className="flex-1">
+            <label className="block text-xs text-gray-500 mb-1">Search</label>
+            <input
+              type="search"
+              value={logSearch}
+              onChange={(e) => setLogSearch(e.target.value)}
+              placeholder="Name, email, phone, company, subject, or date"
+              className="w-full rounded-lg bg-black border border-gray-700 px-3 py-2 text-sm"
+            />
+          </div>
+          {logViewMode === "people" ? (
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Status</label>
+              <select
+                value={logStatusFilter}
+                onChange={(e) => setLogStatusFilter(e.target.value)}
+                className="w-full lg:w-auto rounded-lg bg-black border border-gray-700 px-3 py-2 text-sm"
+              >
+                <option value="all">All people</option>
+                <option value="needs-reply">Needs reply</option>
+                <option value="sent">Already emailed</option>
+              </select>
+            </div>
+          ) : null}
+          {logViewMode === "timeline" ? (
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Events</label>
+              <select
+                value={logKindFilter}
+                onChange={(e) => setLogKindFilter(e.target.value)}
+                className="w-full lg:w-auto rounded-lg bg-black border border-gray-700 px-3 py-2 text-sm"
+              >
+                <option value="all">All events</option>
+                <option value="request">Requests only</option>
+                <option value="sent">Sends only</option>
+              </select>
+            </div>
+          ) : null}
+          {logViewMode === "rolodex" && rolodexTags.length ? (
+            <div>
+              <label className="block text-xs text-gray-500 mb-1">Tag</label>
+              <select
+                value={rolodexTagFilter}
+                onChange={(e) => setRolodexTagFilter(e.target.value)}
+                className="w-full lg:w-auto rounded-lg bg-black border border-gray-700 px-3 py-2 text-sm"
+              >
+                <option value="all">All tags</option>
+                {rolodexTags.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+        </div>
+
+        {logViewMode === "people" ? (
+          <>
+            <p className="text-xs text-gray-500 mb-3">
+              {filteredProfiles.length} person{filteredProfiles.length === 1 ? "" : "s"}
+              {logStatusFilter === "needs-reply" ? " waiting on a reply" : ""}
+            </p>
+            {filteredProfiles.length === 0 ? (
+              <p className="text-sm text-gray-500 italic">No matches — try a name, email, or phone fragment.</p>
+            ) : (
+              <div className="space-y-3 max-h-[min(60vh,560px)] overflow-y-auto pr-1">
+                {filteredProfiles.map((profile) => {
+                  const open = expandedProfile === profile.email;
+                  const profileNote = noteDrafts[profile.email] ?? profile.note ?? "";
+                  const replies = replyOptionsForProfile(profile);
+                  return (
+                    <article
+                      key={profile.email}
+                      className="rounded-xl border border-white/10 bg-black/45 overflow-hidden"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setExpandedProfile(open ? "" : profile.email)}
+                        className="w-full text-left px-4 py-3 flex flex-wrap items-start gap-3 hover:bg-white/5"
+                      >
+                        <div className="flex-1 min-w-[200px]">
+                          <p className="font-semibold text-gray-100">
+                            {profile.name}{" "}
+                            <StatusChip status={profile.status} />
+                          </p>
+                          <p className="text-sm text-[#a77a23] break-all">{profile.email}</p>
+                          {profile.businessName || profile.outlet ? (
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {[profile.businessName, profile.outlet].filter(Boolean).join(" · ")}
+                            </p>
+                          ) : null}
+                        </div>
+                        <div className="text-xs text-gray-500 shrink-0">
+                          {profile.lastRequestAt ? (
+                            <p>Requested {formatWhen(profile.lastRequestAt)}</p>
+                          ) : null}
+                          {profile.lastSentAt ? <p>Last sent {formatWhen(profile.lastSentAt)}</p> : null}
+                        </div>
+                      </button>
+                      {open ? (
+                        <div className="px-4 pb-4 pt-0 border-t border-white/10 space-y-3">
+                          <div className="flex flex-wrap gap-2 pt-3">
+                            {replies.map((opt) =>
+                              opt.type === "mailto" ? (
+                                <a
+                                  key={opt.label}
+                                  href={contactMailto(profile, opt.subject)}
+                                  className="text-xs px-3 py-1.5 rounded-lg border border-[#a77a23]/50 text-[#f5edd7] hover:bg-[#a77a23]/15"
+                                >
+                                  {opt.label}
+                                </a>
+                              ) : (
+                                <button
+                                  key={opt.followUpKey}
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() =>
+                                    sendProfileFollowUp(profile, opt.followUpKey, opt.label)
+                                  }
+                                  className="text-xs px-3 py-1.5 rounded-lg border border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/10 disabled:opacity-50"
+                                >
+                                  Send · {opt.label.replace(/^Follow-up · /, "")}
+                                </button>
+                              )
+                            )}
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Call / tracking note</label>
+                            <textarea
+                              value={profileNote}
+                              onChange={(e) =>
+                                setNoteDrafts((d) => ({ ...d, [profile.email]: e.target.value }))
+                              }
+                              rows={2}
+                              placeholder="e.g. Called 8/14 — resending ARC, check spam folder"
+                              className="w-full rounded-lg bg-black border border-gray-700 px-3 py-2 text-sm"
+                            />
+                            <button
+                              type="button"
+                              disabled={busy}
+                              onClick={() => saveProfileNote(profile)}
+                              className="mt-2 text-xs px-3 py-1.5 rounded-lg border border-white/20 text-gray-300"
+                            >
+                              Save note
+                            </button>
+                          </div>
+                          <div className="space-y-1.5">
+                            <p className="text-xs uppercase tracking-wider text-gray-500">History</p>
+                            {profile.events.slice(0, 8).map((ev) => (
+                              <div key={ev.id} className="text-xs text-gray-400 flex flex-wrap gap-2">
+                                <span className="text-gray-500 whitespace-nowrap">{formatWhen(ev.at)}</span>
+                                <span className={ev.kind === "sent" ? "text-emerald-400" : "text-sky-400"}>
+                                  {ev.kind === "sent" ? "Sent" : "Request"}
+                                </span>
+                                <span>{ev.label}</span>
+                                {ev.subject ? <span className="text-gray-600">— {ev.subject}</span> : null}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </>
+        ) : null}
+
+        {logViewMode === "timeline" ? (
+          <>
+            <p className="text-xs text-gray-500 mb-3">
+              {logSearch.trim()
+                ? `${filteredActivityLog.length} match${filteredActivityLog.length === 1 ? "" : "es"}`
+                : `Latest ${Math.min(filteredActivityLog.length, 100)} of ${activityLog.length} events`}
+            </p>
+            {filteredActivityLog.length === 0 ? (
+              <p className="text-sm text-gray-500 italic">No events match this search.</p>
+            ) : (
+              <div className="overflow-x-auto rounded-xl border border-white/10 max-h-[min(50vh,420px)] overflow-y-auto">
+                <table className="w-full text-sm text-left min-w-[820px]">
+                  <thead className="bg-black/70 text-gray-400 sticky top-0 z-10">
+                    <tr>
+                      <th className="px-3 py-2">Date</th>
+                      <th className="px-3 py-2">Type</th>
+                      <th className="px-3 py-2">Name</th>
+                      <th className="px-3 py-2">Email</th>
+                      <th className="px-3 py-2">Event / subject</th>
+                      <th className="px-3 py-2">Reply</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredActivityLog.map((row) => (
+                      <tr key={row.id} className="border-t border-white/10 align-top">
+                        <td className="px-3 py-2 text-gray-300 whitespace-nowrap">{formatWhen(row.at)}</td>
+                        <td className="px-3 py-2">
+                          {row.kind === "sent" ? (
+                            <span className="text-[10px] uppercase font-bold text-emerald-400">Sent</span>
+                          ) : (
+                            <span className="text-[10px] uppercase font-bold text-sky-400">Request</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-gray-100">{row.name}</td>
+                        <td className="px-3 py-2">
+                          <a href={contactMailto({ email: row.email }, row.subject)} className="text-[#a77a23] hover:underline break-all">
+                            {row.email}
+                          </a>
+                        </td>
+                        <td className="px-3 py-2 text-gray-300">
+                          <p>{row.label}</p>
+                          {row.subject ? <p className="text-xs text-gray-500 mt-0.5">{row.subject}</p> : null}
+                        </td>
+                        <td className="px-3 py-2">
+                          <a
+                            href={contactMailto({ email: row.email }, row.subject ? `Re: ${row.subject}` : "")}
+                            className="text-xs text-emerald-300 hover:underline"
+                          >
+                            Mail
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        ) : null}
+
+        {logViewMode === "rolodex" ? (
+          <>
+            <form onSubmit={saveRolodexContact} className="mb-5 rounded-xl border border-white/10 bg-black/40 p-4 space-y-3">
+              <h3 className="text-sm font-bold text-[#f5edd7]">
+                {editingContactId ? "Edit rolodex entry" : "Add to contact book"}
+              </h3>
+              <p className="text-xs text-gray-500">
+                Site signups appear automatically. Add vendors, press, or anyone else here — name plus email or phone.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div>
+                  <FormFieldLabel required>Name</FormFieldLabel>
+                  <input
+                    required
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <FormFieldLabel>Email</FormFieldLabel>
+                  <input
+                    type="email"
+                    value={contactEmail}
+                    onChange={(e) => setContactEmail(e.target.value)}
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <FormFieldLabel>Phone</FormFieldLabel>
+                  <input
+                    type="tel"
+                    value={contactPhone}
+                    onChange={(e) => setContactPhone(e.target.value)}
+                    placeholder="303-555-0100"
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <FormFieldLabel>Company / outlet</FormFieldLabel>
+                  <input
+                    value={contactCompany}
+                    onChange={(e) => setContactCompany(e.target.value)}
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <FormFieldLabel>Tags</FormFieldLabel>
+                  <input
+                    value={contactTags}
+                    onChange={(e) => setContactTags(e.target.value)}
+                    placeholder="press, vendor, reader"
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="sm:col-span-2 lg:col-span-3">
+                  <FormFieldLabel>Notes</FormFieldLabel>
+                  <input
+                    value={contactNotes}
+                    onChange={(e) => setContactNotes(e.target.value)}
+                    className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="submit"
+                  disabled={busy || !contactName.trim() || (!contactEmail.trim() && !contactPhone.trim())}
+                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold disabled:opacity-50"
+                >
+                  {editingContactId ? "Save changes" : "Add contact"}
+                </button>
+                {editingContactId ? (
+                  <button type="button" onClick={clearContactForm} className="px-4 py-2 rounded-lg border border-white/20 text-sm">
+                    Cancel edit
+                  </button>
+                ) : null}
+              </div>
+            </form>
+
+            <p className="text-xs text-gray-500 mb-3">
+              {filteredContacts.length} contact{filteredContacts.length === 1 ? "" : "s"} in book
+            </p>
+            {filteredContacts.length === 0 ? (
+              <p className="text-sm text-gray-500 italic">No contacts yet — they fill in from site forms or add manually above.</p>
+            ) : (
+              <div className="overflow-x-auto rounded-xl border border-white/10 max-h-[min(50vh,480px)] overflow-y-auto">
+                <table className="w-full text-sm text-left min-w-[880px]">
+                  <thead className="bg-black/70 text-gray-400 sticky top-0 z-10">
+                    <tr>
+                      <th className="px-3 py-2">Name</th>
+                      <th className="px-3 py-2">Email</th>
+                      <th className="px-3 py-2">Phone</th>
+                      <th className="px-3 py-2">Company</th>
+                      <th className="px-3 py-2">Tags</th>
+                      <th className="px-3 py-2">Last activity</th>
+                      <th className="px-3 py-2">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredContacts.map((c) => {
+                      const tel = contactTel(c);
+                      const prof = profileForContact(c);
+                      const replies = replyOptionsForProfile(prof);
+                      const followUp = replies.find((r) => r.type === "follow-up");
+                      return (
+                        <tr key={c.key} className="border-t border-white/10 align-top">
+                          <td className="px-3 py-2 text-gray-100">
+                            {c.name}
+                            {c.status === "needs-reply" ? (
+                              <span className="ml-1 text-[10px] text-amber-400 font-bold">NEEDS REPLY</span>
+                            ) : null}
+                          </td>
+                          <td className="px-3 py-2">
+                            {c.email ? (
+                              <a href={contactMailto(c)} className="text-[#a77a23] hover:underline break-all">
+                                {c.email}
+                              </a>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                          <td className="px-3 py-2">
+                            {tel ? (
+                              <a href={tel} className="text-sky-300 hover:underline whitespace-nowrap">
+                                {c.phone}
+                              </a>
+                            ) : (
+                              "—"
+                            )}
+                          </td>
+                          <td className="px-3 py-2 text-gray-400">{c.company || "—"}</td>
+                          <td className="px-3 py-2 text-xs text-gray-500">{(c.tags || []).join(", ") || "—"}</td>
+                          <td className="px-3 py-2 text-xs text-gray-500 whitespace-nowrap">
+                            {c.lastActivityAt ? formatWhen(c.lastActivityAt) : "—"}
+                          </td>
+                          <td className="px-3 py-2">
+                            <div className="flex flex-wrap gap-1.5">
+                              {c.email ? (
+                                <a href={contactMailto(c)} className="text-xs px-2 py-1 rounded border border-[#a77a23]/40 text-[#f5edd7]">
+                                  Email
+                                </a>
+                              ) : null}
+                              {tel ? (
+                                <a href={tel} className="text-xs px-2 py-1 rounded border border-sky-400/40 text-sky-200">
+                                  Call
+                                </a>
+                              ) : null}
+                              {followUp ? (
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => sendProfileFollowUp(prof, followUp.followUpKey, followUp.label)}
+                                  className="text-xs px-2 py-1 rounded border border-emerald-400/40 text-emerald-200 disabled:opacity-50"
+                                >
+                                  Send letter
+                                </button>
+                              ) : null}
+                              {c.manual ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => startEditContact(c)}
+                                    className="text-xs px-2 py-1 rounded border border-white/20 text-gray-400"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => deleteRolodexContact(c.id, c.name)}
+                                    className="text-xs px-2 py-1 rounded border border-red-400/30 text-red-300"
+                                  >
+                                    Remove
+                                  </button>
+                                </>
+                              ) : null}
+                            </div>
+                            {c.note ? <p className="text-[11px] text-gray-600 mt-1 line-clamp-2">{c.note}</p> : null}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        ) : null}
+      </section>
+
+      {!isOwner ? (
+        <p className="text-sm text-emerald-200/90 rounded-xl border border-emerald-400/30 bg-emerald-950/30 px-4 py-3">
+          Assistant view — use Contact hub above for tracking, notes, and follow-up letters. Countdown, file sends,
+          and letter templates are owner-only.
+        </p>
+      ) : null}
+
+      {isOwner ? (
+      <>
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <h2 className="text-xl font-extrabold mb-1" style={{ color: GOLD }}>
           Launch countdown matrix
@@ -974,6 +1584,8 @@ export default function AdminLaunchPanel() {
           <p className="text-sm text-gray-500">Loading templates…</p>
         )}
       </section>
+      </>
+      ) : null}
 
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
@@ -1063,6 +1675,7 @@ export default function AdminLaunchPanel() {
               >
                 Add one person
               </button>
+              {isOwner ? (
               <button
                 type="button"
                 disabled={busy}
@@ -1071,9 +1684,10 @@ export default function AdminLaunchPanel() {
               >
                 {showBulk ? "Hide bulk paste" : "Bulk paste names & emails"}
               </button>
+              ) : null}
             </div>
           </form>
-          {showBulk ? (
+          {isOwner && showBulk ? (
             <form onSubmit={addBulk} className="mt-4 pt-4 border-t border-white/10 space-y-3">
               <p className="text-xs text-gray-500">
                 One per line: <code className="text-gray-400">Jane Doe, jane@email.com</code> ·{" "}
@@ -1242,6 +1856,7 @@ export default function AdminLaunchPanel() {
           ))}
         </div>
 
+        {isOwner ? (
         <div className="flex flex-wrap gap-2 mb-4 items-end">
           <div>
             <label className="block text-xs text-gray-500 mb-1">Copy to send</label>
@@ -1298,6 +1913,7 @@ export default function AdminLaunchPanel() {
             Aug 17 notice → selected
           </button>
         </div>
+        ) : null}
 
         {recipients.length === 0 ? (
           <p className="text-sm text-gray-500 italic">No one on this list yet — add manually or wait for form signups.</p>
@@ -1352,6 +1968,7 @@ export default function AdminLaunchPanel() {
                       <SendBadge sent={r.sends?.selectionGiveaway} />
                     </td>
                     <td className="px-3 py-2">
+                      {isOwner ? (
                       <button
                         type="button"
                         disabled={busy}
@@ -1360,6 +1977,7 @@ export default function AdminLaunchPanel() {
                       >
                         Remove
                       </button>
+                      ) : null}
                     </td>
                   </tr>
                 ))}

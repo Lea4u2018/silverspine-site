@@ -1,4 +1,4 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
 import { readVisits, storageMode, summarizeVisits } from "@/lib/visitsStore";
 
 export default async function handler(req, res) {
@@ -7,10 +7,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method Not Allowed" });
   }
 
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    return res.status(401).json({ ok: false, error: "Unauthorized" });
-  }
+  if (!requireAuth(req, res)) return;
 
   try {
     const store = await readVisits();

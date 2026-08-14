@@ -1,4 +1,4 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
 import {
   createPost,
   deletePost,
@@ -17,17 +17,12 @@ export const config = {
   },
 };
 
-function requireAdmin(req, res) {
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
-    return false;
-  }
-  return true;
+function requireOwner(req, res) {
+  return requireAuth(req, res, { ownerOnly: true });
 }
 
 export default async function handler(req, res) {
-  if (!requireAdmin(req, res)) return;
+  if (!requireOwner(req, res)) return;
 
   try {
     if (req.method === "GET") {

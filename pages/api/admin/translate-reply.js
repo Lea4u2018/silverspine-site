@@ -1,4 +1,4 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
 import { languageLabel, normalizeLang } from "@/lib/i18n";
 import { fromEnglish, toEnglish } from "@/lib/translate";
 
@@ -12,10 +12,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: "Method Not Allowed" });
   }
 
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    return res.status(401).json({ ok: false, error: "Unauthorized" });
-  }
+  if (!requireAuth(req, res)) return;
 
   const body = req.body && typeof req.body === "object" ? req.body : {};
   const text = String(body.text || "").trim().slice(0, 8000);

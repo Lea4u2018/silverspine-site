@@ -1,4 +1,5 @@
-import { isValidAdminToken, readAdminTokenFromReq } from "@/lib/adminAuth";
+import { requireAuth } from "@/lib/adminAuth";
+import { assistantCanReviewAction } from "@/lib/adminRoles";
 import {
   approveReview,
   listAllForAdmin,
@@ -7,17 +8,9 @@ import {
   unpublishReview,
 } from "@/lib/reviewsStore";
 
-function requireAdmin(req, res) {
-  const token = readAdminTokenFromReq(req);
-  if (!isValidAdminToken(token)) {
-    res.status(401).json({ ok: false, error: "Unauthorized" });
-    return false;
-  }
-  return true;
-}
-
 export default async function handler(req, res) {
-  if (!requireAdmin(req, res)) return;
+  const session = requireAuth(req, res);
+  if (!session) return;
 
   try {
     if (req.method === "GET") {
@@ -30,6 +23,11 @@ export default async function handler(req, res) {
       const id = String(body.id || "").trim();
       const action = String(body.action || "").trim();
       if (!id) return res.status(400).json({ ok: false, error: "Missing review id." });
+
+      if (!assistantCanReviewAction(action)) {
+        const owner = requireAuth(req, res, { ownerOnly: true });
+        if (!owner) return;
+      }
 
       if (action === "approve") {
         await approveReview(id);
