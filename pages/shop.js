@@ -1,68 +1,61 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { NOVEL_PRICING, SNEAK_PEEK_STORES } from "@/lib/store";
+import { NOVEL_PRICING, PREORDER_STATUS, SNEAK_PEEK_PRODUCT_COPY, LAUNCH_COUNTDOWN_MATRIX } from "@/lib/store";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
 import LaunchListForm from "@/components/LaunchListForm";
+import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import StoreHub from "@/components/StoreHub";
+import { bindChromeVars } from "@/lib/chromeVars";
 
 const GOLD = "#a77a23";
 const SILVER = "#c9ced6";
 
-const STATUS_COPY = {
-  live: "Available now",
-  soon: "Coming soon",
-  review: "In review",
-};
-
 export default function Shop() {
   const headerRef = useRef(null);
-  const [logoSrc, setLogoSrc] = useState(null);
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
+  const [countdownMatrix, setCountdownMatrix] = useState(LAUNCH_COUNTDOWN_MATRIX);
+
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer");
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(setVars);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const footerEl = document.getElementById("site-footer");
-      if (footerEl) ro.observe(footerEl);
-    }
-    window.addEventListener("resize", setVars);
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/launch/public");
+        const data = await res.json();
+        if (!cancelled && res.ok && data.ok && Array.isArray(data.countdownMatrix) && data.countdownMatrix.length) {
+          setCountdownMatrix(data.countdownMatrix);
+        }
+      } catch {
+        /* keep defaults */
+      }
+    })();
     return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("resize", setVars);
+      cancelled = true;
     };
   }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-    const CANDIDATES = [
-      "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-      "/SilverSpine_FB_Profile_1024.png",
-    ];
     const tryLoad = (i = 0) => {
-      if (i >= CANDIDATES.length) {
+      if (i >= DISC_LOGO_CANDIDATES.length) {
         if (!cancelled) setUseTextLogo(true);
         return;
       }
       const img = new Image();
       img.onload = () => {
-        if (!cancelled) setLogoSrc(CANDIDATES[i]);
+        if (!cancelled) {
+          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
+          setUseTextLogo(false);
+        }
       };
       img.onerror = () => tryLoad(i + 1);
-      img.src = CANDIDATES[i] + `?v=${Date.now()}`;
+      img.src = DISC_LOGO_CANDIDATES[i];
     };
     tryLoad();
     return () => {
@@ -112,22 +105,112 @@ export default function Shop() {
             border-color: rgba(167,122,35,0.65);
             box-shadow: 0 10px 28px rgba(167,122,35,0.18);
           }
+          .shop-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 1.25rem;
+          }
+          .shop-tab {
+            appearance: none;
+            border: 0;
+            background: transparent;
+            color: #9ca3af;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            padding: 0.7rem 1rem 0.85rem;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+          }
+          .shop-tab:hover { color: #e5e7eb; }
+          .shop-tab[aria-selected="true"] {
+            color: #a77a23;
+            border-bottom-color: #a77a23;
+          }
+          @media (min-width: 768px) {
+            .shop-tab { font-size: 0.8rem; letter-spacing: 0.18em; padding: 0.8rem 1.15rem 0.95rem; }
+          }
+
+          /* Crisp white lightning bed behind shop content */
+          .shop-storm-bed {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+          }
+          .shop-storm-bed video {
+            position: absolute;
+            inset: -12%;
+            width: 124%;
+            height: 124%;
+            object-fit: cover;
+            object-position: center center;
+            opacity: 0.3;
+            filter: saturate(0.15) contrast(1.35) brightness(0.7);
+            /* Wider, softer edge so lightning flashes don’t leave a hard black band */
+            -webkit-mask-image: radial-gradient(ellipse 92% 78% at 50% 42%, transparent 18%, #000 88%);
+                    mask-image: radial-gradient(ellipse 92% 78% at 50% 42%, transparent 18%, #000 88%);
+          }
+          .shop-storm-bed video.shop-storm-bolts {
+            opacity: 0.7;
+            mix-blend-mode: screen;
+            filter: saturate(0) contrast(2.4) brightness(0.75) grayscale(1);
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .shop-storm-bed video { display: none !important; }
+          }
         `}</style>
       </Head>
+
+      <div className="shop-storm-bed" aria-hidden="true">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          ref={(el) => {
+            if (el) el.playbackRate = 0.52;
+          }}
+        >
+          <source src="/storm-lightning.mp4" type="video/mp4" />
+        </video>
+        <video
+          className="shop-storm-bolts"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          ref={(el) => {
+            if (el) el.playbackRate = 0.52;
+          }}
+        >
+          <source src="/storm-lightning.mp4" type="video/mp4" />
+        </video>
+      </div>
 
       <header
         ref={headerRef}
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
           <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
-              <img
-                src={logoSrc}
-                alt="Silver Spine Studio logo"
-                className="h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
-                draggable="false"
-              />
+              <span className="sss-logo-halo">
+                <img
+                  src={logoSrc}
+                  alt="Silver Spine Studio logo"
+                  className="sss-logo-glow h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none"
+                  draggable="false"
+                />
+              </span>
             ) : (
               <span className="text-2xl md:text-3xl font-extrabold" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
@@ -136,9 +219,12 @@ export default function Shop() {
           </Link>
           <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
+        <LaunchMilestoneCountdown linked={false} />
       </header>
 
-      <div className="nebula nebula-top mask-top" aria-hidden="true" />
+      <StormAtmosphere mood="ember" />
+
+      <div className="nebula nebula-top mask-top relative z-10" aria-hidden="true" />
 
       <main className="shop-frame relative z-10 max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
         <div className="shop-rise text-center mb-8 md:mb-10">
@@ -149,10 +235,10 @@ export default function Shop() {
             className="text-3xl md:text-5xl font-extrabold tracking-tight text-white"
             style={{ textShadow: "0 0 10px rgba(201,206,214,0.18), 0 2px 10px rgba(0,0,0,0.82)" }}
           >
-            Choose your door in.
+            Where to buy
           </h1>
           <p className="mt-3 text-sm md:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Pick a storefront below. Live options open checkout immediately. The rest unlock as soon as their listings clear.
+            Open the <span className="text-white font-semibold">Where to BUY</span> tab and choose your store. Live doors go straight to checkout. Grey doors unlock as more retailers finish publishing.
           </p>
         </div>
 
@@ -186,9 +272,36 @@ export default function Shop() {
                   Extended Sneak Peek · {NOVEL_PRICING.sneakPeek}
                 </p>
                 <p className="mt-3 text-sm md:text-base text-gray-300 leading-relaxed">
-                  Unedited Prologue + Chapters 1–2. Buy the sneak peek today and whitelist your email for the{" "}
-                  <span className="text-white font-semibold">{NOVEL_PRICING.insider} insider pre-order rate</span>.
+                  {SNEAK_PEEK_PRODUCT_COPY.intro}
                 </p>
+                <div className="mt-4 rounded-xl border border-[#a77a23]/40 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+                  <p className="font-semibold text-[#a77a23] mb-2">Exclusive Insider perk</p>
+                  <p>{SNEAK_PEEK_PRODUCT_COPY.insiderPerk}</p>
+                  <p className="mt-2 text-white font-semibold">{SNEAK_PEEK_PRODUCT_COPY.hardcoverNote}</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-4 text-sm text-gray-200 leading-relaxed">
+                <p className="font-semibold text-white mb-3 uppercase tracking-wide text-xs">The Launch Countdown Matrix</p>
+                <ul className="space-y-2.5">
+                  {countdownMatrix.map((row) => (
+                    <li key={row.title} className="flex gap-2">
+                      <span aria-hidden="true">{row.icon}</span>
+                      <span>
+                        <span className="text-white font-semibold">{row.when}</span>
+                        {" — "}
+                        {row.title}
+                        {row.note ? (
+                          <>
+                            {" "}
+                            <span className="text-gray-400">({row.note})</span>
+                          </>
+                        ) : null}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-gray-300 italic">{SNEAK_PEEK_PRODUCT_COPY.holidayNote}</p>
               </div>
 
               <div className="rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-xs md:text-sm text-gray-300 leading-relaxed">
@@ -208,20 +321,36 @@ export default function Shop() {
                 </p>
               </div>
 
+              <div className="rounded-xl border border-amber-500/40 bg-amber-950/30 px-4 py-3 text-sm text-amber-100 leading-relaxed">
+                <p className="font-semibold text-white mb-1">{PREORDER_STATUS.headline}</p>
+                <p>{PREORDER_STATUS.detail}</p>
+              </div>
+
               <div className="rounded-xl border border-[#a77a23]/35 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
-                <p className="font-semibold text-white mb-1">Full novel pricing · hard cutoff</p>
+                <p className="font-semibold text-white mb-1">Full DIGITAL copy pricing · hard cutoff</p>
                 <ul className="space-y-1.5 text-xs md:text-sm">
                   <li>
-                    <span className="text-[#a77a23] font-bold">{NOVEL_PRICING.insider}</span> — insider rate for sneak-peek buyers from{" "}
-                    <span className="text-white font-semibold">{NOVEL_PRICING.insiderStartLabel}</span> through{" "}
-                    <span className="text-white font-semibold">{NOVEL_PRICING.insiderEndLabel}</span>
+                    <span className="text-[#a77a23] font-bold">Extended Sneak Peek {NOVEL_PRICING.sneakPeek}</span>
+                    {" "}— Prologue &amp; Chapters 1–2; places you on the Insider Deal whitelist
                   </li>
                   <li>
-                    <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> — full retail price starting{" "}
-                    <span className="text-white font-semibold">{NOVEL_PRICING.retailFromLabel}</span>{" "}
-                    (and for anyone outside the whitelist)
+                    <span className="text-[#a77a23] font-bold">Digital Insider Deal {NOVEL_PRICING.insider}</span>
+                    {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy (
+                    <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span> –{" "}
+                    <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderEndLabel}</span>
+                    ), for sneak-peek buyers
+                  </li>
+                  <li>
+                    <span className="text-white font-bold">Hardcover</span> — orders from{" "}
+                    <span className="text-white font-semibold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>
+                  </li>
+                  <li>
+                    <span className="text-white font-bold">Regular price {NOVEL_PRICING.retail}</span> — from{" "}
+                    <span className="text-white font-semibold">{NOVEL_PRICING.retailFromLabel}</span>
                   </li>
                   <li className="text-gray-400">
+                    Launch week: <span className="text-gray-300">{NOVEL_PRICING.launchWeekLabel}</span>
+                    {" · "}
                     Official release: <span className="text-gray-300">{NOVEL_PRICING.releaseLabel}</span>
                     {" · "}
                     <Link href="/blog" className="text-[#a77a23] hover:underline">
@@ -231,59 +360,6 @@ export default function Shop() {
                 </ul>
               </div>
 
-              <div className="space-y-3" role="list" aria-label="Available storefronts">
-                {SNEAK_PEEK_STORES.map((store) => {
-                  const isLive = store.status === "live" && store.href;
-                  const status = STATUS_COPY[store.status] || store.status;
-
-                  if (isLive) {
-                    return (
-                      <a
-                        key={store.key}
-                        href={store.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        role="listitem"
-                        className="store-live block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23] text-black px-5 py-4 transition-all duration-200"
-                      >
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="text-left">
-                            <p className="font-extrabold text-base md:text-lg tracking-wide">
-                              Buy on {store.label}
-                            </p>
-                            <p className="text-xs md:text-sm text-black/75 mt-0.5">{store.description}</p>
-                          </div>
-                          <span className="shrink-0 text-xs font-bold uppercase tracking-widest bg-black/15 px-2.5 py-1 rounded-md">
-                            {status}
-                          </span>
-                        </div>
-                      </a>
-                    );
-                  }
-
-                  return (
-                    <div
-                      key={store.key}
-                      role="listitem"
-                      aria-disabled="true"
-                      className="block w-full rounded-xl border border-white/10 bg-white/[0.03] text-gray-400 px-5 py-4"
-                    >
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="text-left">
-                          <p className="font-semibold text-base md:text-lg tracking-wide text-gray-300">
-                            {store.label}
-                          </p>
-                          <p className="text-xs md:text-sm text-gray-500 mt-0.5">{store.description}</p>
-                        </div>
-                        <span className="shrink-0 text-xs font-bold uppercase tracking-widest border border-white/15 px-2.5 py-1 rounded-md text-gray-400">
-                          {status}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
               <p className="text-xs text-gray-500 leading-relaxed">
                 Prefer the series page?{" "}
                 <Link href="/books#featured-book" className="text-[#a77a23] hover:underline">
@@ -291,6 +367,30 @@ export default function Shop() {
                 </Link>
                 .
               </p>
+            </div>
+          </div>
+
+          <div className="mt-8 md:mt-10" aria-label="Shop options">
+            <div className="shop-tabs" role="tablist" aria-label="Shop sections">
+              <button
+                type="button"
+                role="tab"
+                id="shop-tab-where-to-buy"
+                aria-selected="true"
+                aria-controls="shop-panel-where-to-buy"
+                className="shop-tab"
+              >
+                Where to BUY
+              </button>
+            </div>
+
+            <div
+              role="tabpanel"
+              id="shop-panel-where-to-buy"
+              aria-labelledby="shop-tab-where-to-buy"
+            >
+              <h2 className="sr-only">Where to BUY</h2>
+              <StoreHub variant="full" />
             </div>
           </div>
         </section>
@@ -303,7 +403,7 @@ export default function Shop() {
             Not buying yet? Stay in the storm.
           </h2>
           <p className="text-sm text-gray-300 mb-5 leading-relaxed">
-            Join the launch list for sneak peek news, the Sep 1 insider window, and release-day alerts.
+            Join the launch list for sneak peek news, the Sep 30 full DIGITAL preorder window, hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
           </p>
           <LaunchListForm />
         </section>

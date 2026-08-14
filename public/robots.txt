@@ -1,4 +1,22 @@
+# Studio + Book 1 stay findable. Upcoming titles stay private.
 User-agent: *
 Allow: /
+Disallow: /admin
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+
+User-agent: msnbot
+Allow: /
+Disallow: /admin
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+
+User-agent: Slurp
+Allow: /
+Disallow: /admin
 
 Sitemap: https://www.silverspinestudio.com/sitemap.xml

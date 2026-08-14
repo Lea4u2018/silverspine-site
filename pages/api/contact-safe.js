@@ -12,6 +12,8 @@
 import nodemailer from "nodemailer";
 import { languageLabel, normalizeLang } from "@/lib/i18n";
 import { fromEnglish, toEnglish } from "@/lib/translate";
+import { NOVEL_PRICING } from "@/lib/store";
+import { captureFormSubmission } from "@/lib/launchAdminStore";
 
 // ---------- Simple in-memory rate limiter (per runtime instance) ----------
 const WINDOW_MS = 5 * 60 * 1000; // 5 minutes
@@ -223,7 +225,7 @@ export default async function handler(req, res) {
       studioSubject: `[ARC REQUEST] Early-release request — ${name}`,
       typeLabel: "EARLY-RELEASE ARC REQUEST",
       typeTag: "[ARC REQUEST]",
-      folderHint: "Sort to: ARC folder (Outlook rule: subject contains ARC REQUEST)",
+      folderHint: "Sort to: [ARC] folder (Outlook rule: subject contains [ARC REQUEST])",
       successMessage:
         "Thanks — your ARC request was received. Check your email for confirmation.",
       customerSubject: "We received your early-release request — Silver Spine Studio™",
@@ -259,7 +261,7 @@ export default async function handler(req, res) {
       studioSubject: `[LAUNCH LIST] Email list signup — ${name}`,
       typeLabel: "LAUNCH EMAIL LIST SIGNUP",
       typeTag: "[LAUNCH LIST]",
-      folderHint: "Sort to: Launch List folder (filter subject: LAUNCH LIST)",
+      folderHint: "Sort to: [LAUNCH LIST] folder (Outlook rule: subject contains [LAUNCH LIST])",
       successMessage: "Thanks! You're on the list. Watch your inbox for a confirmation.",
       customerSubject: "You're on the launch list — Silver Spine Studio™",
       customerText: [
@@ -267,7 +269,7 @@ export default async function handler(req, res) {
         "",
         "You’re on the Silver Spine Studio™ launch list. Thank you for joining us.",
         "",
-        "You’ll get updates on The Beautiful Beast sneak peek news, the Sep 30 Insider preorder window, and release-day alerts.",
+        `You’ll get updates on The Beautiful Beast sneak peek news, the Sep 30 full DIGITAL Insider preorder window, hardcover alerts for ${NOVEL_PRICING.hardcoverOrderFromLabel}, and release-day news.`,
         "",
         "BONUS — THREE FREE FULL DIGITAL COPIES:",
         "Three lucky sleuths will win a free digital copy of the FULL novel (readable on your devices).",
@@ -285,7 +287,7 @@ export default async function handler(req, res) {
       studioSubject: `[CONTACT-SSS] Website message — ${name}`,
       typeLabel: "CONTACT FORM MESSAGE",
       typeTag: "[CONTACT-SSS]",
-      folderHint: "Sort to: CONTACT-SSS folder (filter subject: CONTACT-SSS — unique, won’t match other mail)",
+      folderHint: "Sort to: [CONTACT-SSS] folder (Outlook rule: subject contains [CONTACT-SSS])",
       successMessage: "Thanks! Your message has been sent. Check your email for a confirmation.",
       customerSubject: "Thank you for contacting Silver Spine Studio™",
       customerText: [
@@ -308,7 +310,7 @@ export default async function handler(req, res) {
       studioSubject: `[WEBSITE INQUIRY] Custom site / website question — ${name}`,
       typeLabel: "WEBSITE BUILD INQUIRY",
       typeTag: "[WEBSITE INQUIRY]",
-      folderHint: "Sort to: Website Inquiries folder (filter subject: WEBSITE INQUIRY)",
+      folderHint: "Sort to: [WEBSITE INQUIRY] folder (Outlook rule: subject contains [WEBSITE INQUIRY])",
       successMessage:
         "Thanks — your website inquiry was received. Check your email for a confirmation; I’ll reply as soon as I can.",
       customerSubject: "Thank you for contacting Silver Spine Studio™ — website inquiry",
@@ -332,7 +334,7 @@ export default async function handler(req, res) {
       studioSubject: `[MEDIA REQUEST] Press / interview — ${name}${outlet ? ` (${outlet})` : ""}`,
       typeLabel: "MEDIA / INTERVIEW / PRESS REQUEST",
       typeTag: "[MEDIA REQUEST]",
-      folderHint: "Sort to: [MEDIA REQUEST] folder (filter subject: MEDIA REQUEST)",
+      folderHint: "Sort to: [MEDIA REQUEST] folder (Outlook rule: subject contains [MEDIA REQUEST])",
       successMessage:
         "Thanks — your media / interview request was received. Check your email for a confirmation; I’ll reply as soon as I can.",
       customerSubject: "We received your media request — Silver Spine Studio™",
@@ -478,7 +480,7 @@ export default async function handler(req, res) {
               `Visitor-facing subject: ${customerSubject}`,
               `Sent at: ${new Date().toISOString()}`,
               "",
-              "Outlook: move messages with AUTO-REPLY SENT into the AUTO REPLIED folder.",
+              "Outlook: subject contains [AUTO-REPLY SENT] → move to [AUTO REPLIED] folder.",
               "",
               "— End of record —",
             ].join("\n"),
@@ -496,6 +498,21 @@ export default async function handler(req, res) {
         console.error(`Customer auto-reply error (${kind}):`, autoErr);
         // Studio notification already sent — don't fail the whole request.
       }
+    }
+
+    try {
+      await captureFormSubmission({
+        kind,
+        name,
+        email,
+        format,
+        reviewSpot,
+        outlet,
+        deadline,
+        messagePreview: message.slice(0, 280),
+      });
+    } catch (capErr) {
+      console.error("launch admin capture error:", capErr);
     }
 
     return res.status(200).json({

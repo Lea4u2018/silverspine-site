@@ -53,6 +53,12 @@ export default function Privacy() {
         or if required by law. Storefronts process their own checkout data under their terms.
       </p>
 
+      <h2>Published author name</h2>
+      <p>
+        Books, this website, and official Silver Spine Studio™ communications identify the author as{" "}
+        <strong className="text-white">Leameso James</strong> only. We do not publish former legal names on this site.
+      </p>
+
       <h2>Your choices</h2>
       <p>
         To update or remove yourself from the launch list, or ask about data we hold from a form you submitted, email{" "}

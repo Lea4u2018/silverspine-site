@@ -3,89 +3,58 @@ import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { FaRegCommentDots, FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import { FaRegCommentDots } from "react-icons/fa";
 import StarRating, { StarDisplay } from "@/components/StarRating";
-import { db } from "@/lib/firebase";
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
-  serverTimestamp,
-} from "firebase/firestore";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
+import { bindChromeVars } from "@/lib/chromeVars";
 
 export default function ReviewsPage() {
 
   const GOLD = "#a77a23";
   const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
  const DISC_LOGO = "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png";
-  const AUDIO_SRC = "/thunder_rumble.mp3";
-
   // header sizing for disc logo
   const headerRef = useRef(null);
   useEffect(() => {
-    const syncHeaderVar = () => {
-      const h = headerRef.current ? Math.round(headerRef.current.getBoundingClientRect().height) : 140;
-      document.documentElement.style.setProperty("--header-h", `${h}px`);
-    };
-    syncHeaderVar();
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(syncHeaderVar);
-      if (headerRef.current) ro.observe(headerRef.current);
-    }
-    window.addEventListener("load", syncHeaderVar);
-    window.addEventListener("resize", syncHeaderVar);
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    root.classList.add("sss-reviews-lock");
     return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("load", syncHeaderVar);
-      window.removeEventListener("resize", syncHeaderVar);
+      root.classList.remove("sss-reviews-lock");
+      root.style.removeProperty("--header-h");
+      root.style.removeProperty("--footer-h");
     };
   }, []);
-
-  // audio
-  const audioRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(true);
-
-  useEffect(() => {
-    const a = audioRef.current;
-    if (!a) return;
-    const prime = () => {
-      a.muted = false;
-      a.volume = 0.22;
-      a.play().catch(() => {});
-    };
-    document.addEventListener("click", prime, { once: true });
-    return () => document.removeEventListener("click", prime);
-  }, []);
-
-  const toggleAudio = () => {
-    const a = audioRef.current;
-    if (!a) return;
-    if (isMuted) {
-      a.muted = false; a.volume = 0.22; a.play().catch(() => {});
-    } else { a.muted = true; }
-    setIsMuted(v => !v);
-  };
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
   // form
   const [rating, setRating] = useState(5.0);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
+  const [hp, setHp] = useState("");
+  const [startedAt] = useState(() => Date.now());
   const [submitting, setSubmitting] = useState(false);
 
-  // data
+  // data (approved only — free storage, no Firebase billing)
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
-    const col = collection(db, "reviews");
-    const q = query(col, where("approved", "==", true), orderBy("createdAt", "desc"));
-    const unsub = onSnapshot(q, (snap) => {
-      setReviews(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
-    });
-    return () => unsub();
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        const data = await res.json();
+        if (!cancelled && res.ok && data.ok) {
+          setReviews(Array.isArray(data.reviews) ? data.reviews : []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const stats = useMemo(() => {
@@ -109,7 +78,8 @@ export default function ReviewsPage() {
   }, []);
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden">
+    <div className="reviews-page bg-black text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden">
+      <StormAtmosphere mood="ash" />
       <Head>
         <title>Reviews | Silver Spine Studio™</title>
         <meta name="description" content="Leave a review and read what others are saying." />
@@ -172,39 +142,129 @@ export default function ReviewsPage() {
           /* Ensure page scrolls normally */
           html, body { margin:0; background:#000; height:auto; overflow-y:auto; }
           #__next { height:auto; overflow:visible; }
+
+          /* Reviews chrome: header + footer stay put; page content scrolls */
+          html.sss-reviews-lock #site-footer {
+            padding-top: 0.4rem !important;
+            padding-bottom: 0.4rem !important;
+          }
+          html.sss-reviews-lock #site-footer .sss-footer-icons {
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 0.4rem 0.55rem !important;
+          }
+          html.sss-reviews-lock #site-footer .sss-footer-icon-group {
+            flex-wrap: nowrap !important;
+            gap: 0.3rem !important;
+          }
+          html.sss-reviews-lock #site-footer .sss-footer-icons > span {
+            width: 1px !important;
+            height: 1.6rem !important;
+          }
+          html.sss-reviews-lock #site-footer a[aria-label] {
+            width: 1.65rem !important;
+            height: 1.65rem !important;
+          }
+          html.sss-reviews-lock #site-footer a[aria-label] svg {
+            width: 0.75rem !important;
+            height: 0.75rem !important;
+          }
+          html.sss-reviews-lock #site-footer .sss-footer-credits {
+            display: none !important;
+          }
+          html.sss-reviews-lock #site-footer nav[aria-label="Legal"] {
+            margin-top: 0.2rem !important;
+            flex-wrap: nowrap !important;
+            font-size: 10px !important;
+          }
+          html.sss-reviews-lock #site-footer p {
+            font-size: 10px !important;
+            line-height: 1.25 !important;
+          }
+
+          @media (min-width: 768px) {
+            html.sss-reviews-lock,
+            html.sss-reviews-lock body,
+            html.sss-reviews-lock #__next {
+              height: 100%;
+              overflow: hidden;
+            }
+            html.sss-reviews-lock #__next > div.bg-black {
+              height: 100dvh;
+              max-height: 100dvh;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+            }
+            html.sss-reviews-lock #__next > div.bg-black > main {
+              flex: 1 1 auto;
+              min-height: 0;
+              overflow: hidden;
+              display: flex;
+              flex-direction: column;
+            }
+            html.sss-reviews-lock .reviews-page {
+              flex: 1 1 auto;
+              min-height: 0;
+              overflow: hidden;
+              display: flex;
+              flex-direction: column;
+            }
+            html.sss-reviews-lock .reviews-page > main {
+              flex: 1 1 auto;
+              min-height: 0;
+              overflow-x: hidden;
+              overflow-y: auto;
+            }
+            html.sss-reviews-lock #site-footer {
+              flex-shrink: 0;
+              position: relative;
+              z-index: 40;
+            }
+          }
+
+          @media (max-width: 767px) {
+            html.sss-reviews-lock #site-footer {
+              position: fixed;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              z-index: 40;
+              box-shadow: 0 -8px 24px rgba(0,0,0,0.45);
+            }
+            html.sss-reviews-lock .reviews-page {
+              padding-bottom: calc(var(--footer-h) + 8px);
+            }
+          }
         `}</style>
       </Head>
-
-      {/* audio element */}
-      <audio ref={audioRef} loop preload="auto" playsInline muted={isMuted}>
-        <source src={AUDIO_SRC} type="audio/mpeg" />
-      </audio>
 
       {/* ===== HEADER ===== */}
       <header
         ref={headerRef}
         className="sticky top-0 z-header bg-gradient-to-b from-gray-900 to-gray-800 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-5 max-w-[1400px]">
+        <div className="mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-5 max-w-[1400px] min-w-0">
           <div className="flex items-center shrink-0">
             <Link
               href="/"
               aria-label="Silver Spine Studio — Home"
               className="flex items-center gap-3 md:gap-4"
             >
-              <Image
-                src={DISC_LOGO}
-                alt="Silver Spine Studio"
-                width={512}
-                height={512}
-                priority
-                className="disc-logo select-none"
-                style={{
-                  height: "clamp(56px, calc(var(--header-h) - 28px), 108px)",
-                  width: "auto",
-                  filter: "drop-shadow(0 0 18px rgba(220,220,220,0.16))",
-                }}
-              />
+              <span className="sss-logo-halo">
+                <Image
+                  src={DISC_LOGO}
+                  alt="Silver Spine Studio"
+                  width={512}
+                  height={512}
+                  priority
+                  className="sss-logo-glow disc-logo select-none"
+                  style={{
+                    height: "clamp(56px, calc(var(--header-h) - 28px), 108px)",
+                    width: "auto",
+                  }}
+                />
+              </span>
               <span
                 className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
                 style={{
@@ -266,20 +326,6 @@ export default function ReviewsPage() {
             </div>
           </div>
 
-          {/* THUNDER TOGGLE — lifted up slightly */}
-          <div className="w-full flex items-center justify-center toggle-tight">
-            <button
-              type="button"
-              onClick={toggleAudio}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#a77a23]/60 text-[#a77a23] bg-black/70 hover:bg-black/80 transition shadow"
-              title={isMuted ? "Enable ambient audio" : "Mute ambient audio"}
-              aria-label={isMuted ? "Play site audio" : "Pause site audio"}
-            >
-              {isMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-              {isMuted ? "Click to hear thunder" : "Turn thunder off"}
-            </button>
-          </div>
-
           {/* two columns — lifted with smaller top offset */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* left: form */}
@@ -289,31 +335,73 @@ export default function ReviewsPage() {
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
-                    if (!name.trim() || !text.trim()) return;
+                    const n = name.trim();
+                    const t = text.trim();
+                    if (!n || n.length < 2) {
+                      alert("Please enter your name.");
+                      return;
+                    }
+                    if (!t || t.length < 10) {
+                      alert("Please enter a longer review (at least a sentence).");
+                      return;
+                    }
                     setSubmitting(true);
                     try {
-                      await addDoc(collection(db, "reviews"), {
-                        name: name.trim(),
-                        text: text.trim(),
-                        rating,
-                        approved: false,
-                        createdAt: serverTimestamp(),
+                      const res = await fetch("/api/reviews/submit", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          name: n,
+                          text: t,
+                          rating,
+                          hp,
+                          startedAt,
+                        }),
                       });
-                      setName(""); setText(""); setRating(5.0);
-                      alert("Thank you! Your review was submitted and is pending approval.");
+                      let data = {};
+                      try {
+                        data = await res.json();
+                      } catch {
+                        data = {};
+                      }
+                      if (res.ok && data.ok) {
+                        setName("");
+                        setText("");
+                        setRating(5.0);
+                        alert(data.message || "Thank you! Your review was submitted and is pending approval.");
+                      } else {
+                        alert(data.error || `Sorry—something went wrong (${res.status}). Please try again in a moment.`);
+                      }
                     } catch (err) {
                       console.error(err);
-                      alert("Sorry—something went wrong.");
+                      alert("Sorry—something went wrong. Please try again in a moment.");
                     } finally {
                       setSubmitting(false);
                     }
                   }}
                 >
-                  <label className="block text-sm text-gray-300 mb-2">Your Rating</label>
+                  {/* honeypot — leave empty (odd name avoids password-manager autofill) */}
+                  <input
+                    type="text"
+                    name="sss_website_url"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
+                    style={{ position: "absolute", left: "-9999px" }}
+                  />
+                  <FormRequiredNote className="text-xs text-gray-500 mb-3" />
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Your Rating <span className="text-red-400 font-semibold ml-0.5" aria-hidden="true">*</span>
+                  </label>
                   <StarRating value={rating} onChange={setRating} />
 
                   <div className="mt-5">
-                    <label className="block text-sm mb-1" htmlFor="name">Name</label>
+                    <FormFieldLabel htmlFor="name" required>
+                      Name
+                    </FormFieldLabel>
                     <input
                       id="name"
                       className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 focus:outline-none focus:border-[#a77a23] transition"
@@ -326,7 +414,9 @@ export default function ReviewsPage() {
                   </div>
 
                   <div className="mt-4">
-                    <label className="block text-sm mb-1" htmlFor="text">Your Review</label>
+                    <FormFieldLabel htmlFor="text" required>
+                      Your Review
+                    </FormFieldLabel>
                     <textarea
                       id="text"
                       className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 h-28 resize-y focus:outline-none focus:border-[#a77a23] transition"

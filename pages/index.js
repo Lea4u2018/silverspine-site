@@ -2,135 +2,126 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import FixedMusicControl from "@/components/FixedMusicControl";
+import { useCinematicAudio } from "@/components/CinematicAudio";
+import { writePianoMuted } from "@/lib/cinematicAudio";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
+import { bindChromeVars } from "@/lib/chromeVars";
+import { buildHomeSchemaGraph } from "@/lib/authorIdentity";
+import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
+import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
 
 export default function Home() {
   const audioRef = useRef(null);
   const videoRef = useRef(null);
   const headerRef = useRef(null);
+  const { ensurePlaying: ensurePiano } = useCinematicAudio();
 
   useEffect(() => {
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer");
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
-
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(setVars) : null;
-    if (ro && headerRef.current) ro.observe(headerRef.current);
-    const footerEl = document.getElementById("site-footer");
-    if (ro && footerEl) ro.observe(footerEl);
-
-    window.addEventListener("load", setVars);
-    window.addEventListener("resize", setVars);
-
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("load", setVars);
-      window.removeEventListener("resize", setVars);
-    };
+    // Header-only — observing the footer fed a resize/jump loop with hero height
+    return bindChromeVars(headerRef.current);
   }, []);
 
-  const THUNDER_VOLUME = 0.32;
-  const THUNDER_BURST_MS = 5500; // short rumble, then silence
-  const THUNDER_GAP_MIN_MS = 16000;
-  const THUNDER_GAP_MAX_MS = 28000;
+  const THUNDER_VOLUME = 0.38;
   const THUNDER_PREF_KEY = "sss-home-thunder-muted";
   const STORM_GATE_KEY = "sss-storm-entered";
-  const [isMuted, setIsMuted] = useState(true);
   const [showStormGate, setShowStormGate] = useState(true);
   const [gateLeaving, setGateLeaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [stars, setStars] = useState([]);
   const userMutedRef = useRef(false);
-  const thunderBurstTimerRef = useRef(null);
-  const thunderGapTimerRef = useRef(null);
   const thunderFadeTimerRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const SILVER = "#c9ced6";
 
   const clearThunderTimers = () => {
-    if (thunderBurstTimerRef.current) {
-      window.clearTimeout(thunderBurstTimerRef.current);
-      thunderBurstTimerRef.current = null;
-    }
-    if (thunderGapTimerRef.current) {
-      window.clearTimeout(thunderGapTimerRef.current);
-      thunderGapTimerRef.current = null;
-    }
     if (thunderFadeTimerRef.current) {
       window.clearInterval(thunderFadeTimerRef.current);
       thunderFadeTimerRef.current = null;
     }
   };
 
-  const stopThunder = () => {
-    clearThunderTimers();
+  const stopThunder = ({ fade = false } = {}) => {
     const audio = audioRef.current;
+    clearThunderTimers();
     if (!audio) return;
-    audio.pause();
-    audio.muted = true;
-    audio.volume = 0;
-    try {
-      audio.currentTime = 0;
-    } catch {}
+
+    if (!fade) {
+      audio.pause();
+      audio.muted = true;
+      audio.volume = 0;
+      try {
+        audio.currentTime = 0;
+      } catch {}
+      return;
+    }
+
+    const startVol = audio.volume || THUNDER_VOLUME;
+    let step = 0;
+    thunderFadeTimerRef.current = window.setInterval(() => {
+      step += 1;
+      audio.volume = Math.max(0, startVol * (1 - step / 12));
+      if (step >= 12) {
+        clearThunderTimers();
+        audio.pause();
+        audio.muted = true;
+        audio.volume = 0;
+        try {
+          audio.currentTime = 0;
+        } catch {}
+      }
+    }, 80);
   };
 
-  const playThunderBurst = async () => {
+  // Continuous storm bed — the old short bursts + long gaps felt broken / drop-in-out.
+  const startThunder = async () => {
     const audio = audioRef.current;
     if (!audio || userMutedRef.current) return;
 
     clearThunderTimers();
-    audio.loop = false;
+    audio.loop = true;
     audio.muted = false;
     audio.volume = THUNDER_VOLUME;
     try {
-      audio.currentTime = 0;
+      // Keep place if already rolling; only restart if near the end or stopped cold.
+      if (audio.paused || audio.currentTime < 0.05) {
+        audio.currentTime = 0;
+      }
     } catch {}
     try {
       await audio.play();
     } catch {
       return;
     }
-
-    // Fade out and stop so it never becomes a nonstop rumble bed.
-    thunderBurstTimerRef.current = window.setTimeout(() => {
-      const el = audioRef.current;
-      if (!el || userMutedRef.current) return;
-      const startVol = el.volume;
-      let step = 0;
-      thunderFadeTimerRef.current = window.setInterval(() => {
-        step += 1;
-        el.volume = Math.max(0, startVol * (1 - step / 8));
-        if (step >= 8) {
-          window.clearInterval(thunderFadeTimerRef.current);
-          thunderFadeTimerRef.current = null;
-          el.pause();
-          try {
-            el.currentTime = 0;
-          } catch {}
-        }
-      }, 70);
-    }, THUNDER_BURST_MS);
-
-    const gap = THUNDER_GAP_MIN_MS + Math.random() * (THUNDER_GAP_MAX_MS - THUNDER_GAP_MIN_MS);
-    thunderGapTimerRef.current = window.setTimeout(() => {
-      if (!userMutedRef.current) playThunderBurst();
-    }, gap);
   };
 
- const CANDIDATES = [
-  "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-  "/Final_Silver_Spine_Circular_Logo_With_Words.png",
-  "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-  "/SilverSpine_FB_Profile_1024.png",
-  "/Silver_Spine_Studio_Logo_2025_10_11.png",
-];
+  // Keep home thunder pref in sync — actual pause/play is handled by stopAllAmbient / playAllAmbient.
+  useEffect(() => {
+    const onAmbientMute = (e) => {
+      const muted = !!(e?.detail && e.detail.muted);
+      userMutedRef.current = muted;
+      try {
+        window.localStorage.setItem(THUNDER_PREF_KEY, muted ? "1" : "0");
+      } catch {
+        /* ignore */
+      }
+      // Hard stop (no fade) so Mute always kills home thunder immediately
+      if (muted) stopThunder({ fade: false });
+      else if (!showStormGate) startThunder();
+    };
+    window.addEventListener("sss-piano-mute", onAmbientMute);
+    return () => window.removeEventListener("sss-piano-mute", onAmbientMute);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showStormGate]);
 
-  const [logoSrc, setLogoSrc] = useState(null);
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
 
   useEffect(() => {
@@ -142,12 +133,15 @@ export default function Home() {
       }
       const test = new Image();
       test.onload = () => {
-        if (!cancelled) setLogoSrc(srcs[idx]);
+        if (!cancelled) {
+          setLogoSrc(srcs[idx]);
+          setUseTextLogo(false);
+        }
       };
       test.onerror = () => tryLoad(srcs, idx + 1);
-      test.src = srcs[idx] + `?v=${Date.now()}`;
+      test.src = srcs[idx];
     };
-    tryLoad(CANDIDATES);
+    tryLoad(DISC_LOGO_CANDIDATES);
     return () => {
       cancelled = true;
     };
@@ -179,6 +173,23 @@ export default function Home() {
     return () => io.disconnect();
   }, []);
 
+  const setStormGateFlag = (open) => {
+    try {
+      if (open) {
+        document.documentElement.dataset.sssStormGate = "1";
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+      } else {
+        delete document.documentElement.dataset.sssStormGate;
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+      window.dispatchEvent(new Event("sss-storm-gate"));
+    } catch {
+      /* ignore */
+    }
+  };
+
   // Storm gate guarantees a user gesture so thunder can legally start.
   useEffect(() => {
     let prefMuted = false;
@@ -188,15 +199,23 @@ export default function Home() {
       alreadyEntered = window.sessionStorage.getItem(STORM_GATE_KEY) === "1";
     } catch {}
     userMutedRef.current = prefMuted;
-    setIsMuted(prefMuted);
 
-    setShowStormGate(!alreadyEntered);
-    if (alreadyEntered && !prefMuted) {
-      setIsMuted(false);
-      playThunderBurst();
+    const showGate = !alreadyEntered;
+    setShowStormGate(showGate);
+    setStormGateFlag(showGate);
+
+    if (alreadyEntered) {
+      // Returning visitors: resume piano bed if they left it on
+      ensurePiano();
+      if (!prefMuted) {
+        startThunder();
+      }
     }
 
-    return () => stopThunder();
+    return () => {
+      setStormGateFlag(false);
+      stopThunder();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -206,76 +225,75 @@ export default function Home() {
       window.sessionStorage.setItem(STORM_GATE_KEY, "1");
     } catch {}
 
+    // Unlock the cinematic piano bed for the whole universe (header Mute controls it).
+    writePianoMuted(false);
+    await ensurePiano();
+
     if (!userMutedRef.current) {
-      setIsMuted(false);
-      await playThunderBurst();
+      await startThunder();
     }
 
     window.setTimeout(() => {
       setShowStormGate(false);
       setGateLeaving(false);
+      setStormGateFlag(false);
     }, 700);
   };
 
-  const toggleThunder = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    setIsMuted((prev) => {
-      const next = !prev;
-      userMutedRef.current = next;
-      try {
-        window.localStorage.setItem(THUNDER_PREF_KEY, next ? "1" : "0");
-      } catch {}
-      if (next) stopThunder();
-      else playThunderBurst();
-      return next;
-    });
-  };
-
+  // Keep the loop short — long duplicated tracks race past on phones even with slow durations.
   const SERIES_TICKER_ITEMS = Array.from(
-    { length: 6 },
+    { length: 2 },
     () =>
       "The Silver Spine Studio™ Series: The Seven-Fold Chronicle — thrillers forged in storm and consequence"
   );
   // Short segments read cleaner than one giant uppercase sentence.
-  const LAUNCH_TICKER_ITEMS = Array.from({ length: 4 }, () => [
-    { label: "The Beautiful Beast Extended Sneak Peek — $4.99", outNow: true },
-    { label: "Insider full novel $14.99 · Sep 1–Oct 19, 2026", outNow: false },
-    { label: "Full retail $24.99 starts Oct 20, 2026", outNow: false },
+  const LAUNCH_TICKER_ITEMS = Array.from({ length: 2 }, () => [
+    { label: "Sneak Peek $4.99 — Prologue & Ch. 1–2 · Insider whitelist", outNow: true },
+    { label: "3 lucky winners will each receive a FULL digital copy — join the launch list · Happy Sleuthing!", outNow: false },
+    { label: PREORDER_STATUS.digitalTicker, outNow: false },
+    { label: PREORDER_STATUS.hardcoverTicker, outNow: false },
+    { label: `Official release · ${NOVEL_PRICING.releaseLabel} · Regular ${NOVEL_PRICING.retail}`, outNow: false },
   ]).flat();
 
+  const stormGate =
+    mounted && showStormGate
+      ? createPortal(
+          <div
+            className={`storm-gate ${gateLeaving ? "leaving" : ""}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Enter Silver Spine Studio"
+          >
+            <div className="storm-gate-flash" aria-hidden="true" />
+            <div className="relative z-10 max-w-xl mx-auto">
+              <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
+                Silver Spine Studio™
+              </p>
+              <h2
+                className="text-3xl md:text-5xl font-extrabold tracking-wide mb-3"
+                style={{ color: SILVER, textShadow: "0 2px 16px rgba(0,0,0,0.85)" }}
+              >
+                The storm is already waiting.
+              </h2>
+              <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-2">
+                Step inside for thunder, lightning, and the first pages of the seven-fold chronicle.
+              </p>
+              <button type="button" className="storm-enter-btn" onClick={enterTheStorm}>
+                Enter the storm
+              </button>
+              <p className="mt-4 text-[11px] md:text-xs text-gray-500">
+                Enter for piano + thunder — the score follows you through the site · Mute anytime
+              </p>
+            </div>
+          </div>,
+          document.body
+        )
+      : null;
+
   return (
-    <div className="bg-black text-gray-100">
-      {showStormGate && (
-        <div
-          className={`storm-gate ${gateLeaving ? "leaving" : ""}`}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Enter Silver Spine Studio"
-        >
-          <div className="storm-gate-flash" aria-hidden="true" />
-          <div className="relative z-10 max-w-xl mx-auto">
-            <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
-              Silver Spine Studio™
-            </p>
-            <h2
-              className="text-3xl md:text-5xl font-extrabold tracking-wide mb-3"
-              style={{ color: SILVER, textShadow: "0 2px 16px rgba(0,0,0,0.85)" }}
-            >
-              The storm is already waiting.
-            </h2>
-            <p className="text-sm md:text-base text-gray-300 leading-relaxed mb-2">
-              Step inside for thunder, lightning, and the first pages of the seven-fold chronicle.
-            </p>
-            <button type="button" className="storm-enter-btn" onClick={enterTheStorm}>
-              Enter the storm
-            </button>
-            <p className="mt-4 text-[11px] md:text-xs text-gray-500">
-              Sound starts with entry · you can mute anytime
-            </p>
-          </div>
-        </div>
-      )}
+    <div className="bg-black text-gray-100 relative">
+      <StormAtmosphere mood="threshold" />
+      {stormGate}
 
       <Head>
         <title>Silver Spine Studio™ | The Beautiful Beast &amp; Seven-Fold Chronicle</title>
@@ -310,36 +328,7 @@ export default function Home() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "Organization",
-                  name: "Silver Spine Studio",
-                  url: "https://www.silverspinestudio.com/",
-                  logo: "https://www.silverspinestudio.com/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-                  sameAs: [
-                    "https://www.facebook.com/SilverSpineStudio/",
-                    "https://www.instagram.com/silverspinestudio/",
-                    "https://www.youtube.com/@silverspinestudio",
-                  ],
-                },
-                {
-                  "@type": "WebSite",
-                  name: "Silver Spine Studio",
-                  url: "https://www.silverspinestudio.com/",
-                  publisher: { "@type": "Organization", name: "Silver Spine Studio" },
-                },
-                {
-                  "@type": "Book",
-                  name: "The Beautiful Beast",
-                  author: { "@type": "Person", name: "Leameso James" },
-                  url: "https://www.silverspinestudio.com/books/the-beautiful-beast",
-                  image: "https://www.silverspinestudio.com/covers/1-the-beautiful-beast-full-tagged.png",
-                  genre: ["Thriller", "Crime", "Rural Noir"],
-                },
-              ],
-            }),
+            __html: JSON.stringify(buildHomeSchemaGraph()),
           }}
         />
         <style>{`
@@ -358,17 +347,22 @@ export default function Home() {
             background: rgba(0,0,0,0.95);
             border-top: 1px solid rgba(167,122,35,0.3);
             border-bottom: 1px solid rgba(0,0,0,0.4);
-            mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+          }
+          @media (min-width: 769px) {
+            .ticker-wrap {
+              mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
+              -webkit-mask-image: linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%);
+            }
           }
           .ticker-track {
             display: flex;
             width: max-content;
-            will-change: transform;
-            animation: tickerMove var(--ticker-speed, 60s) linear infinite;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            animation: tickerMove var(--ticker-speed, 48s) linear infinite;
           }
           .ticker-track.ticker-launch {
-            --ticker-speed: 48s;
+            --ticker-speed: 38s;
           }
           .ticker-group {
             display: flex;
@@ -376,13 +370,21 @@ export default function Home() {
             align-items: center;
             white-space: nowrap;
           }
+          /* Phones: crawl slow enough to read (set duration directly — Safari-safe) */
           @media (max-width: 768px) {
-            .ticker-track { --ticker-speed: 42s; }
-            .ticker-track.ticker-launch { --ticker-speed: 36s; }
+            .ticker-track {
+              --ticker-speed: 180s;
+              animation: tickerMove 180s linear infinite !important;
+            }
+            .ticker-track.ticker-launch {
+              --ticker-speed: 160s;
+              animation: tickerMove 160s linear infinite !important;
+            }
+            .ticker-item { padding: 0 1.35rem; font-size: 0.78rem; }
           }
           @media (min-width: 1280px) {
-            .ticker-track { --ticker-speed: 72s; }
-            .ticker-track.ticker-launch { --ticker-speed: 56s; }
+            .ticker-track { --ticker-speed: 56s; }
+            .ticker-track.ticker-launch { --ticker-speed: 44s; }
           }
           .ticker-item {
             display: inline-flex;
@@ -405,11 +407,31 @@ export default function Home() {
           }
 
           @keyframes tickerMove {
-            0%   { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            0%   { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
           }
+          /* Reduced motion: never leave a clipped mid-scroll phrase stuck on screen */
           @media (prefers-reduced-motion: reduce) {
-            .ticker-track { animation: none; }
+            .ticker-track {
+              animation: none !important;
+              width: 100%;
+              transform: none !important;
+            }
+            .ticker-group {
+              width: 100%;
+              justify-content: center;
+              flex-wrap: wrap;
+              white-space: normal;
+              text-align: center;
+              padding: 0.15rem 0.75rem;
+              gap: 0.15rem 0.5rem;
+            }
+            .ticker-group[aria-hidden="true"] { display: none; }
+            .ticker-item {
+              white-space: normal;
+              padding: 0.1rem 0.5rem;
+            }
+            .ticker-item::after { display: none; }
             .storm-gate-flash { animation: none !important; opacity: 0 !important; }
           }
 
@@ -457,7 +479,8 @@ export default function Home() {
           .storm-gate {
             position: fixed;
             inset: 0;
-            z-index: 200;
+            /* Must sit on document.body — if nested under Layout main, footer paints over it and the page “jumps” */
+            z-index: 400;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -513,30 +536,28 @@ export default function Home() {
         ref={headerRef}
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-2 md:py-3">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-2 md:py-3 min-w-0">
           <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
-              <img
-                src={logoSrc}
-                alt="Silver Spine Studio logo"
-                className="h-[72px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]"
-                draggable="false"
-              />
+              <span className="sss-logo-halo">
+                <img
+                  src={logoSrc}
+                  alt="Silver Spine Studio logo"
+                  className="sss-logo-glow h-[72px] md:h-[108px] lg:h-[122px] w-auto select-none"
+                  draggable="false"
+                />
+              </span>
             ) : (
               <span className="text-2xl md:text-3xl font-extrabold select-none" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
               </span>
             )}
-
-            <span className="hidden sm:inline text-lg md:text-2xl font-semibold tracking-wide" style={{ color: SILVER }}>
-              Silver Spine Studio<span className="align-super text-sm md:text-base">™</span>
-            </span>
           </Link>
 
           <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
 
-        <div className="ticker-wrap">
+        <div className="ticker-wrap notranslate" translate="no">
           <div
             className="ticker-track text-[0.9rem] md:text-base tracking-wide border-b border-white/5"
             style={{ color: "#f5edd7", padding: "6px 0" }}
@@ -578,9 +599,11 @@ export default function Home() {
           </div>
         </div>
 
+        <LaunchMilestoneCountdown variant="home" />
+
       </header>
 
-      <main className="relative overflow-hidden flex items-center justify-center text-center">
+      <main className="relative z-10 overflow-hidden flex items-center justify-center text-center">
         <div className="relative w-full hero-frame">
           <img
             src="/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg"
@@ -625,7 +648,9 @@ export default function Home() {
           <div className="hero-top-shade" aria-hidden="true" />
 
           <div className="absolute inset-0 flex items-center justify-center z-50 px-4">
-            <div className="inline-block rounded-xl bg-black/35 backdrop-blur-[1.5px] px-4 py-3 md:px-6 md:py-4 shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+              <FixedMusicControl embedded />
+              <div className="inline-block rounded-xl bg-black/35 backdrop-blur-[1.5px] px-4 py-3 md:px-6 md:py-4 shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
               <h1
                 className="text-5xl md:text-7xl font-extrabold mb-2 md:mb-3 tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
                 style={{ color: SILVER }}
@@ -641,22 +666,18 @@ export default function Home() {
               <p className="text-base md:text-xl text-gray-100 max-w-[60ch] mx-auto italic tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
                 Stories are forged in storms of consequence, as beauty and danger share the same breath.
               </p>
+              </div>
             </div>
           </div>
 
-          <audio ref={audioRef} preload="auto" playsInline>
-            <source src="/thunder_rumble.mp3" type="audio/mpeg" />
-          </audio>
-
-          <button
-            type="button"
-            onClick={toggleThunder}
-            className="absolute top-4 right-4 z-[60] pointer-events-auto text-[#a77a23] hover:text-white text-2xl"
-            title={isMuted ? "Turn thunder on" : "Turn thunder off"}
-            aria-label={isMuted ? "Turn thunder on" : "Turn thunder off"}
-          >
-            {isMuted ? "🔇" : "🔊"}
-          </button>
+          <audio
+            id="sss-home-thunder"
+            ref={audioRef}
+            src="/thunder_rumble.mp3"
+            preload="auto"
+            playsInline
+            loop
+          />
         </div>
       </main>
     </div>

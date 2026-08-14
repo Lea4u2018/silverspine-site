@@ -6,6 +6,7 @@ const STATUS_COPY = {
   live: "Available now",
   soon: "Coming soon",
   review: "In review",
+  library: "At libraries",
 };
 
 const STORE_ICONS = {
@@ -37,7 +38,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
     return (
       <div className={className}>
         <p className="text-[11px] sm:text-xs text-gray-400 leading-relaxed mb-2">
-          Available worldwide — Amazon, Kobo, Apple Books &amp; more.
+          Available worldwide — Amazon (Kindle), B&amp;N (Nook), Apple Books &amp; more. Each store uses its own app.
         </p>
         <div
           className="grid grid-cols-2 gap-2"
@@ -46,8 +47,34 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
         >
           {stores.map((store) => {
             const isLive = store.status === "live" && store.href;
+            const isLibrary = store.status === "library";
             const Icon = STORE_ICONS[store.key] || FaBookOpen;
             const name = store.shortLabel || store.label;
+            if (isLibrary) {
+              return (
+                <div
+                  key={store.key}
+                  role="listitem"
+                  title={store.label}
+                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-[#f5f0e4] border border-[#a77a23]/50 bg-[#a77a23]/15 text-left py-2.5 px-2.5 rounded-lg"
+                >
+                  <span className="inline-flex items-center gap-1.5 min-w-0 flex-1">
+                    <Icon className="shrink-0 text-base text-[#a77a23]" aria-hidden />
+                    <span className="min-w-0">
+                      <span className="block text-[12px] sm:text-[13px] font-extrabold leading-snug break-words">
+                        {name}
+                      </span>
+                      <span className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#a77a23]">
+                        Ask your library
+                      </span>
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider text-[#f5f0e4] bg-[#a77a23]/40 px-1.5 py-0.5 rounded">
+                    Live
+                  </span>
+                </div>
+              );
+            }
             if (isLive) {
               return (
                 <a
@@ -113,12 +140,45 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
         Kobo and Apple Books also open country storefronts for local readers.
       </p>
       <p className="text-xs md:text-sm text-gray-400 leading-relaxed mb-1">
-        Choose your store. Each live door opens that retailer directly. Grey doors are still publishing — we’ll light them up when a working direct link is ready.
+        Choose your store. Each live door opens that retailer directly. Library doors (like cloudLibrary) are live for libraries — ask yours to add it. Grey doors are still publishing.
       </p>
       {stores.map((store) => {
         const isLive = store.status === "live" && store.href;
+        const isLibrary = store.status === "library";
         const status = STATUS_COPY[store.status] || store.status;
         const Icon = STORE_ICONS[store.key] || FaBookOpen;
+
+        if (isLibrary) {
+          return (
+            <div
+              key={store.key}
+              role="listitem"
+              className="block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/10 text-[#f5f0e4] px-4 sm:px-5 py-4"
+            >
+              <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-start sm:items-center gap-3 min-w-0 text-left flex-1">
+                  <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#a77a23]/20">
+                    <Icon className="text-xl text-[#a77a23]" aria-hidden />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-extrabold text-base md:text-lg tracking-wide leading-snug break-words">
+                      {store.label}
+                    </p>
+                    <p className="text-xs md:text-sm text-gray-300 mt-0.5 leading-snug">
+                      {store.description}
+                    </p>
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#a77a23] mt-1">
+                      Live for libraries · no public checkout link
+                    </p>
+                  </div>
+                </div>
+                <span className="shrink-0 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#f5f0e4] bg-[#a77a23]/40 px-2 sm:px-2.5 py-1 rounded-md mt-0.5">
+                  {status}
+                </span>
+              </div>
+            </div>
+          );
+        }
 
         if (isLive) {
           return (

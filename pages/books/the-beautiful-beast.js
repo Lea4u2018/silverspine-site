@@ -1,5 +1,8 @@
 import Head from "next/head";
 import Link from "next/link";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import StoreHub from "@/components/StoreHub";
+import { SAME_AS_STUDIO, SAME_AS_AUTHOR } from "@/lib/socials";
 
 export default function TheBeautifulBeast() {
   // SEO data for this specific book
@@ -12,21 +15,31 @@ export default function TheBeautifulBeast() {
   const bookJsonLd = {
     "@context": "https://schema.org",
     "@type": "Book",
-    "name": "The Beautiful Beast",
-    "author": {
+    name: "The Beautiful Beast",
+    author: {
       "@type": "Person",
-      "name": "Leameso James",
+      name: "Leameso James",
+      sameAs: SAME_AS_AUTHOR,
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "Silver Spine Studio™",
+      name: "Silver Spine Studio™",
+      url: "https://www.silverspinestudio.com/",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.silverspinestudio.com/google-brand-logo.png",
+        width: 512,
+        height: 512,
+      },
+      sameAs: SAME_AS_STUDIO,
     },
-    "image": ogImage,
-    "description": description,
+    image: ogImage,
+    description: description,
   };
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative z-10">
+      <StormAtmosphere mood="noir" />
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -76,10 +89,19 @@ export default function TheBeautifulBeast() {
           dragging secrets into the light. A novel by <b>Leameso James</b>.
         </p>
 
-        {/* Back to Index */}
+        <div className="space-y-3 mb-8 max-w-md mx-auto text-left">
+          <StoreHub variant="compact" liveOnly />
+          <Link
+            href="/shop"
+            className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
+          >
+            Full store hub · coming soon doors
+          </Link>
+        </div>
+
         <Link
           href="/books"
-          className="inline-block mt-4 px-6 py-3 rounded-lg bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition"
+          className="inline-block mt-2 px-6 py-3 rounded-lg bg-yellow-400 text-black font-semibold hover:bg-yellow-300 transition"
         >
           ← Back to All Books
         </Link>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import InfoPageShell from "@/components/InfoPageShell";
-import { NOVEL_PRICING } from "@/lib/store";
+import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
 
 const SECTIONS = [
   {
@@ -54,15 +54,173 @@ const SECTIONS = [
     ],
   },
   {
+    title: "Barnes & Noble (NOOK Reader required)",
+    items: [
+      {
+        q: "Before I buy on Barnes & Noble — what app or device do I need?",
+        a: (
+          <>
+            <p>
+              <strong>Barnes &amp; Noble sells NOOK ebooks.</strong> Those files open only in the{" "}
+              <strong>NOOK app (NOOK Reader)</strong> or on a <strong>Barnes &amp; Noble NOOK eReader device</strong>.
+              They do <strong>not</strong> open in the Kindle app, Apple Books, Google Play Books, Kobo, or a generic
+              EPUB reader you sideload yourself.
+            </p>
+            <p>
+              <strong>Choose Barnes &amp; Noble if:</strong> you already use NOOK, or you are fine installing the NOOK
+              Reader app on your phone, tablet, or computer.
+            </p>
+            <p>
+              <strong>Choose a different store on our </strong>
+              <Link href="/shop">Shop</Link>
+              <strong> page if you prefer:</strong>
+            </p>
+            <ul>
+              <li>
+                <strong>Gumroad</strong> — instant EPUB/PDF download; works with many reading apps
+              </li>
+              <li>
+                <strong>Amazon Kindle</strong> — Kindle app or Kindle eReader
+              </li>
+              <li>
+                <strong>Apple Books</strong> — iPhone, iPad, Mac (Books app)
+              </li>
+              <li>
+                <strong>Kobo</strong> — Kobo app or Kobo eReader
+              </li>
+              <li>
+                <strong>Smashwords</strong> — multi-format download (EPUB and more)
+              </li>
+            </ul>
+            <p>Same book, same price — pick the store that matches the device you already use.</p>
+          </>
+        ),
+      },
+      {
+        q: "I bought on Barnes & Noble — where is my ebook?",
+        a: (
+          <>
+            <p>
+              Your purchase lives in your <strong>Barnes &amp; Noble account</strong>, not on this website. Open it with
+              the <strong>NOOK app (NOOK Reader)</strong> or a <strong>NOOK eReader device</strong> — signed in with the{" "}
+              <strong>exact email used at checkout</strong>. After payment clears, it usually appears within minutes.
+            </p>
+            <ul>
+              <li>
+                Confirm you bought the <strong>NOOK eBook</strong> (not a print book).
+              </li>
+              <li>
+                Install the <strong>NOOK app (NOOK Reader)</strong> on your phone or tablet, or sign in at{" "}
+                <a href="https://www.barnesandnoble.com" target="_blank" rel="noopener noreferrer">
+                  bn.com
+                </a>
+                .
+              </li>
+              <li>
+                Sign in with the <strong>same email</strong> used at checkout.
+              </li>
+              <li>
+                Open <strong>NOOK → Library</strong> (or bn.com → Account → My NOOK → My Library).
+              </li>
+              <li>Pull down to refresh or sync. If you just purchased, wait 15–30 minutes.</li>
+              <li>
+                Check bn.com → Account → <strong>Order History</strong> to confirm the NOOK Book order completed.
+              </li>
+            </ul>
+            <p>
+              <strong>Download the NOOK Reader app:</strong>{" "}
+              <a
+                href="https://apps.apple.com/us/app/nook/id373582546"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Apple App Store
+              </a>{" "}
+              ·{" "}
+              <a
+                href="https://play.google.com/store/apps/details?id=bn.ereader"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Google Play
+              </a>
+            </p>
+            <p>
+              The regular Barnes &amp; Noble shopping app is for browsing and buying — your ebook library is inside{" "}
+              <strong>NOOK (NOOK Reader)</strong>.
+            </p>
+            <p>
+              Still missing? You may be signed into a different email than the one used at checkout. Forward your B&amp;N
+              order confirmation to{" "}
+              <a href="mailto:contact@silverspinestudio.com">contact@silverspinestudio.com</a> and we&apos;ll help you
+              spot what went wrong.
+            </p>
+          </>
+        ),
+      },
+      {
+        q: "Can I read my Barnes & Noble purchase on Kindle, Kobo, or another e-reader?",
+        a: (
+          <>
+            <p>
+              <strong>No.</strong> Barnes &amp; Noble NOOK ebooks stay inside the NOOK ecosystem. There is no way to
+              move a B&amp;N purchase into the Kindle app, Apple Books, Kobo, or a generic EPUB app.
+            </p>
+            <p>
+              <strong>On Barnes &amp; Noble, you can read with:</strong>
+            </p>
+            <ul>
+              <li>
+                <strong>NOOK app (NOOK Reader)</strong> on iPhone, iPad, Android, or computer (
+                <a href="https://apps.apple.com/us/app/nook/id373582546" target="_blank" rel="noopener noreferrer">
+                  Apple
+                </a>
+                {" · "}
+                <a
+                  href="https://play.google.com/store/apps/details?id=bn.ereader"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Google Play
+                </a>
+                )
+              </li>
+              <li>
+                <strong>NOOK eReader devices</strong> from Barnes &amp; Noble — sign in with your purchase email and
+                open Library
+              </li>
+              <li>
+                <strong>bn.com</strong> — Account → My NOOK → My Library (web reading where supported)
+              </li>
+            </ul>
+            <p>
+              <strong>Want Kindle, Kobo, Apple Books, or a downloadable EPUB/PDF?</strong> Buy from another door on our{" "}
+              <Link href="/shop">Shop</Link> page instead — Gumroad, Amazon, Apple Books, Kobo, and Smashwords each
+              match different devices and apps.
+            </p>
+          </>
+        ),
+      },
+    ],
+  },
+  {
     title: "Pricing, pre-orders & launch",
     items: [
       {
+        q: "Can I preorder the full DIGITAL copy now?",
+        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. The full DIGITAL copy opens for Insider preorder ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover is not available for order until ${NOVEL_PRICING.hardcoverOrderFromLabel}. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
+      },
+      {
+        q: "When can I order the hardcover?",
+        a: `Hardcover orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Full DIGITAL copy preorder opens separately ${NOVEL_PRICING.digitalPreorderStartLabel}.`,
+      },
+      {
         q: "What is the benefit of buying the Extended Sneak Peek today?",
-        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full novel for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) during preorder, ${NOVEL_PRICING.insiderStartLabel} – ${NOVEL_PRICING.insiderEndLabel}. Official release is ${NOVEL_PRICING.releaseLabel} at regular price ${NOVEL_PRICING.retail} — well timed for holiday gifting.`,
+        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) when preorder opens (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover orders from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
       },
       {
         q: "How much does everything cost?",
-        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist). Insider Deal / preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.insiderStartLabel} – ${NOVEL_PRICING.insiderEndLabel}, sneak-peek buyers). Regular price: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}.`,
+        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Digital Insider preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover orders from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}.`,
       },
       {
         q: "Can I get a refund after I buy?",
@@ -136,7 +294,9 @@ export default function FAQ() {
             {section.items.map((item) => (
               <details key={item.q} className="faq-item">
                 <summary>{item.q}</summary>
-                <p>{item.a}</p>
+                <div className="faq-answer">
+                  {typeof item.a === "string" ? <p>{item.a}</p> : item.a}
+                </div>
               </details>
             ))}
           </div>

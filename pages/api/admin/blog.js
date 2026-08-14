@@ -7,6 +7,7 @@ import {
   storageMode,
   updatePost,
 } from "@/lib/blogStore";
+import { listPinnedForAdmin, pinnedStorageMode, updatePinned } from "@/lib/pinnedBlogStore";
 
 export const config = {
   api: {
@@ -30,8 +31,14 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === "GET") {
-      const posts = await listAllForAdmin();
-      return res.status(200).json({ ok: true, posts, storage: storageMode() });
+      const [posts, pinned] = await Promise.all([listAllForAdmin(), listPinnedForAdmin()]);
+      return res.status(200).json({
+        ok: true,
+        posts,
+        pinned,
+        storage: storageMode(),
+        pinnedStorage: pinnedStorageMode(),
+      });
     }
 
     if (req.method === "POST") {
@@ -47,6 +54,39 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, ...uploaded });
       }
 
+      if (action === "update-pinned") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing pinned post id." });
+        const bullets =
+          typeof body.bulletsText === "string"
+            ? body.bulletsText.split("\n").map((s) => s.trim()).filter(Boolean)
+            : body.bullets;
+        const post = await updatePinned(id, {
+          category: body.category,
+          dateISO: body.dateISO,
+          title: body.title,
+          body: body.body,
+          bullets,
+          mediaType: body.mediaType,
+          mediaUrl: body.mediaUrl,
+          mediaPoster: body.mediaPoster,
+          mediaCaption: body.mediaCaption,
+          videoLive: body.videoLive,
+          figureKey: body.figureKey,
+          expandBody: body.expandBody,
+          expandLabel: body.expandLabel,
+          published: body.published,
+        });
+        return res.status(200).json({ ok: true, post });
+      }
+
+      if (action === "publish-pinned" || action === "unpublish-pinned") {
+        const id = String(body.id || "").trim();
+        if (!id) return res.status(400).json({ ok: false, error: "Missing pinned post id." });
+        const post = await updatePinned(id, { published: action === "publish-pinned" });
+        return res.status(200).json({ ok: true, post });
+      }
+
       if (action === "create") {
         const post = await createPost({
           title: body.title,
@@ -54,6 +94,7 @@ export default async function handler(req, res) {
           mediaType: body.mediaType,
           mediaUrl: body.mediaUrl,
           mediaCaption: body.mediaCaption,
+          videoLive: body.videoLive,
           published: body.published !== false,
         });
         return res.status(200).json({ ok: true, post });
@@ -68,6 +109,7 @@ export default async function handler(req, res) {
           mediaType: body.mediaType,
           mediaUrl: body.mediaUrl,
           mediaCaption: body.mediaCaption,
+          videoLive: body.videoLive,
           published: body.published,
         });
         return res.status(200).json({ ok: true, post });

@@ -5,46 +5,12 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import LaunchListForm from "@/components/LaunchListForm";
 import ArcRequestForm from "@/components/ArcRequestForm";
-import BlogFigures from "@/components/BlogFigures";
+import PinnedBlogCard from "@/components/PinnedBlogCard";
+import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
 import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import { bindChromeVars } from "@/lib/chromeVars";
 import { readPreferredLang } from "@/lib/i18n";
-
-/**
- * One distinct hero per blog card (no repeats across the feed).
- * Stills OR mp4 — drop files in /public/blog/ then point src here.
- * Note: storm-cover-art.jpg ≈ beautiful-beast-cover.jpg — do not use both.
- * quote-storm-waiting.jpg puts the logo over the figure — avoid as a hero.
- */
-const BLOG_IMG = {
-  cover: {
-    src: "/blog/beautiful-beast-cover.jpg",
-    alt: "The Beautiful Beast cover art",
-    caption: "The Beautiful Beast — Book One of the Seven-Fold Chronicle.",
-  },
-  arcQuote: {
-    src: "/blog/quote-arc-week.jpg",
-    alt: "ARC week announcement on a snow mountain road",
-    caption: "ARC week is open — full novel November 1, 2026.",
-  },
-  cliffside: {
-    src: "/blog/cliffside-snow.jpg",
-    alt: "Lone figure on a snowy cliff overlooking a mountain valley",
-    caption: "Cliffside — where the storm begins.",
-  },
-  highway: {
-    src: "/blog/highway-night-banner.jpg",
-    alt: "Cinematic night highway through a Colorado canyon",
-    caption: "Colorado highway night — the chronicle’s road.",
-  },
-  // Extras only inside “View timeline / View notes”
-  snowRoad: {
-    src: "/blog/snow-mountain-road.jpg",
-    alt: "Wet mountain highway at night with taillights in the snow",
-    caption: "Million-Dollar Highway atmosphere — wet asphalt, snow, and debt.",
-  },
-};
 
 export default function Blog() {
 
@@ -60,6 +26,7 @@ export default function Blog() {
  const REQUEST_EMAIL = "contact@silverspinestudio.com";
 
   const [studioPosts, setStudioPosts] = useState([]);
+  const [pinnedPosts, setPinnedPosts] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,6 +36,7 @@ export default function Blog() {
         const data = await res.json();
         if (!cancelled && res.ok && data.ok && Array.isArray(data.posts)) {
           setStudioPosts(data.posts);
+          setPinnedPosts(Array.isArray(data.pinned) ? data.pinned : []);
         }
       } catch {
         /* keep pinned cards only */
@@ -123,8 +91,6 @@ export default function Blog() {
   }, []);
 
   // ---- local UI ----
-  const [showPlan, setShowPlan] = useState(false);
-  const [showBrandNotes, setShowBrandNotes] = useState(false);
   const [showArc, setShowArc] = useState(false);
   const [showList, setShowList] = useState(false);
   const [showPress, setShowPress] = useState(false);
@@ -840,7 +806,11 @@ export default function Blog() {
                         <video
                           className="w-full h-auto block"
                           src={p.mediaUrl}
-                          controls
+                          poster={p.mediaPoster || undefined}
+                          autoPlay={p.videoLive !== false}
+                          muted={p.videoLive !== false}
+                          loop={p.videoLive !== false}
+                          controls={p.videoLive === false}
                           playsInline
                           preload="metadata"
                           aria-label={p.mediaCaption || p.title}
@@ -857,276 +827,16 @@ export default function Blog() {
                 );
               })}
 
-              {/* CARD 1 — today */}
-              <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                  <span className="uppercase tracking-wide">Announcement</span>
-                  <time dateTime="2026-08-09">Aug 9, 2026</time>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-                  Website Inquiries Are Open — Plus Seven Spines in the Storm
-                </h3>
-                <p className="text-gray-300 mb-3 text-sm">
-                  We’ve added a clear path for custom website builds.
-                  If you want a site designed, use Contact and choose{" "}
-                  <span className="text-white font-semibold">Website build inquiry</span>
-                  {" "}— those messages arrive tagged{" "}
-                  <span className="text-white font-semibold">[WEBSITE INQUIRY]</span> in the studio inbox.
-                </p>
-                <p className="text-gray-300 mb-3 text-sm">
-                  Reach us at{" "}
-                  <Link href="/contact?topic=sites" className="text-[#a77a23] font-semibold hover:underline">
-                    silverspinestudio.com/contact?topic=sites
-                  </Link>
-                  {" "}or email{" "}
-                  <a href={`mailto:${REQUEST_EMAIL}`} className="text-[#a77a23] font-semibold hover:underline">
-                    {REQUEST_EMAIL}
-                  </a>
-                  . Book launch still comes first — projects are considered by inquiry, fit, and timing.
-                </p>
-                <figure className="my-4 overflow-hidden rounded-xl border border-white/10 bg-black">
-                  <video
-                    className="w-full h-auto block"
-                    src="/covers/seven-spines-noir-window.mp4"
-                    poster="/covers/seven-spines-noir-window.png"
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    aria-label="Seven spines in a rainy window — cream to deep fire red"
-                  />
-                  <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
-                    Cream to deep fire red · seven spines in the storm
-                  </figcaption>
-                </figure>
-                <div className="flex flex-wrap gap-3 mt-2">
-                  <Link
-                    href="/contact?topic=sites"
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Contact — website inquiries
-                  </Link>
-                  <Link
-                    href="/books"
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Back to Books
-                  </Link>
-                </div>
-                <p className="text-gray-400 text-xs mt-4 italic">Happy Sleuthing.</p>
-              </article>
-
-              {/* CARD 2 */}
-              <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                  <span className="uppercase tracking-wide">Announcement</span>
-                  <time dateTime="2026-08-08">Aug 8, 2026</time>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-                  Silver Spine Studio™ Is Live — Come On In
-                </h3>
-                <p className="text-gray-300 mb-3 text-sm">
-                  The site is in production. Rain, lightning, Books, Shop, Reviews, and the launch list are open —
-                  the storm is no longer waiting behind a closed gate.
-                </p>
-                <ul className="text-gray-300 text-sm list-disc ml-5 mb-4">
-                  <li>Cover reveal &amp; Extended Sneak Peek windows are underway</li>
-                  <li>ARC applications are open for 25 early sleuths</li>
-                  <li>3 lucky winners will each receive a FULL digital copy — join the launch list</li>
-                </ul>
-                <BlogFigures images={[BLOG_IMG.cover]} />
-                <div className="flex flex-wrap gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowList(true)}
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Join the launch list
-                  </button>
-                  <Link
-                    href="/shop"
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Visit the Shop
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => setShowArc(true)}
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Request early-release ARC
-                  </button>
-                </div>
-                <p className="text-gray-400 text-xs mt-4 italic">Happy Sleuthing.</p>
-              </article>
-
-              {/* CARD 3 */}
-              <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                  <span className="uppercase tracking-wide">Announcement</span>
-                  <time dateTime="2026-07-28">Jul 28, 2026</time>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-                  The Beautiful Beast — Launch Timeline & What’s Next
-                </h3>
-                <p className="text-gray-300 mb-3 text-sm">
-                  The road to release is mapped. Here’s the plan and how to get early access.
-                </p>
-                <ul className="text-gray-300 text-sm list-disc ml-5 mb-4">
-                  <li>ARC sign-ups + selection window</li>
-                  <li>Cover reveal + teaser trailer</li>
-                  <li>Preorder live + launch week events</li>
-                </ul>
-                <BlogFigures images={[BLOG_IMG.arcQuote]} />
-                <div className="flex flex-wrap gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowPlan(v => !v)}
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                    aria-expanded={showPlan}
-                    aria-controls="launch-plan"
-                  >
-                    {showPlan ? "Hide timeline" : "View timeline"}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowList(true)}
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Join the launch list
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowArc(true)}
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Request early-release ARC
-                  </button>
-                </div>
-
-                <div
-                  id="launch-plan"
-                  className={`disclosure mt-3 ${showPlan ? "open" : ""}`}
-                  style={{
-                    maxHeight: showPlan ? 4000 : 0,
-                    opacity: showPlan ? 1 : 0,
-                    transition: "max-height 260ms ease, opacity 220ms ease"
-                  }}
-                >
-                  <div className="rounded-lg border border-white/10 p-4 bg-black/40">
-                    <BlogFigures images={[BLOG_IMG.snowRoad]} />
-                    <h4 className="text-lg font-semibold mb-3" style={{ color: GOLD }}>Milestones</h4>
-                  <ol className="list-decimal ml-5 space-y-2 text-sm text-gray-200">
-   <li><span className="font-semibold text-[#a77a23]"> Cover Reveal</span> — Aug 3, 2026. The blank ribbon falls away. The premium artwork is officially unmasked.</li>
-   <li><span className="font-semibold text-[#a77a23]"> Sneak Peek Release</span> — Aug 4, 2026. Digital Extended Sneak Peek (Prologue &amp; Chapters 1–2) for $4.99. This purchase places you on the Insider Deal whitelist.</li>
-   <li><span className="font-semibold"> ARC Sign-ups</span> — Aug 7 – Aug 14, 2026. Advanced Review Copy applications open to select <span className="text-[#a77a23] font-semibold">25 sleuths</span> for early access. Selection emails go out Aug 17, 2026.</li>
-   <li><span className="font-semibold"> Teaser Trailer 2 Drop</span> — Aug 21, 2026. Production loops push live.</li>
-   <li><span className="font-semibold"> ARC Delivery Window</span> — Sep 21–23, 2026.</li>
-   <li><span className="font-semibold"> Preorder Goes Live</span> — Sep 30, 2026. Early whitelisted buyers lock in the $14.99 Insider Deal through Oct 14, 2026 (save 40% vs regular $24.99).</li>
-   <li><span className="font-semibold"> Launch Week Events</span> — Oct 21–28, 2026.</li>
-   <li><span className="font-semibold"> Official Release Day</span> — Nov 1, 2026. Full retail becomes $24.99.</li>
- </ol>
-
-
-                  <h4 className="text-lg font-semibold mt-5 mb-2" style={{ color: GOLD }}>A note for readers &amp; gift-givers</h4>
-<ul className="list-disc ml-5 space-y-2 text-sm text-gray-200">
-  <li><span className="font-semibold">Begin with the Sneak Peek:</span> $4.99 for Prologue &amp; Chapters 1–2 — and your place on the Insider whitelist.</li>
-  <li><span className="font-semibold">Two paths to the full novel:</span> Preorder Sep 30 – Oct 14 at $14.99, or wait for official release Nov 1 at $24.99 with your Insider path as offered.</li>
-<li><span className="font-semibold text-[#a77a23]">Holiday timing:</span> Nov 1 release lands just as gift season begins — a Colorado thriller ready for the nightstand, the stocking, or the reader who loves a storm.</li>
-
-</ul>
-
-                  </div>
-                </div>
-              </article>
-
-              {/* CARD 4 */}
-              <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                  <span className="uppercase tracking-wide">Behind the Scenes</span>
-                  <time dateTime="2026-07-16">Jul 16, 2026</time>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-                  Building the Silver Spine Look
-                </h3>
-                <p className="text-gray-300 mb-3 text-sm">Jet black, deep gold, stormlight. The system we’re shipping across the site.</p>
-                <BlogFigures images={[BLOG_IMG.cliffside]} />
-                <div className="flex gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowBrandNotes(v => !v)}
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                    aria-expanded={showBrandNotes}
-                    aria-controls="brand-notes"
-                  >
-                    {showBrandNotes ? "Hide notes" : "View notes"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowPress(true)}
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Request press kit
-                  </button>
-                </div>
-
-                <div
-                  id="brand-notes"
-                  className={`disclosure mt-3 ${showBrandNotes ? "open" : ""}`}
-                  style={{
-                    maxHeight: showBrandNotes ? 2400 : 0,
-                    opacity: showBrandNotes ? 1 : 0,
-                    transition: "max-height 260ms ease, opacity 220ms ease"
-                  }}
-                >
-                  <div className="rounded-lg border border-white/10 p-4 bg-black/40 text-sm text-gray-200">
-                    <ul className="list-disc ml-5 space-y-2">
-                      <li><span className="font-semibold">Palette:</span> Jet black base, storm-gold accents ({GOLD}).</li>
-                      <li><span className="font-semibold">Type:</span> Elegant serif for headings; clean sans for UI.</li>
-                      <li><span className="font-semibold">Motion:</span> Subtle fades/parallax &lt; 400ms; cinematic, not busy.</li>
-                    </ul>
-                  </div>
-                </div>
-              </article>
-
-              {/* CARD 5 — oldest (bottom) */}
-              <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                  <span className="uppercase tracking-wide">Announcement</span>
-                  <time dateTime="2026-07-05">Jul 5, 2026</time>
-                </div>
-                <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-                  The Seven-Fold Chronicle Begins
-                </h3>
-                <p className="text-gray-300 mb-3 text-sm">
-                  Book One — <em>The Beautiful Beast</em> — opens the mapped sequence: thrillers forged in storm and consequence,
-                  where beauty and danger share the same breath.
-                </p>
-                <ul className="text-gray-300 text-sm list-disc ml-5 mb-4">
-                  <li>Colorado highway. Thanksgiving night. The storm is already waiting.</li>
-                  <li>Future volumes follow the rolling narrative timeline after Book 1</li>
-                  <li>Join the launch list for calendar locks as dates firm up</li>
-                </ul>
-                <BlogFigures images={[BLOG_IMG.highway]} />
-                <div className="flex flex-wrap gap-3 mt-4">
-                  <Link
-                    href="/books"
-                    className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
-                  >
-                    Explore the Books
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => setShowList(true)}
-                    className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
-                  >
-                    Join the launch list
-                  </button>
-                </div>
-              </article>
+              {/* Pinned announcements (editable in Admin → Blog) */}
+              {pinnedPosts.map((p) => (
+                <PinnedBlogCard
+                  key={p.id}
+                  post={p}
+                  onLaunchList={() => setShowList(true)}
+                  onArc={() => setShowArc(true)}
+                  onPress={() => setShowPress(true)}
+                />
+              ))}
             </section>
 
             {/* RIGHT: Welcome stays fixed on desktop while blog scrolls */}
@@ -1245,6 +955,7 @@ export default function Blog() {
               <button onClick={() => setShowPress(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <form onSubmit={submitPress} className="space-y-4">
+              <FormRequiredNote />
               <div className="hidden" aria-hidden="true">
                 <label>Leave this empty</label>
                 <input
@@ -1256,34 +967,36 @@ export default function Blog() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-300 mb-1">Your name</label>
+                  <FormFieldLabel required>Your name</FormFieldLabel>
                   <input value={pressName} onChange={e => setPressName(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-300 mb-1">Outlet</label>
+                  <FormFieldLabel required>Outlet</FormFieldLabel>
                   <input value={pressOutlet} onChange={e => setPressOutlet(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-gray-300 mb-1">Email</label>
+                  <FormFieldLabel required>Email</FormFieldLabel>
                   <input type="email" value={pressEmail} onChange={e => setPressEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-300 mb-1">Deadline (optional)</label>
+                  <FormFieldLabel optional>Deadline</FormFieldLabel>
                   <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2026" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-gray-300 mb-1">What you need</label>
-                <input value={pressNeeds} onChange={e => setPressNeeds(e.target.value)} className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                <FormFieldLabel required>What you need</FormFieldLabel>
+                <input value={pressNeeds} onChange={e => setPressNeeds(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
               </div>
 
               <label className="flex items-start gap-2 text-xs text-gray-300">
                 <input type="checkbox" checked={pressAgree} onChange={e => setPressAgree(e.target.checked)} required />
-                <span>I acknowledge materials (if shared) are confidential and not for redistribution without written consent.</span>
+                <span>
+                  <RequiredMark /> I acknowledge materials (if shared) are confidential and not for redistribution without written consent.
+                </span>
               </label>
 
               {pressStatus.msg ? (

@@ -1,44 +1,61 @@
 import Link from "next/link";
-import { CORE_ICONS, PENDING_FOOTER_HUB } from "@/lib/socials";
+import { SOCIAL_ICONS, BOOK_ICONS, PENDING_FOOTER_HUB } from "@/lib/socials";
 import { SNEAK_PEEK_STORES } from "@/lib/store";
 
 const GOLD = "#a77a23";
 
+/**
+ * ONE definitive map — subject tag, Outlook folder, and rule must stay in sync.
+ * Rule conditions always include the brackets (never bare words like REVIEW).
+ */
 const EMAIL_TAGS = [
   {
-    tag: "[ARC REQUEST]",
-    meaning: "New ARC application to your inbox",
-    outlook: "Rule: subject contains ARC REQUEST → [ARC] folder",
+    tag: "[AUTO-REPLY SENT]",
+    folder: "[AUTO REPLIED]",
+    meaning: "Internal notice: auto-confirmation already emailed to the visitor",
+    order: "Run this rule FIRST · stop processing",
   },
   {
-    tag: "[AUTO-REPLY SENT]",
-    meaning: "Automatic confirmation already emailed to the visitor",
-    outlook: "Rule: subject contains AUTO-REPLY SENT → [AUTO REPLIED] folder",
+    tag: "[ARC REQUEST]",
+    folder: "[ARC]",
+    meaning: "New ARC / early-release application",
+    order: "Rule 2",
   },
   {
     tag: "[LAUNCH LIST]",
+    folder: "[LAUNCH LIST]",
     meaning: "Launch-list signup",
-    outlook: "Rule: subject contains LAUNCH LIST → [LAUNCH LIST] folder",
-  },
-  {
-    tag: "[CONTACT-SSS]",
-    meaning: "Silver Spine contact form (unique code — won’t catch other emails with the word contact)",
-    outlook: "Rule: subject contains CONTACT-SSS → [CONTACT-SSS] folder",
-  },
-  {
-    tag: "[MEDIA REQUEST]",
-    meaning: "Press kit, interview, or media feature request",
-    outlook: "Rule: subject contains MEDIA REQUEST → [MEDIA REQUEST] folder",
-  },
-  {
-    tag: "[WEBSITE INQUIRY]",
-    meaning: "Custom website inquiry",
-    outlook: "Rule: subject contains WEBSITE INQUIRY → [WEBSITE INQUIRY] folder",
+    order: "Rule 3",
   },
   {
     tag: "[REVIEW]",
-    meaning: "New review submitted (if configured)",
-    outlook: "Rule: subject contains REVIEW → [REVIEWS] folder",
+    folder: "[REVIEWS]",
+    meaning: "New review submitted (pending approval)",
+    order: "Rule 4 — must use [REVIEW] with brackets (never the word REVIEW alone)",
+  },
+  {
+    tag: "[NEIGHBOR]",
+    folder: "[NEIGHBORS]",
+    meaning: "Studio Neighbor listing request (pending approval)",
+    order: "Rule — must use [NEIGHBOR] with brackets",
+  },
+  {
+    tag: "[MEDIA REQUEST]",
+    folder: "[MEDIA REQUEST]",
+    meaning: "Press kit, interview, or media feature request",
+    order: "Rule 5",
+  },
+  {
+    tag: "[WEBSITE INQUIRY]",
+    folder: "[WEBSITE INQUIRY]",
+    meaning: "Custom website inquiry",
+    order: "Rule 6",
+  },
+  {
+    tag: "[CONTACT-SSS]",
+    folder: "[CONTACT-SSS]",
+    meaning: "Silver Spine contact form (unique code — not the word contact)",
+    order: "Rule 7",
   },
 ];
 
@@ -46,74 +63,65 @@ const EMAIL_TAGS = [
  * Admin “Next Up” hub — unfinished footer icons + soon storefronts + email tag cheat sheet.
  */
 export default function AdminNextUpPanel() {
-  const soonStores = SNEAK_PEEK_STORES.filter((s) => s.status !== "live" || !s.href);
-  const liveFooter = CORE_ICONS;
+  const soonStores = SNEAK_PEEK_STORES.filter((s) => s.status === "soon" || s.status === "review");
+  const liveFooter = [
+    ...SOCIAL_ICONS.map((i) => ({ ...i, group: "Social" })),
+    ...BOOK_ICONS.map((i) => ({ ...i, group: "Books" })),
+  ];
 
   return (
     <div className="space-y-8">
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <h2 className="text-xl font-extrabold mb-2" style={{ color: GOLD }}>
-          Email tags (definitive)
+          Email tags (definitive — one map only)
         </h2>
         <p className="text-sm text-gray-400 mb-4">
-          The site tags subjects. <strong className="text-gray-200">Outlook rules</strong> move them into folders
-          (the website cannot file your inbox by itself).
+          Subjects are tagged by the site. <strong className="text-gray-200">Outlook rules</strong> file them.
+          Use this table only — subject tag, folder, and rule all match. Always include{" "}
+          <strong className="text-gray-200">brackets</strong> in the rule (never bare REVIEW / contact / etc.).
         </p>
-        <div className="mb-4 rounded-xl border border-[#a77a23]/30 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
-          <p className="font-semibold text-[#a77a23] mb-1">Setup once in Outlook</p>
-          <ol className="list-decimal ml-5 space-y-1 text-gray-300">
-            <li>
-              Folders (with brackets, matching your setup):{" "}
-              <strong>[ARC]</strong> · <strong>[LAUNCH LIST]</strong> · <strong>[REVIEWS]</strong> ·{" "}
-              <strong>[CONTACT-SSS]</strong> · <strong>[MEDIA REQUEST]</strong> ·{" "}
-              <strong>[WEBSITE INQUIRY]</strong> · <strong>[AUTO REPLIED]</strong>
-            </li>
-            <li>
-              Rule (run first): subject contains <code className="text-[#a77a23]">AUTO-REPLY SENT</code> → move to{" "}
-              <strong>[AUTO REPLIED]</strong> · stop processing
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">ARC REQUEST</code> → <strong>[ARC]</strong>
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">LAUNCH LIST</code> → <strong>[LAUNCH LIST]</strong>
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">REVIEW</code> → <strong>[REVIEWS]</strong>
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">MEDIA REQUEST</code> → <strong>[MEDIA REQUEST]</strong>
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">WEBSITE INQUIRY</code> → <strong>[WEBSITE INQUIRY]</strong>
-            </li>
-            <li>
-              Rule: <code className="text-[#a77a23]">CONTACT-SSS</code> → <strong>[CONTACT-SSS]</strong>
-            </li>
-          </ol>
-          <p className="text-xs text-gray-500 mt-2">
-            Folder names can keep the <code className="text-[#a77a23]">[]</code>. Rule conditions match the text
-            inside the subject tag (e.g. CONTACT-SSS). Auto-confirmations to visitors stay clean; you get a
-            separate internal email tagged <code className="text-[#a77a23]">[AUTO-REPLY SENT]</code>.
-          </p>
+        <div className="mb-4 overflow-x-auto rounded-xl border border-[#a77a23]/30">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-[#a77a23]/15 text-[#a77a23]">
+              <tr>
+                <th className="px-3 py-2 font-bold">Subject tag (exact)</th>
+                <th className="px-3 py-2 font-bold">Outlook folder</th>
+                <th className="px-3 py-2 font-bold">Rule: subject contains</th>
+              </tr>
+            </thead>
+            <tbody className="text-gray-200">
+              {EMAIL_TAGS.map((row) => (
+                <tr key={row.tag} className="border-t border-white/10">
+                  <td className="px-3 py-2.5 font-mono text-[#a77a23] font-bold whitespace-nowrap">{row.tag}</td>
+                  <td className="px-3 py-2.5 font-mono whitespace-nowrap">{row.folder}</td>
+                  <td className="px-3 py-2.5 font-mono text-[#a77a23] whitespace-nowrap">{row.tag}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-3 mb-4">
           {EMAIL_TAGS.map((row) => (
             <div
-              key={row.tag}
+              key={`${row.tag}-detail`}
               className="rounded-xl border border-white/10 bg-black/40 px-4 py-3"
             >
-              <p className="font-mono text-sm text-[#a77a23] font-bold">{row.tag}</p>
+              <p className="font-mono text-sm text-[#a77a23] font-bold">
+                {row.tag} → {row.folder}
+              </p>
               <p className="text-sm text-gray-200 mt-1">{row.meaning}</p>
-              <p className="text-xs text-gray-500 mt-1">{row.outlook}</p>
+              <p className="text-xs text-gray-500 mt-1">{row.order}</p>
             </div>
           ))}
         </div>
-        <p className="text-xs text-gray-500 mt-4 leading-relaxed">
-          Example ARC auto-reply subject:{" "}
+        <p className="text-xs text-gray-500 leading-relaxed">
+          Example:{" "}
           <span className="text-gray-300 font-mono">
-            [AUTO-REPLY SENT] [ARC REQUEST] We received your early-release request…
+            [AUTO-REPLY SENT] [ARC REQUEST] Auto-confirmation sent → jane@…
           </span>
+          {" · "}
+          Review example:{" "}
+          <span className="text-gray-300 font-mono">[REVIEW] Pending approval — Jane (5★)</span>
         </p>
       </section>
 
@@ -167,7 +175,7 @@ export default function AdminNextUpPanel() {
               key={i.key}
               className="text-xs rounded-full border border-emerald-500/30 text-emerald-300 px-2.5 py-1"
             >
-              {i.label}
+              {i.group}: {i.label}
             </li>
           ))}
         </ul>

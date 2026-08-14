@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
+import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
 import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
 import { readPreferredLang } from "@/lib/i18n";
 import { bindChromeVars } from "@/lib/chromeVars";
@@ -112,7 +113,7 @@ export default function Contact() {
   ref={headerRef}
   className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
 >
-  <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+  <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
   <Link
   href="/"
   className="flex items-center gap-3 md:gap-4 group"
@@ -279,15 +280,16 @@ function ContactFormEngine() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 text-left">
+      <FormRequiredNote className="text-xs text-gray-500 mb-1" />
       <div className="hidden" aria-hidden="true">
         <label>Leave this empty</label>
         <input type="text" value={hp} onChange={(e) => setHp(e.target.value)} autoComplete="off" />
       </div>
 
       <div>
-        <label className="block mb-2 text-gray-300" htmlFor="contact-topic">
+        <FormFieldLabel htmlFor="contact-topic" className="block mb-2 text-gray-300" required>
           Topic
-        </label>
+        </FormFieldLabel>
         <select
           id="contact-topic"
           value={topic}
@@ -338,18 +340,24 @@ function ContactFormEngine() {
       </div>
 
       <div>
-        <label className="block mb-2 text-gray-300">Name</label>
+        <FormFieldLabel className="block mb-2 text-gray-300" required>
+          Name
+        </FormFieldLabel>
         <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="Your name" />
       </div>
       <div>
-        <label className="block mb-2 text-gray-300">Email</label>
+        <FormFieldLabel className="block mb-2 text-gray-300" required>
+          Email
+        </FormFieldLabel>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder="you@example.com" />
       </div>
 
       {topic === "media" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block mb-2 text-gray-300">Outlet / publication</label>
+            <FormFieldLabel className="block mb-2 text-gray-300" required>
+              Outlet / publication
+            </FormFieldLabel>
             <input
               type="text"
               value={outlet}
@@ -360,7 +368,9 @@ function ContactFormEngine() {
             />
           </div>
           <div>
-            <label className="block mb-2 text-gray-300">Deadline (optional)</label>
+            <FormFieldLabel className="block mb-2 text-gray-300" optional>
+              Deadline
+            </FormFieldLabel>
             <input
               type="text"
               value={deadline}
@@ -373,7 +383,9 @@ function ContactFormEngine() {
       )}
 
       <div>
-        <label className="block mb-2 text-gray-300">Message</label>
+        <FormFieldLabel className="block mb-2 text-gray-300" required>
+          Message
+        </FormFieldLabel>
         <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#a77a23] transition-colors duration-300 text-white" placeholder={messagePlaceholder} />
       </div>
 

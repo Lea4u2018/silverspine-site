@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { DIGITAL_COPY_GIVEAWAY } from "@/lib/store";
+import { readPreferredLang } from "@/lib/i18n";
+import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
 
 /**
  * Shared launch-list signup. Sends kind:"list" to /api/contact-safe.
@@ -24,8 +27,9 @@ export default function LaunchListForm({
           kind: "list",
           name,
           email,
+          language: readPreferredLang(),
           message:
-            "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle.",
+            "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 lucky winners will each receive a FULL digital copy (winners announced mid-October 2026).",
           hp,
           startedAt,
         }),
@@ -34,7 +38,7 @@ export default function LaunchListForm({
       if (res.ok && data.ok) {
         setStatus({
           state: "success",
-          msg: "You're on the list. Watch your inbox for launch updates.",
+          msg: "You're on the list — entered for a chance to be one of 3 lucky winners (each receives a FULL digital copy). Happy Sleuthing!",
         });
         setName("");
         setEmail("");
@@ -52,6 +56,7 @@ export default function LaunchListForm({
 
   return (
     <form onSubmit={submit} className="space-y-4">
+      <FormRequiredNote />
       <div className="hidden" aria-hidden="true">
         <label>Leave empty</label>
         <input
@@ -63,7 +68,7 @@ export default function LaunchListForm({
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-300 mb-1">Name</label>
+        <FormFieldLabel required>Name</FormFieldLabel>
         <input
           required
           value={name}
@@ -72,7 +77,7 @@ export default function LaunchListForm({
         />
       </div>
       <div>
-        <label className="block text-sm text-gray-300 mb-1">Email</label>
+        <FormFieldLabel required>Email</FormFieldLabel>
         <input
           required
           type="email"
@@ -93,6 +98,9 @@ export default function LaunchListForm({
       >
         {status.state === "sending" ? "Joining…" : "Join the launch list"}
       </button>
+      <p className="text-xs text-gray-300 leading-relaxed">
+        {DIGITAL_COPY_GIVEAWAY.blurb}
+      </p>
       <p className="text-xs text-gray-400">
         Separate from ARC requests. Signups go to {requestEmail}.
       </p>

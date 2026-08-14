@@ -2,64 +2,46 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
-import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { LIVE_SNEAK_PEEK_STORES } from "@/lib/store";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import StoreHub from "@/components/StoreHub";
+import { bindChromeVars } from "@/lib/chromeVars";
+import { buildAboutPageSchema, PUBLIC_AUTHOR_NAME, SITE_ORIGIN } from "@/lib/authorIdentity";
+import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
 
 export default function About() {
   const GOLD = "#a77a23";
 
-  // ===== Header/footer sizing so footer stays in view =====
+  // ===== Header sizing (do not observe footer — jump loop) =====
   const headerRef = useRef(null);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer"); // safe if missing
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(setVars);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const footerEl = document.getElementById("site-footer");
-      if (footerEl) ro.observe(footerEl);
-    }
-    window.addEventListener("load", setVars);
-    window.addEventListener("resize", setVars);
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("load", setVars);
-      window.removeEventListener("resize", setVars);
-    };
-  }, []);
-
-  // ---------- Logo (disc first) ----------
-  const [logoSrc, setLogoSrc] = useState(null);
+  // ---------- Logo (instant primary — no cache-bust delay) ----------
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-   const CANDIDATES = [
-  "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-  "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-  "/SilverSpine_FB_Profile_1024.png",
-  "/Silver_Spine_Studio_Logo_2025_10_11.png",
-];
     const tryLoad = (i = 0) => {
-      if (i >= CANDIDATES.length) { if (!cancelled) setUseTextLogo(true); return; }
+      if (i >= DISC_LOGO_CANDIDATES.length) {
+        if (!cancelled) setUseTextLogo(true);
+        return;
+      }
       const img = new Image();
-      img.onload = () => !cancelled && setLogoSrc(CANDIDATES[i]);
+      img.onload = () => {
+        if (!cancelled) {
+          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
+          setUseTextLogo(false);
+        }
+      };
       img.onerror = () => tryLoad(i + 1);
-      img.src = CANDIDATES[i] + `?v=${Date.now()}`;
+      img.src = DISC_LOGO_CANDIDATES[i];
     };
     tryLoad();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ---------- Starfield ----------
@@ -108,61 +90,107 @@ export default function About() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // ---------- Thunder audio (button under the card) ----------
-  const audioRef = useRef(null);
-  const [siteAudioMuted, setSiteAudioMuted] = useState(true);
-  const [showToast, setShowToast] = useState(false);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    let el = document.getElementById("site-audio");
-    if (!el) {
-      el = document.createElement("audio");
-      el.id = "site-audio";
-      el.src = "/thunder_rumble.mp3";
-      el.loop = true;
-      el.preload = "auto";
-      document.body.appendChild(el);
-    }
-    audioRef.current = el;
-  }, []);
-
-  const toggleSiteAudio = async () => {
-    const a = audioRef.current;
-    if (!a) return;
-    try {
-      if (a.paused) {
-        a.muted = false;
-        a.volume = 0.22;
-        if (a.readyState < 2) a.load();
-        await a.play();
-        setSiteAudioMuted(false);
-      } else {
-        a.pause();
-        setSiteAudioMuted(true);
-      }
-      setShowToast(false);
-    } catch {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 1800);
-    }
-  };
-
-  // ---------- Author image fallback ----------
+  // ---------- Author image / motion portrait ----------
   const [showAuthorImg, setShowAuthorImg] = useState(true);
+  const [useAuthorMotion, setUseAuthorMotion] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/author-motion.mp4", { method: "HEAD" })
+      .then((r) => {
+        if (!cancelled) setUseAuthorMotion(r.ok);
+      })
+      .catch(() => {
+        if (!cancelled) setUseAuthorMotion(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="bg-black text-gray-100">
       <Head>
-        <title>About | Silver Spine Studio™</title>
-        <meta name="description" content="About the author and the Silver Spine Studio™ world." />
+        <title>About {PUBLIC_AUTHOR_NAME} | Silver Spine Studio™</title>
+        <meta
+          name="description"
+          content={`About ${PUBLIC_AUTHOR_NAME} — author of The Beautiful Beast and the Seven-Fold Chronicle at Silver Spine Studio™.`}
+        />
+        <meta name="author" content={PUBLIC_AUTHOR_NAME} />
+        <link rel="canonical" href={`${SITE_ORIGIN}/about`} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildAboutPageSchema()) }}
+        />
         <style>{`
           :root { --header-h: 140px; --footer-h: 72px; }
           /* Trimmed middle so the global footer is fully visible */
           .page-frame { min-height: calc(100vh - var(--header-h) - var(--footer-h) - 96px); display: flex; flex-direction: column; }
 
-          /* Starfield */
-          #stars { position: fixed; inset: 0; z-index: 0; opacity: .28; pointer-events: none; }
+          /* Soft live motion until CapCut author-motion.mp4 is dropped in */
+          @keyframes authorPortraitBreathe {
+            0%, 100% { transform: scale(1.04) translate3d(0, 1%, 0); }
+            50% { transform: scale(1.1) translate3d(0, -1.5%, 0); }
+          }
+          .author-portrait-still {
+            transform-origin: 50% 35%;
+            animation: authorPortraitBreathe 8s ease-in-out infinite;
+            will-change: transform;
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .author-portrait-still { animation: none; }
+          }
+
+          /* Starfield under the storm */
+          #stars { position: fixed; inset: 0; z-index: 0; opacity: .22; pointer-events: none; }
+
+          /* Soft lightning bed — behind bio, not over text */
+          .about-storm-bed {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+          }
+          /* Base lightning bed — same overall room light; bolts pushed silver/white */
+          .about-storm-bed video {
+            position: absolute;
+            inset: -8%;
+            width: 116%;
+            height: 116%;
+            object-fit: cover;
+            opacity: 0.34;
+            filter: saturate(0.25) contrast(1.28) brightness(0.74);
+            -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
+                    mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
+          }
+          /* Bolt punch layer — high-contrast silver forks only (screen blend keeps darks quiet) */
+          .about-storm-bed video.about-storm-bolts {
+            opacity: 0.62;
+            mix-blend-mode: screen;
+            filter: saturate(0) contrast(2.2) brightness(0.68) grayscale(1);
+          }
+          .about-rain {
+            position: absolute;
+            inset: 0;
+            background-image: repeating-linear-gradient(
+              -18deg,
+              transparent 0 14px,
+              rgba(200, 220, 245, 0.045) 14px 15px
+            );
+            animation: about-rain-drift 1.1s linear infinite;
+            opacity: 0.55;
+            -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
+                    mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
+          }
+          @keyframes about-rain-drift {
+            from { transform: translate3d(0, -12px, 0); }
+            to   { transform: translate3d(-8px, 18px, 0); }
+          }
+          @media (prefers-reduced-motion: reduce) {
+            .about-storm-bed video,
+            .about-storm-bed video.about-storm-bolts,
+            .about-rain { display: none !important; }
+          }
 
           /* Links */
           .nav-link { color: #e5e7eb; }
@@ -200,27 +228,57 @@ export default function About() {
         `}</style>
       </Head>
 
-      {/* ✨ Starfield */}
+      {/* Starfield + lightning/rain bed */}
       <canvas id="stars" />
+      <div className="about-storm-bed" aria-hidden="true">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          ref={(el) => {
+            if (el) el.playbackRate = 0.55;
+          }}
+        >
+          <source src="/storm-lightning.mp4" type="video/mp4" />
+        </video>
+        <video
+          className="about-storm-bolts"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          ref={(el) => {
+            if (el) el.playbackRate = 0.55;
+          }}
+        >
+          <source src="/storm-lightning.mp4" type="video/mp4" />
+        </video>
+        <div className="about-rain" />
+      </div>
 
       {/* HEADER */}
     <header
   ref={headerRef}
   className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
 >
-  <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+  <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
     <Link
       href="/"
       className="flex items-center gap-3 md:gap-4 group"
       aria-label="Silver Spine Studio — Home"
     >
       {logoSrc && !useTextLogo ? (
-        <img
-          src={logoSrc}
-          alt="Silver Spine Studio logo"
-          className="h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(238,242,247,0.22)]"
-          draggable="false"
-        />
+        <span className="sss-logo-halo">
+          <img
+            src={logoSrc}
+            alt="Silver Spine Studio logo"
+            className="sss-logo-glow h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none"
+            draggable="false"
+          />
+        </span>
       ) : (
         <span
           className="text-2xl md:text-3xl font-extrabold"
@@ -252,6 +310,8 @@ export default function About() {
   </div>
 </header>
 
+      <StormAtmosphere mood="author" />
+
       {/* TOP NEBULA (tight) */}
       <div className="nebula nebula-top mask-top relative z-10">
         <div className="letterbox-bar top-edge" />
@@ -260,20 +320,20 @@ export default function About() {
       {/* ===== Between header and footer (no local footer below) ===== */}
       <div className="page-frame relative z-10">
         {/* HEADING */}
-        <section className="relative max-w-6xl mx-auto w-full px-4 md:px-6 pt-1">
-          <div className="text-center">
+        <section className="relative max-w-6xl mx-auto w-full px-4 md:px-6 pt-1 text-center">
           <h1
-  className="heading"
-  style={{
-    color: "#eef2f7",
-    textShadow:
-      "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
-  }}
->
-  About the Author
-</h1>
-            <p className="subheading">A life built from storms, stories, and staying power.</p>
-          </div>
+            className="heading mx-auto w-full text-center"
+            style={{
+              color: "#eef2f7",
+              textShadow:
+                "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
+            }}
+          >
+            About the Author
+          </h1>
+          <p className="subheading mx-auto w-full text-center">
+            A life built from storms, stories, and staying power.
+          </p>
         </section>
 
        {/* MAIN — bio */}
@@ -286,14 +346,33 @@ export default function About() {
          <div className="content card-wrap">
            {showAuthorImg && (
              <div className="flex justify-center mb-4">
-               <div className="w-[150px] h-[150px] rounded-full overflow-hidden border-2" style={{ borderColor: GOLD }}>
-                 <img
-                   src="/author.jpg"
-                   alt="Leameso James"
-                   className="object-cover w-full h-full"
-                   onError={() => setShowAuthorImg(false)}
-                   draggable="false"
-                 />
+               <div
+                 className="author-portrait-ring w-[150px] h-[150px] rounded-full overflow-hidden border-2"
+                 style={{ borderColor: GOLD }}
+               >
+                 {useAuthorMotion ? (
+                   <video
+                     className="object-cover w-full h-full"
+                     autoPlay
+                     muted
+                     loop
+                     playsInline
+                     preload="metadata"
+                     poster="/author.jpg"
+                     aria-label="Leameso James"
+                     onError={() => setUseAuthorMotion(false)}
+                   >
+                     <source src="/author-motion.mp4" type="video/mp4" />
+                   </video>
+                 ) : (
+                   <img
+                     src="/author.jpg"
+                     alt="Leameso James"
+                     className="author-portrait-still object-cover w-full h-full"
+                     onError={() => setShowAuthorImg(false)}
+                     draggable="false"
+                   />
+                 )}
                </div>
              </div>
            )}
@@ -301,7 +380,7 @@ export default function About() {
            <div className="max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
              <p>
                <span className="font-semibold" style={{ color: GOLD }}>Leameso James</span>,
-               born in Newark, New Jersey and raised in Tuskegee, Alabama, has always been drawn to
+               born a northerner, raised a southerner, has always been drawn to
                stories that feel cinematic and human. Not darkness for its own sake—but the places where
                courage is forged, where love and conscience light the way through the storm.
              </p>
@@ -341,43 +420,33 @@ export default function About() {
        </div>
 
        <div className="bg-black/60 p-4 rounded-xl border border-white/5 text-[0.95rem] text-gray-200 leading-relaxed">
-         <p className="mb-2">🚨 <span className="text-white font-semibold">Insider Privilege:</span> Download the instant digital sneak peek today for just <span className="text-[#a77a23] font-bold">$4.99</span>.</p>
-         <p>Purchasing today whitelists your email for the discounted <span className="text-white font-bold">$14.99 insider rate</span> from <span className="text-white font-bold">Sep 1 – Oct 19, 2026</span>. Full retail is <span className="text-white font-bold">$24.99</span> starting <span className="text-white font-bold">Oct 20, 2026</span>.</p>
+         <p className="mb-2 text-white font-semibold">Welcome in — thank you for stopping by.</p>
+         <p className="mb-3">
+           The <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}
+           <span className="text-[#a77a23] font-bold">$4.99</span>. That purchase places you on the{" "}
+           <span className="text-[#a77a23] font-bold">Insider Deal</span> whitelist for the discounted full DIGITAL copy.
+         </p>
+         <p className="mb-3 text-amber-100/95 border border-amber-500/35 bg-amber-950/25 rounded-lg px-3 py-2 text-sm">
+           {PREORDER_STATUS.headline}
+         </p>
+         <p>
+           Full DIGITAL Insider preorder: <span className="text-white font-bold">{NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}</span> at{" "}
+           <span className="text-[#a77a23] font-bold">{NOVEL_PRICING.insider}</span> for whitelisted readers.
+           Hardcover orders from <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>.
+           Digital retail <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
+         </p>
        </div>
 
        <div className="pt-2 space-y-3">
-         {LIVE_SNEAK_PEEK_STORES.map((store) => (
-           <a
-             key={store.key}
-             href={store.href}
-             target="_blank"
-             rel="noopener noreferrer"
-             className="w-full inline-flex items-center justify-center gap-2 font-bold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)] text-sm"
-           >
-             📖 Claim the Extended Sneak Peek
-           </a>
-         ))}
+         <StoreHub variant="compact" liveOnly />
          <Link
            href="/shop"
            className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
          >
-           More storefront options
+           Full store hub · coming soon doors
          </Link>
        </div>
 
-       {/* RESTORED THUNDER AUDIO CONTROLLER (Centered underneath checkout layout) */}
-       <div className="flex justify-center pt-2">
-         <button
-           type="button"
-           aria-label={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-           onClick={toggleSiteAudio}
-           className="chip"
-           title={siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-         >
-           {siteAudioMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-           {siteAudioMuted ? "Click to hear thunder" : "Click to turn thunder off"}
-         </button>
-       </div>
      </div>
 
    </div>
@@ -391,16 +460,6 @@ export default function About() {
       </div>
 
       {/* No local footer here — global Footer renders separately. */}
-
-      {/* Optional toast if the browser blocks audio */}
-      {showToast && (
-        <div
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-sm"
-          style={{ background: "rgba(20,20,20,0.85)", color: GOLD, border: "1px solid rgba(167,122,35,0.35)", zIndex: 80 }}
-        >
-          Tap once to enable audio.
-        </div>
-      )}
     </div>
   );
 }

@@ -2,6 +2,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
+import { bindChromeVars } from "@/lib/chromeVars";
 
 const GOLD = "#a77a23";
 const SILVER = "#c9ced6";
@@ -11,53 +14,28 @@ const SILVER = "#c9ced6";
  */
 export default function InfoPageShell({ title, description, eyebrow, tone, children }) {
   const headerRef = useRef(null);
-  const [logoSrc, setLogoSrc] = useState(null);
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer");
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(setVars);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const footerEl = document.getElementById("site-footer");
-      if (footerEl) ro.observe(footerEl);
-    }
-    window.addEventListener("resize", setVars);
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("resize", setVars);
-    };
-  }, []);
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-    const CANDIDATES = [
-      "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-      "/SilverSpine_FB_Profile_1024.png",
-    ];
     const tryLoad = (i = 0) => {
-      if (i >= CANDIDATES.length) {
+      if (i >= DISC_LOGO_CANDIDATES.length) {
         if (!cancelled) setUseTextLogo(true);
         return;
       }
       const img = new Image();
       img.onload = () => {
-        if (!cancelled) setLogoSrc(CANDIDATES[i]);
+        if (!cancelled) {
+          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
+          setUseTextLogo(false);
+        }
       };
       img.onerror = () => tryLoad(i + 1);
-      img.src = CANDIDATES[i] + `?v=${Date.now()}`;
+      img.src = DISC_LOGO_CANDIDATES[i];
     };
     tryLoad();
     return () => {
@@ -67,6 +45,7 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
 
   return (
     <div className="bg-black text-gray-100 min-h-screen">
+      <StormAtmosphere mood="quiet" />
       <Head>
         <title>{title} | Silver Spine Studio™</title>
         <meta name="description" content={description} />
@@ -135,6 +114,23 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
             line-height: 1;
           }
           .faq-item[open] summary::after { content: "–"; }
+          .faq-item .faq-answer {
+            margin-top: 0.55rem;
+            color: #ffffff;
+          }
+          .faq-item .faq-answer p {
+            margin-top: 0.55rem;
+            color: #ffffff !important;
+          }
+          .faq-item .faq-answer p:first-child { margin-top: 0; }
+          .faq-item .faq-answer ul {
+            list-style: disc;
+            padding-left: 1.25rem;
+            margin: 0.55rem 0 0;
+            color: #ffffff;
+          }
+          .faq-item .faq-answer li + li { margin-top: 0.35rem; }
+          .faq-item .faq-answer a { color: ${GOLD}; text-decoration: underline; text-underline-offset: 2px; }
           .faq-item p {
             margin-top: 0.55rem;
             color: #ffffff !important;
@@ -146,15 +142,17 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
         ref={headerRef}
         className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
       >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
           <Link href="/" className="flex items-center gap-3 md:gap-4 shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
-              <img
-                src={logoSrc}
-                alt="Silver Spine Studio logo"
-                className="h-[64px] md:h-[88px] w-auto select-none shrink-0"
-                draggable="false"
-              />
+              <span className="sss-logo-halo">
+                <img
+                  src={logoSrc}
+                  alt="Silver Spine Studio logo"
+                  className="sss-logo-glow h-[64px] md:h-[88px] w-auto select-none"
+                  draggable="false"
+                />
+              </span>
             ) : (
               <span className="text-xl md:text-2xl font-extrabold" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-sm">™</span>
@@ -165,7 +163,7 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
         </div>
       </header>
 
-      <div className="info-frame relative z-0">
+      <div className="info-frame relative z-10">
         <div className="nebula nebula-top mask-top" aria-hidden="true" />
         <main className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-12">
           <p className="text-xs font-bold uppercase tracking-[0.28em] mb-3" style={{ color: GOLD }}>

@@ -1,70 +1,60 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
-import { LIVE_SNEAK_PEEK_STORES } from "@/lib/store";
+import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
+import {
+  duckAmbientForNarration,
+  restoreAmbientAfterNarration,
+} from "@/lib/cinematicAudio";
 import LaunchListForm from "@/components/LaunchListForm";
+import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
 import SiteNav from "@/components/SiteNav";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import StoreHub from "@/components/StoreHub";
+import { bindChromeVars } from "@/lib/chromeVars";
+import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
 
 export default function Books() {
   const GOLD = "#a77a23";
   const SILVER = "#c9ced6";
   const headerRef = useRef(null);
+  const router = useRouter();
 
-  // ===== Measure header/footer so footer is on-screen (no giant gap) =====
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const setVars = () => {
-      const header = headerRef.current;
-      const footer = document.getElementById("site-footer");
-      const hH = header ? header.getBoundingClientRect().height : 140;
-      const fH = footer ? footer.getBoundingClientRect().height : 72;
-      document.documentElement.style.setProperty("--header-h", `${Math.round(hH)}px`);
-      document.documentElement.style.setProperty("--footer-h", `${Math.round(fH)}px`);
-    };
-    setVars();
-    let ro;
-    if (typeof ResizeObserver !== "undefined") {
-      ro = new ResizeObserver(setVars);
-      if (headerRef.current) ro.observe(headerRef.current);
-      const footerEl = document.getElementById("site-footer");
-      if (footerEl) ro.observe(footerEl);
-    }
-    window.addEventListener("load", setVars);
-    window.addEventListener("resize", setVars);
-    return () => {
-      if (ro) ro.disconnect();
-      window.removeEventListener("load", setVars);
-      window.removeEventListener("resize", setVars);
-    };
-  }, []);
+  // ===== Measure header only (footer observe caused jump loops) =====
+  useEffect(() => bindChromeVars(headerRef.current), []);
 
-  // ===== Updated logo first =====
-  const [logoSrc, setLogoSrc] = useState(null);
+  // ===== Logo (instant primary path — no cache-bust delay) =====
+  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
   const [useTextLogo, setUseTextLogo] = useState(false);
   const [selectedBookId, setSelectedBookId] = useState(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
     let cancelled = false;
-    const CANDIDATES = [
-      "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png",
-      "/SilverSpine_FB_Profile_CircleDisc_1024.png",
-      "/SilverSpine_FB_Profile_1024.png",
-      "/Silver_Spine_Studio_Logo_2025_10_11.png",
-    ];
     const tryLoad = (i = 0) => {
-      if (i >= CANDIDATES.length) { if (!cancelled) setUseTextLogo(true); return; }
+      if (i >= DISC_LOGO_CANDIDATES.length) {
+        if (!cancelled) setUseTextLogo(true);
+        return;
+      }
       const img = new Image();
-      img.onload = () => { if (!cancelled) setLogoSrc(CANDIDATES[i]); };
+      img.onload = () => {
+        if (!cancelled) {
+          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
+          setUseTextLogo(false);
+        }
+      };
       img.onerror = () => tryLoad(i + 1);
-      img.src = CANDIDATES[i] + `?v=${Date.now()}`;
+      img.src = DISC_LOGO_CANDIDATES[i];
     };
     tryLoad();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // ===== Hover narration (separate from thunder) =====
   const audioRefs = useRef({});
+  const activeNarrationId = useRef(null);
   const [narrationEnabled, setNarrationEnabled] = useState(false);
   const [pendingNarrationId, setPendingNarrationId] = useState(null);
   const [showNarrationChip, setShowNarrationChip] = useState(false);
@@ -73,12 +63,26 @@ export default function Books() {
     const el = audioRefs.current[id];
     if (!el) return;
     try {
+      // Stop any other whisper still playing when moving between covers
+      Object.entries(audioRefs.current).forEach(([key, other]) => {
+        if (!other || Number(key) === id) return;
+        try {
+          other.pause();
+          other.currentTime = 0;
+        } catch {}
+      });
       el.pause();
       el.currentTime = 0;
       el.playbackRate = id === 1 ? 1.02 : 0.92;
-      el.volume = 0.85;
+      el.volume = 0.95;
+      activeNarrationId.current = id;
+      duckAmbientForNarration();
       await el.play();
     } catch {
+      if (activeNarrationId.current === id) {
+        activeNarrationId.current = null;
+        restoreAmbientAfterNarration();
+      }
       setPendingNarrationId(id);
       setShowNarrationChip(true);
     }
@@ -94,12 +98,20 @@ export default function Books() {
         } else {
           clearInterval(fade);
           el.pause();
-          el.volume = 0.85;
+          el.volume = 0.95;
+          if (activeNarrationId.current === id) {
+            activeNarrationId.current = null;
+            restoreAmbientAfterNarration();
+          }
         }
       }, 40);
     } else {
       el.pause();
       el.currentTime = 0;
+      if (activeNarrationId.current === id) {
+        activeNarrationId.current = null;
+        restoreAmbientAfterNarration();
+      }
     }
   };
 
@@ -113,142 +125,95 @@ export default function Books() {
     }
   };
 
-  // ===== Thunder (button now requires DOUBLE-CLICK to toggle) =====
-  const [thunderOn, setThunderOn] = useState(false);
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    let el = document.getElementById("site-audio");
-    if (!el) {
-      el = document.createElement("audio");
-      el.id = "site-audio";
-      el.src = "/thunder_rumble.mp3";
-      el.loop = true;
-      el.preload = "auto";
-      document.body.appendChild(el);
-    }
-    el.muted = true;
-  }, []);
+  // ===== Trailer: paused until reader hits play; hard-stop video+audio on leave =====
+  const trailerRef = useRef(null);
+  const BEAST_COVER = "/covers/1-the-beautiful-beast-full-tagged.png";
+  const [trailerShowCover, setTrailerShowCover] = useState(true);
 
-  const toggleThunder = async () => {
-    const a = document.getElementById("site-audio");
-    if (!a) return;
-    if (!a.paused) {
-      a.pause();
-      setThunderOn(false);
-      return;
-    }
+  const stopTrailerHard = () => {
+    const vid = trailerRef.current;
+    if (!vid) return;
     try {
-      a.volume = 0.12;
-      a.muted = false;
-      if (a.readyState < 2) a.load();
-      await a.play();
-      setThunderOn(true);
-    } catch {
-      try {
-        a.muted = true;
-        await a.play();
-        a.pause();
-        a.muted = false;
-        if (a.readyState < 2) a.load();
-        await a.play();
-        setThunderOn(true);
-      } catch {
-        setTimeout(async () => {
-          try {
-            a.muted = false;
-            if (a.readyState < 2) a.load();
-            await a.play();
-            setThunderOn(true);
-          } catch {
-            setThunderOn(false);
-          }
-        }, 120);
-      }
-    }
+      vid.pause();
+      vid.muted = true;
+      vid.currentTime = 0;
+    } catch {}
+    setTrailerShowCover(true);
   };
 
-  // ===== Trailer: always start muted (phones block unmuted autoplay after ~1s) =====
-  const trailerRef = useRef(null);
-  const [trailerMuted, setTrailerMuted] = useState(true);
-  const [showTrailerSoundHint, setShowTrailerSoundHint] = useState(true);
+  const playTrailer = async () => {
+    const vid = trailerRef.current;
+    if (!vid) return;
+    try {
+      vid.muted = false;
+      vid.removeAttribute("muted");
+      vid.volume = 1;
+      await vid.play();
+      setTrailerShowCover(false);
+    } catch {
+      // Browser may still require a control-bar tap; cover stays until play succeeds.
+    }
+  };
 
   useEffect(() => {
     const vid = trailerRef.current;
     if (!vid) return;
 
-    let cancelled = false;
+    vid.playsInline = true;
+    vid.setAttribute("playsinline", "");
+    vid.setAttribute("webkit-playsinline", "");
+    // Stay paused with sound ready — no muted autoplay (silent motion confuses readers).
+    vid.pause();
+    vid.muted = false;
+    vid.removeAttribute("muted");
+    vid.volume = 1;
+    try {
+      vid.currentTime = 0;
+    } catch {}
+    setTrailerShowCover(true);
 
-    const playMuted = async () => {
-      vid.defaultMuted = true;
-      vid.muted = true;
-      vid.setAttribute("muted", "");
-      vid.playsInline = true;
+    const onPlay = () => setTrailerShowCover(false);
+    const onPauseOrEnd = () => {
       try {
-        await vid.play();
+        if (vid.ended || vid.currentTime < 0.35) setTrailerShowCover(true);
       } catch {
-        // Wait for a user tap on the video/controls.
-      }
-      if (!cancelled) {
-        setTrailerMuted(true);
-        setShowTrailerSoundHint(true);
+        setTrailerShowCover(true);
       }
     };
+    vid.addEventListener("play", onPlay);
+    vid.addEventListener("pause", onPauseOrEnd);
+    vid.addEventListener("ended", onPauseOrEnd);
 
-    // If the OS pauses unmuted autoplay, recover as muted so visitors still see it.
-    const onPause = () => {
-      if (cancelled || !vid || document.hidden) return;
-      if (vid.currentTime > 0 && vid.currentTime < 3 && !vid.ended) {
-        vid.muted = true;
-        vid.play().catch(() => {});
-        setTrailerMuted(true);
-        setShowTrailerSoundHint(true);
-      }
-    };
+    const onRouteChange = () => stopTrailerHard();
+    router.events.on("routeChangeStart", onRouteChange);
+    router.events.on("routeChangeError", onRouteChange);
 
-    const onStalled = () => {
-      if (cancelled || !vid) return;
-      vid.muted = true;
-      vid.play().catch(() => {});
-    };
-
-    vid.addEventListener("pause", onPause);
-    vid.addEventListener("stalled", onStalled);
-    playMuted();
+    const onPageHide = () => stopTrailerHard();
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("beforeunload", onPageHide);
 
     return () => {
-      cancelled = true;
-      vid.removeEventListener("pause", onPause);
-      vid.removeEventListener("stalled", onStalled);
+      vid.removeEventListener("play", onPlay);
+      vid.removeEventListener("pause", onPauseOrEnd);
+      vid.removeEventListener("ended", onPauseOrEnd);
+      router.events.off("routeChangeStart", onRouteChange);
+      router.events.off("routeChangeError", onRouteChange);
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("beforeunload", onPageHide);
+      stopTrailerHard();
     };
-  }, []);
-
-  const toggleTrailerMute = async () => {
-    const vid = trailerRef.current;
-    if (!vid) return;
-    if (trailerMuted) {
-      vid.muted = false;
-      vid.volume = 0.85;
-      try {
-        await vid.play();
-      } catch {}
-      setTrailerMuted(false);
-      setShowTrailerSoundHint(false);
-    } else {
-      vid.muted = true;
-      setTrailerMuted(true);
-      setShowTrailerSoundHint(true);
-    }
-  };
+  }, [router.events]);
 
   // ===== Page data =====
+  // Master spine palette (glow only). Titles only on Book 1 cover art — do not label 2–7 on the grid.
   const books = [
     { id: 1, title: "THE BEAUTIFUL BEAST", tagline: "The first strike in the storm.", img: "/covers/1-the-beautiful-beast-full-tagged.png", motion: "/covers/1-the-beautiful-beast-motion.mp4", whisper: "/audio/beast_whisper_01.mp3", color: "#F5E6C8", ribbon: "COMING SOON" },
-    { id: 2, title: "SHADOWS OF A GHOST", tagline: "A shadow doesn’t vanish — it just learns to wait.", img: "/covers/2-shadows-of-a-ghost-arthur-blank-cover.jpg", whisper: "/audio/ghost_whisper_01.mp3", color: "#E5C877", ribbon: "IN THE WORKS" },
-    { id: 3, title: "THE GATHERING STORM", tagline: "The sting of lightning before the clap of thunder.", img: "/covers/3-the-gathering-storm-bee-blank-cover.jpg", whisper: "/audio/storm_whisper_01.mp3", color: "#D4A24B", ribbon: "SIMMERING" },
-    { id: 4, title: "FRAGILE UNBROKEN", tagline: "What doesn’t shatter learns how to cut.", img: "/covers/4-fragile-unbroken-elliot-blank-cover.jpg", whisper: "/audio/fragile_whisper_01.mp3", color: "#C57A2A", ribbon: "WHEELS TURNING" },
-    { id: 5, title: "THE MACHINE", tagline: "When prayer is your only hope — don’t skip it!", img: "/covers/5-the-machine-lancaster-blank-cover.jpg", whisper: "/audio/machine_whisper_01.mp3", color: "#A0522D", ribbon: "BASKING IN TIME" },
-    { id: 6, title: "SCARRED TRUTH", tagline: "When no one’s secrets are safe — and the truth is unmerciful.", img: "/covers/6-scarred-truth-saxe-blank-cover.jpg", whisper: "/audio/scarred_whisper_01.mp3", color: "#993300", ribbon: "HOLDING TIGHT" },
-    { id: 7, title: "SCORCHED EARTH", tagline: "Before the ashes settle — no one is safe.", img: "/covers/7-scorched-earth-francis-blank-cover.jpg", whisper: "/audio/scorched_whisper_01.mp3", color: "#8B0000", ribbon: "THE BEST TO COME" },
+    { id: 2, title: "BOOK TWO", tagline: "A shadow doesn’t vanish — it just learns to wait.", img: "/covers/book-02.jpg", whisper: "/audio/ghost_whisper_01.mp3", color: "#E5C877", ribbon: "IN THE WORKS" },
+    { id: 3, title: "BOOK THREE", tagline: "The sting of lightning before the clap of thunder.", img: "/covers/book-03.jpg", whisper: "/audio/storm_whisper_01.mp3", color: "#CE9D3B", ribbon: "SIMMERING" },
+    { id: 4, title: "BOOK FOUR", tagline: "What doesn’t shatter learns how to cut.", img: "/covers/book-04.jpg", whisper: "/audio/fragile_whisper_01.mp3", color: "#C57A2A", ribbon: "WHEELS TURNING" },
+    { id: 5, title: "BOOK FIVE", tagline: "When prayer is your only hope — don’t skip it!", img: "/covers/book-05.jpg", whisper: "/audio/machine_whisper_01.mp3", color: "#A0522D", ribbon: "BASKING IN TIME" },
+    { id: 6, title: "BOOK SIX", tagline: "When no one’s secrets are safe — and the truth is unmerciful.", img: "/covers/book-06.jpg", whisper: "/audio/scarred_whisper_01.mp3", color: "#993300", ribbon: "HOLDING TIGHT" },
+    { id: 7, title: "BOOK SEVEN", tagline: "Before the ashes settle — no one is safe.", img: "/covers/book-07.jpg", whisper: "/audio/scorched_whisper_01.mp3", color: "#8B0000", ribbon: "THE BEST TO COME" },
   ];
   return (
     <div className="bg-black text-gray-100">
@@ -269,37 +234,129 @@ export default function Books() {
           .hero-spacer { height: 8px; }
           .heading { text-align:center; color:${GOLD}; font-size:2.8rem; font-weight:800; line-height:1.2; margin-top: 0.06rem; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
           .subheading { text-align:center; color:#f3e2b8; font-size:1.02rem; font-style:italic; margin:.12rem 0 .6rem; }
-          .book-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2rem; justify-items: center; align-items: start; max-width: 88%; margin: .2rem auto 1.2rem; padding: 0.2rem 1rem 0.6rem; }
-          @media (max-width: 1600px) { .book-grid { grid-template-columns: repeat(4, 1fr); } }
-          @media (max-width: 1024px) { .book-grid { grid-template-columns: repeat(3, 1fr); } }
-          @media (max-width: 768px) { .heading { font-size: 2.2rem; } .nebula-top { height: 44px; } .nebula-bottom { height: 92px; margin-top: -14px; } .book-grid { grid-template-columns: repeat(2, 1fr); max-width: 94%; } }
-          @media (max-width: 480px) { .book-grid { grid-template-columns: 1fr; } }
-          .book-card { position: relative; border-radius: 1rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 300px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; }
-          .book-card:hover, .book-card.selected { transform: translateY(-3px) scale(1.015); box-shadow: 0 0 45px var(--glow), 0 0 75px var(--glow); border-color: var(--glow); }
+          /* Single row, Book 1 → Book 7 in order */
+          .book-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1.15rem; justify-items: center; align-items: start; max-width: 92%; margin: 0.45rem auto 1.1rem; padding: 0.15rem 0.75rem 0.5rem; }
+          @media (max-width: 1600px) { .book-grid { grid-template-columns: repeat(7, 1fr); gap: 0.85rem; } }
+          @media (max-width: 1100px) { .book-grid { grid-template-columns: repeat(4, 1fr); gap: 1rem; } }
+          @media (max-width: 768px) { .heading { font-size: 2.05rem; } .nebula-top { height: 40px; } .nebula-bottom { height: 84px; margin-top: -12px; } .book-grid { grid-template-columns: repeat(2, 1fr); max-width: 96%; gap: 0.85rem; } }
+          @media (max-width: 480px) { .book-grid { grid-template-columns: repeat(2, 1fr); gap: 0.7rem; } }
+          .book-card { position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 210px; background: rgba(12,12,12,0.55); border: 1px solid #7e7e70; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; }
+          .book-card:hover, .book-card.selected { transform: translateY(-2px) scale(1.012); box-shadow: 0 0 36px var(--glow), 0 0 60px var(--glow); border-color: var(--glow); }
+          @media (max-width: 768px) { .book-card { max-width: 170px; } }
+          @media (min-width: 1400px) { .book-card { max-width: 230px; } }
           .book-card img, .book-card video { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
           .ribbon { position:absolute; top:50%; left:50%; width:250%; height:58%; transform:translate(-50%,-50%) rotate(-45deg); background:#000; display:flex; align-items:center; justify-content:center; z-index:6; }
           .ribbon-text { color:#fff; font:700 1rem/1 'Libre Baskerville', Georgia, serif; letter-spacing:.22em; text-transform:uppercase; opacity:.95; }
           .book-title { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 2rem/1.16 'Libre Baskerville', Georgia, serif; color:var(--glow); text-shadow:0 0 18px rgba(0,0,0,.6); z-index:4; }
           .author-name { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 1.2rem/1.2 'Libre Baskerville', Georgia, serif; color:var(--glow); letter-spacing:.18em; z-index:4; }
-          .tagline { margin-top:.55rem; min-height: 2.6em; text-align:center; color: #f5f5f5; font-style:italic; font-size:0.95rem; line-height:1.35; opacity:0; transition:opacity .35s ease-in-out; }
+          .tagline { margin-top:.4rem; min-height: 2.4em; text-align:center; color: #f5f5f5; font-style:italic; font-size:0.85rem; line-height:1.3; opacity:0; transition:opacity .35s ease-in-out; }
           .book-card:hover + .tagline, .tagline.visible { opacity:1; }
           .chip { display:inline-flex; align-items:center; gap:.5rem; background: rgba(0,0,0,0.75); border: 1px solid rgba(167,122,35,0.45); border-radius: 999px; padding: 6px 12px; color: ${GOLD}; box-shadow: 0 6px 24px rgba(0,0,0,0.45); }
           .chip:hover { background: rgba(0,0,0,0.9); }
-          .featured-wrap { max-width: 1120px; margin: 0 auto 1.1rem; padding: 0 1rem; }
+          .featured-wrap {
+            max-width: 1320px;
+            margin: 0.35rem auto 0.25rem;
+            padding: 0 1rem;
+            scroll-margin-top: calc(var(--header-h) + 16px);
+          }
+          .featured-panel {
+            align-items: center;
+          }
+          .featured-copy h3 {
+            font-size: clamp(1.75rem, 2.6vw, 2.35rem) !important;
+          }
+          .featured-copy #featured-blurb-text {
+            font-size: 1.08rem;
+            line-height: 1.65;
+          }
+          .books-storm-panel {
+            border: 1px solid rgba(167,122,35,0.35);
+            background: rgba(0,0,0,0.55);
+            border-radius: 1rem;
+            padding: 1.35rem 1.25rem 1.45rem;
+            height: 100%;
+            min-height: 320px;
+          }
+          .books-storm-panel h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.02em;
+            margin: 0 0 0.55rem;
+          }
+          .books-storm-panel p {
+            font-size: 1rem !important;
+            line-height: 1.55 !important;
+          }
+          .shop-hub-link {
+            display: inline-flex;
+            width: auto;
+            max-width: 100%;
+            align-self: flex-start;
+            padding: 0.65rem 1.1rem;
+            font-size: 0.95rem;
+          }
+          @media (max-width: 1023px) {
+            .featured-panel {
+              align-items: stretch;
+              gap: 1.1rem;
+              padding: 1rem !important;
+            }
+            /* Mobile stack: copy → trailer → stay in the storm */
+            .featured-copy { order: 1; }
+            .trailer-slot { order: 2; }
+            .storm-slot { order: 3; }
+            .shop-hub-link { width: 100%; justify-content: center; }
+          }
+          .trailer-frame {
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+            scroll-margin-top: calc(var(--header-h) + 28px);
+          }
+          @media (max-width: 1023px) {
+            .trailer-frame { max-width: 340px; }
+          }
+          /* Larger player left; storm right; center keeps 2-col store tabs */
+          @media (min-width: 1024px) {
+            .trailer-frame { max-width: 420px; margin-left: 0; margin-right: auto; }
+            .trailer-slot { justify-content: flex-start; }
+            .storm-slot { justify-content: stretch; }
+            .books-storm-panel { width: 100%; }
+          }
           .timeline { max-width: 1080px; margin: .35rem auto 1.05rem; padding: .6rem .9rem; border: 1px solid rgba(167,122,35,0.35); border-radius: 12px; background: rgba(0,0,0,0.45); }
           .timeline h4 { margin: 0 0 .3rem; font: 700 1rem/1.2 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: ${GOLD}; letter-spacing:.04em; text-transform: uppercase; }
           .timeline-list { display:grid; grid-template-columns: 1fr 2.2fr; gap: .35rem .9rem; align-items: start; }
           .timeline dt { color:#d9d1bd; font-weight:600; }
           .timeline dd { color:#eee7d6; margin:0; }
           @media (max-width: 640px) { .timeline-list { grid-template-columns: 1fr; } }
+          /* Keep trailer chrome in the control bar — no mid-frame overlays */
+          /* Pin framing to the top so faces/titles aren’t cut mid-frame */
+          .trailer-player {
+            background: #0a0a0a;
+            object-fit: cover;
+            object-position: center top;
+          }
+          .trailer-player::-webkit-media-controls-panel { display: flex !important; }
+          .trailer-play-icon {
+            filter: drop-shadow(0 4px 18px rgba(0,0,0,0.65));
+            transition: transform 0.2s ease;
+          }
+          .trailer-play-btn:hover .trailer-play-icon { transform: scale(1.06); }
+          .trailer-play-btn:focus-visible {
+            outline: 2px solid #a77a23;
+            outline-offset: -4px;
+          }
         `}</style>
       </Head>
 
       <header ref={headerRef} className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30">
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between px-4 md:px-6 py-3 md:py-4">
+        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
           <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
             {logoSrc && !useTextLogo ? (
-              <img src={logoSrc} alt="Silver Spine Studio logo" className="h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none shrink-0 drop-shadow-[0_6px_18px_rgba(201,206,214,0.28)]" draggable="false" />
+              <span className="sss-logo-halo">
+                <img src={logoSrc} alt="Silver Spine Studio logo" className="sss-logo-glow h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none" draggable="false" />
+              </span>
             ) : (
               <span className="text-2xl md:text-3xl font-extrabold" style={{ color: SILVER }}>
                 Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
@@ -308,24 +365,23 @@ export default function Books() {
           </Link>
           <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
         </div>
+        <LaunchMilestoneCountdown />
       </header>
 
-      <div className="page-frame relative z-0">
+      <StormAtmosphere mood="highway" />
+
+      <div className="page-frame relative z-10">
         <div className="nebula nebula-top mask-top relative z-10">
           <div className="letterbox-bar top-edge" />
         </div>
 
-        <div className="relative z-20 flex items-center justify-center gap-3 mb-2">
-          {showNarrationChip && !narrationEnabled && (
+        {showNarrationChip && !narrationEnabled && (
+          <div className="relative z-20 flex items-center justify-center gap-3 mb-2">
             <button className="chip" onClick={enableNarration} title="Enable narration (one-time)">
               🎧 Click once to enable narration
             </button>
-          )}
-          <button onDoubleClick={toggleThunder} className="chip" title={thunderOn ? "Double-click to turn thunder off" : "Double-click to hear thunder"}>
-            {thunderOn ? <FaVolumeUp size={16} /> : <FaVolumeMute size={16} />}
-            {thunderOn ? "Double-click to turn thunder off" : "Double-click to hear thunder"}
-          </button>
-        </div>
+          </div>
+        )}
 
         <main className="flex-1 relative z-20 pb-8">
           <h1 className="heading" style={{ color: SILVER }}>
@@ -335,54 +391,63 @@ export default function Books() {
             Click a book to reveal its brief below. Narration plays on hover (one-time enable may be required).
           </h2>
 
-              <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-black/40 p-6 rounded-2xl border border-white/5 shadow-2xl">
+          <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
+            <div className="featured-panel grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 bg-black/40 p-5 md:p-6 rounded-2xl border border-white/5 shadow-2xl">
 
-              {/* VIDEO TRAILER COLUMN (Left Side) */}
-              <div className="md:col-span-4 max-w-[280px] md:max-w-full mx-auto w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative z-30">
-                <video
-                  ref={trailerRef}
-                  controls
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover absolute inset-0 z-40"
-                  style={{ width: "100%", height: "100%", pointerEvents: "auto" }}
-                >
-                  <source src="/videos/00_OFFICIAL_SNEAK_PEEK_TRAILER_1.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-
-                <button
-                  type="button"
-                  onClick={toggleTrailerMute}
-                  className="absolute top-3 right-3 z-50 inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/70 border border-[#a77a23]/60 text-[#a77a23] hover:text-white hover:bg-black/85 shadow-lg"
-                  title={trailerMuted ? "Unmute trailer" : "Mute trailer"}
-                  aria-label={trailerMuted ? "Unmute trailer" : "Mute trailer"}
-                >
-                  {trailerMuted ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
-                </button>
-
-                {showTrailerSoundHint && trailerMuted && (
-                  <button
-                    type="button"
-                    onClick={toggleTrailerMute}
-                    className="absolute bottom-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-full bg-black/80 border border-[#a77a23]/70 px-3 py-1.5 text-xs md:text-sm text-gray-100 shadow-lg"
+              {/* LEFT — larger trailer */}
+              <div className="trailer-slot lg:col-span-4 flex justify-center lg:justify-start items-center">
+                <div className="trailer-frame w-full aspect-[9/16] rounded-xl overflow-hidden shadow-2xl border border-white/10 bg-gray-950 relative z-30">
+                  {/* Real cover + play cue until playback starts */}
+                  {trailerShowCover ? (
+                    <>
+                      <img
+                        src={BEAST_COVER}
+                        alt="The Beautiful Beast cover"
+                        className="absolute inset-0 z-[41] w-full h-full object-cover object-top pointer-events-none"
+                        draggable="false"
+                      />
+                      <button
+                        type="button"
+                        onClick={playTrailer}
+                        className="trailer-play-btn absolute inset-0 z-[42] flex flex-col items-center justify-center gap-3 bg-black/35 hover:bg-black/45 transition-colors"
+                        aria-label="Play The Beautiful Beast trailer"
+                      >
+                        <span className="trailer-play-icon" aria-hidden="true">
+                          <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
+                            <circle cx="32" cy="32" r="30" fill="rgba(0,0,0,0.55)" stroke="#a77a23" strokeWidth="2.5" />
+                            <path d="M26 20 L46 32 L26 44 Z" fill="#f5f0e4" />
+                          </svg>
+                        </span>
+                        <span className="text-[#f5f0e4] text-sm font-bold uppercase tracking-[0.18em] drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
+                          Play trailer
+                        </span>
+                      </button>
+                    </>
+                  ) : null}
+                  <video
+                    ref={trailerRef}
+                    className="trailer-player w-full h-full absolute inset-0 z-40"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }}
+                    poster={BEAST_COVER}
+                    controls
+                    controlsList="nodownload"
+                    playsInline
+                    preload="metadata"
+                    aria-label="The Beautiful Beast trailer"
                   >
-                    Tap for sound
-                  </button>
-                )}
+                    <source src="/videos/00_OFFICIAL_SNEAK_PEEK_TRAILER_1.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
 
-              {/* DESCRIPTION & DOWNLOAD DETAILS (Right Side) */}
-              <div className="md:col-span-8 flex flex-col justify-center h-full space-y-5">
+              {/* CENTER — book info + two-column store doors */}
+              <div className="featured-copy lg:col-span-5 flex flex-col justify-center space-y-4">
                 <div>
-                  <h3 className="text-2xl md:text-4xl font-extrabold tracking-tight text-white text-left" style={{ textShadow: "0 0 10px rgba(201,206,214,0.22), 0 2px 10px rgba(0,0,0,0.82)" }}>
+                  <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white text-left" style={{ textShadow: "0 0 10px rgba(201,206,214,0.22), 0 2px 10px rgba(0,0,0,0.82)" }}>
                     The Beautiful Beast
                   </h3>
-                  <p className="text-[#a77a23] text-xs md:text-sm font-bold uppercase tracking-widest mt-1 mb-4">
+                  <p className="text-[#a77a23] text-xs md:text-sm font-bold uppercase tracking-widest mt-1 mb-3">
                     Crime Thriller • Psychological • Rural Noir
                   </p>
                   <p id="featured-blurb-text" className="text-sm md:text-base text-gray-300 leading-relaxed text-left" style={{ textShadow: "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)" }}>
@@ -390,31 +455,49 @@ export default function Books() {
                   </p>
                 </div>
 
-                <div className="bg-[#a77a23]/10 border border-[#a77a23]/20 p-4 rounded-xl">
-                  <p className="text-xs md:text-sm text-gray-300 leading-normal">
-                    ⚡ <span className="text-white font-semibold">Limited Preview:</span> Get the unedited Prologue + Chapters 1–2 for <span className="text-[#a77a23] font-bold">$4.99</span>. Buying today whitelists your email for the <span className="text-white font-bold">$14.99 insider rate</span> from <span className="text-white font-bold">Sep 1 – Oct 19, 2026</span>. Full retail is <span className="text-white font-bold">$24.99</span> starting <span className="text-white font-bold">Oct 20, 2026</span>.
-                    {" "}Personal license only — files may not be shared, uploaded, or resold.
+                <div className="bg-[#a77a23]/10 border border-[#a77a23]/20 p-3.5 rounded-xl space-y-2.5">
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    The{" "}
+                    <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}
+                    <span className="text-[#a77a23] font-bold">$4.99</span> — and places you on the{" "}
+                    <span className="text-[#a77a23] font-bold">Insider Deal</span> whitelist.
+                  </p>
+                  <p className="text-sm text-amber-100/95 leading-relaxed border border-amber-500/35 bg-amber-950/25 rounded-lg px-3 py-2">
+                    {PREORDER_STATUS.headline}. Sneak peek available now.
+                  </p>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    Full DIGITAL copy: <span className="text-[#a77a23] font-bold">{NOVEL_PRICING.insider}</span>{" "}
+                    <span className="text-white font-semibold">
+                      {NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}
+                    </span>
+                    {" "}(Insider whitelist). Hardcover orders from{" "}
+                    <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>. Digital retail{" "}
+                    <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
+                  </p>
+                  <p className="text-xs text-gray-400 leading-normal">
+                    Personal license only — files may not be shared, uploaded, or resold.
                   </p>
                 </div>
 
-                <div className="pt-2 space-y-3">
-                  {LIVE_SNEAK_PEEK_STORES.map((store) => (
-                    <a
-                      key={store.key}
-                      href={store.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="gumroad-button w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-white bg-[#a77a23] hover:bg-[#8e661b] transform hover:-translate-y-0.5 transition-all duration-200 text-center py-3.5 px-6 rounded-xl shadow-[0_4px_14px_rgba(167,122,35,0.4)]"
-                    >
-                      📖 {store.shortLabel}
-                    </a>
-                  ))}
+                <div className="space-y-2.5">
+                  <StoreHub variant="compact" liveOnly />
                   <Link
                     href="/shop"
-                    className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl"
+                    className="shop-hub-link font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 rounded-lg"
                   >
-                    More storefront options
+                    Where to BUY →
                   </Link>
+                </div>
+              </div>
+
+              {/* RIGHT — Stay in the storm, pushed outward */}
+              <div className="storm-slot lg:col-span-3 flex items-center">
+                <div className="books-storm-panel w-full" aria-label="Join the launch list">
+                  <h3>Stay in the storm</h3>
+                  <p className="text-sm text-gray-300 mb-4 leading-relaxed">
+                    Launch list for sneak peek news, Sep 30 full DIGITAL preorder, hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy.
+                  </p>
+                  <LaunchListForm />
                 </div>
               </div>
 
@@ -432,7 +515,7 @@ export default function Books() {
                     role="button"
                     tabIndex={0}
                     aria-pressed={selected}
-                    aria-label={`${b.title}. ${b.tagline}`}
+                    aria-label={b.id === 1 ? `${b.title}. ${b.tagline}` : `Book ${b.id}. ${b.ribbon}. ${b.tagline}`}
                     onClick={() => setSelectedBookId((prev) => (prev === b.id ? null : b.id))}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -452,43 +535,23 @@ export default function Books() {
                         loop
                         playsInline
                         preload="metadata"
-                        aria-label={`${b.title} live cover`}
+                        aria-label={b.id === 1 ? `${b.title} live cover` : `Book ${b.id} cover`}
                       />
                     ) : (
-                      <img src={b.img} alt={b.title} />
+                      <img src={b.img} alt={b.id === 1 ? b.title : `Book ${b.id} — ${b.ribbon}`} />
                     )}
                     {b.id !== 1 && (
                       <div className="ribbon">
                         <span className="ribbon-text">{b.ribbon}</span>
                       </div>
                     )}
-                    {b.id !== 1 && (
-                      <>
-                        <p className="book-title">{b.title}</p>
-                        <p className="author-name" style={{ color: GOLD }}>LEAMESO JAMES</p>
-                      </>
-                    )}
+                    {/* Titles stay off Books 2–7 — only Book 1 shows its titled cover art */}
                     <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
                   </div>
                   <p className={`tagline${selected ? " visible" : ""}`}>{b.tagline}</p>
                 </div>
               );
             })}
-          </section>
-
-          <section
-            className="featured-wrap mb-8 mt-8"
-            aria-label="Join the launch list"
-          >
-            <div className="max-w-xl mx-auto rounded-2xl border border-[#a77a23]/30 bg-black/50 p-5 md:p-7 shadow-2xl">
-              <h3 className="text-xl md:text-2xl font-extrabold text-white tracking-tight mb-2">
-                Stay in the storm
-              </h3>
-              <p className="text-sm text-gray-300 mb-5 leading-relaxed">
-                Join the launch list for sneak peek news, the Sep 1 insider window, and release-day alerts.
-              </p>
-              <LaunchListForm />
-            </div>
           </section>
         </main>
         <div className="nebula nebula-bottom mask-bottom relative z-10">

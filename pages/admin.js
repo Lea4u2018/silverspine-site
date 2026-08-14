@@ -2,10 +2,14 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { StarDisplay } from "@/components/StarRating";
+import AdminBannerClock from "@/components/AdminBannerClock";
 import AdminBlogPanel from "@/components/AdminBlogPanel";
+import AdminLaunchPanel from "@/components/AdminLaunchPanel";
+import AdminNeighborsPanel from "@/components/AdminNeighborsPanel";
 import AdminNextUpPanel from "@/components/AdminNextUpPanel";
-import { SITE_LANGUAGES, languageLabel, normalizeLang } from "@/lib/i18n";
+import AdminReviewsPanel from "@/components/AdminReviewsPanel";
+import AdminSearchMonitorPanel from "@/components/AdminSearchMonitorPanel";
+import { languageLabel, normalizeLang } from "@/lib/i18n";
 
 const GOLD = "#a77a23";
 
@@ -31,7 +35,8 @@ export default function AdminPage() {
   const [storage, setStorage] = useState("");
   const [busyId, setBusyId] = useState("");
   const [actionMsg, setActionMsg] = useState("");
-  const [adminTab, setAdminTab] = useState("reviews"); // "reviews" | "blog" | "next"
+  const [adminTab, setAdminTab] = useState("reviews"); // "reviews" | "blog" | "launch" | "next" | "neighbors" | "search"
+  const [visits, setVisits] = useState(null);
 
   const [replyLang, setReplyLang] = useState("es");
   const [replyTo, setReplyTo] = useState("");
@@ -61,19 +66,32 @@ export default function AdminPage() {
     }
   }, []);
 
+  const loadVisits = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/visits");
+      const data = await res.json();
+      if (res.ok && data.ok) setVisits(data);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
   const refreshSession = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/session");
       const data = await res.json();
       const ok = Boolean(data.ok);
       setAuthed(ok);
-      if (ok) await loadReviews();
+      if (ok) {
+        await loadReviews();
+        await loadVisits();
+      }
     } catch {
       setAuthed(false);
     } finally {
       setChecking(false);
     }
-  }, [loadReviews]);
+  }, [loadReviews, loadVisits]);
 
   useEffect(() => {
     refreshSession();
@@ -104,6 +122,7 @@ export default function AdminPage() {
         setAuthed(true);
         setAdminTab("reviews");
         await loadReviews();
+        await loadVisits();
       } else {
         setLoginError(data.error || "Login failed.");
       }
@@ -214,31 +233,34 @@ export default function AdminPage() {
       </Head>
 
       <header className="border-b border-[#a77a23]/30 bg-gradient-to-b from-gray-900 to-gray-950">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
-          <div>
-            <p className="text-xs uppercase tracking-widest" style={{ color: GOLD }}>
-              Private · password required
-            </p>
-            <h1 className="text-xl md:text-2xl font-extrabold">Studio Admin</h1>
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-widest" style={{ color: GOLD }}>
+                Private · password required
+              </p>
+              <h1 className="text-xl md:text-2xl font-extrabold">Studio Admin</h1>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3 text-sm flex-wrap justify-end">
+              <Link href="/" className="text-gray-400 hover:text-white underline-offset-2 hover:underline">
+                Site
+              </Link>
+              {authed ? (
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="px-3 py-1.5 rounded-lg border border-white/20 hover:border-[#a77a23]/60"
+                >
+                  Log out
+                </button>
+              ) : null}
+            </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3 text-sm flex-wrap justify-end">
-            <Link href="/" className="text-gray-400 hover:text-white underline-offset-2 hover:underline">
-              Site
-            </Link>
-            {authed ? (
-              <button
-                type="button"
-                onClick={logout}
-                className="px-3 py-1.5 rounded-lg border border-white/20 hover:border-[#a77a23]/60"
-              >
-                Log out
-              </button>
-            ) : null}
-          </div>
+          <AdminBannerClock />
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8 pb-24">
+      <main className="max-w-6xl mx-auto px-4 py-8 pb-24">
         {checking ? (
           <p className="text-gray-400">Checking session…</p>
         ) : !authed ? (
@@ -294,6 +316,29 @@ export default function AdminPage() {
           </div>
         ) : (
           <>
+            <div className="mb-6 rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/10 px-4 py-4">
+              <p className="text-xs uppercase tracking-widest mb-3" style={{ color: GOLD }}>
+                Visitors · not you
+              </p>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-white">{visits ? visits.todayPeople : "—"}</p>
+                  <p className="text-xs text-gray-400 mt-1">Today</p>
+                </div>
+                <div>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-white">{visits ? visits.weekPeople : "—"}</p>
+                  <p className="text-xs text-gray-400 mt-1">Last 7 days</p>
+                </div>
+                <div>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-white">{visits ? visits.allPeople : "—"}</p>
+                  <p className="text-xs text-gray-400 mt-1">All time</p>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-3">
+                People who opened the site (Mountain time). Your computer is skipped after you sign in here once — even
+                after you log out. Numbers start from today forward.
+              </p>
+            </div>
             <div
               className="mb-8 flex flex-wrap gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-black/60 sticky top-0 z-20"
               role="tablist"
@@ -330,10 +375,24 @@ export default function AdminPage() {
               <button
                 type="button"
                 role="tab"
+                id="admin-tab-launch"
+                aria-selected={adminTab === "launch"}
+                onClick={() => setAdminTab("launch")}
+                className={`flex-1 min-w-[22%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                  adminTab === "launch"
+                    ? "bg-[#a77a23] text-black shadow"
+                    : "text-gray-200 hover:bg-white/5"
+                }`}
+              >
+                Launch
+              </button>
+              <button
+                type="button"
+                role="tab"
                 id="admin-tab-next"
                 aria-selected={adminTab === "next"}
                 onClick={() => setAdminTab("next")}
-                className={`flex-1 min-w-[30%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                className={`flex-1 min-w-[22%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
                   adminTab === "next"
                     ? "bg-[#a77a23] text-black shadow"
                     : "text-gray-200 hover:bg-white/5"
@@ -341,205 +400,69 @@ export default function AdminPage() {
               >
                 Next Up
               </button>
+              <button
+                type="button"
+                role="tab"
+                id="admin-tab-neighbors"
+                aria-selected={adminTab === "neighbors"}
+                onClick={() => setAdminTab("neighbors")}
+                className={`flex-1 min-w-[22%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                  adminTab === "neighbors"
+                    ? "bg-[#a77a23] text-black shadow"
+                    : "text-gray-200 hover:bg-white/5"
+                }`}
+              >
+                Community
+              </button>
+              <button
+                type="button"
+                role="tab"
+                id="admin-tab-search"
+                aria-selected={adminTab === "search"}
+                onClick={() => setAdminTab("search")}
+                className={`flex-1 min-w-[22%] rounded-lg px-3 py-3.5 text-sm sm:text-base font-extrabold tracking-wide transition-colors ${
+                  adminTab === "search"
+                    ? "bg-[#a77a23] text-black shadow"
+                    : "text-gray-200 hover:bg-white/5"
+                }`}
+              >
+                Search
+              </button>
             </div>
 
             {adminTab === "blog" ? (
               <AdminBlogPanel />
+            ) : adminTab === "launch" ? (
+              <AdminLaunchPanel />
             ) : adminTab === "next" ? (
               <AdminNextUpPanel />
+            ) : adminTab === "neighbors" ? (
+              <AdminNeighborsPanel />
+            ) : adminTab === "search" ? (
+              <AdminSearchMonitorPanel visits={visits} />
             ) : (
-              <>
-                <div className="mb-6 rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/15 px-4 py-3 text-sm">
-                  <strong style={{ color: GOLD }}>Pending:</strong> {pending.length}
-                  <span className="mx-2 text-gray-500">·</span>
-                  <strong className="text-gray-200">Live on site:</strong> {approved.length}
-                  {storage ? (
-                    <>
-                      <span className="mx-2 text-gray-500">·</span>
-                      <span className="text-gray-400">Storage: {storage}</span>
-                    </>
-                  ) : null}
-                  {actionMsg ? <p className="mt-2 text-gray-200">{actionMsg}</p> : null}
-                </div>
-
-                <section className="mb-10">
-                  <h2 className="text-lg font-semibold mb-3" style={{ color: GOLD }}>
-                    Waiting for your approval
-                  </h2>
-                  <p className="text-sm text-gray-400 mb-4">
-                    Approve to show on the public Reviews page. Decline to hide.
-                  </p>
-                  {pending.length === 0 ? (
-                    <p className="text-gray-400 text-sm italic">No pending reviews right now.</p>
-                  ) : (
-                    <div className="space-y-4">
-                      {pending.map((r) => (
-                        <article key={r.id} className="rounded-xl border border-amber-500/30 bg-gray-950 p-4">
-                          <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                            <div className="font-semibold" style={{ color: GOLD }}>
-                              {r.name}
-                            </div>
-                            <StarDisplay value={r.rating} />
-                          </div>
-                          <p className="text-xs text-gray-500 mb-2">{formatWhen(r.createdAt)}</p>
-                          <p className="text-gray-200 whitespace-pre-wrap mb-4">{r.text}</p>
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              disabled={busyId === r.id}
-                              onClick={() => act(r.id, "approve")}
-                              className="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:opacity-90 disabled:opacity-50"
-                            >
-                              Approve
-                            </button>
-                            <button
-                              type="button"
-                              disabled={busyId === r.id}
-                              onClick={() => act(r.id, "reject")}
-                              className="px-4 py-2 rounded-lg border border-red-400/50 text-red-300 hover:bg-red-950/40 disabled:opacity-50"
-                            >
-                              Decline
-                            </button>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  )}
-                </section>
-
-                <section className="mb-10">
-                  <h2 className="text-lg font-semibold mb-3" style={{ color: GOLD }}>
-                    Already on the site
-                  </h2>
-                  {approved.length === 0 ? (
-                    <p className="text-gray-400 text-sm italic">No approved reviews yet.</p>
-                  ) : (
-                    <div className="space-y-3">
-                      {approved.map((r) => (
-                        <article key={r.id} className="rounded-xl border border-white/10 bg-gray-950/70 p-4">
-                          <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                            <div className="font-semibold text-gray-100">{r.name}</div>
-                            <StarDisplay value={r.rating} />
-                          </div>
-                          <p className="text-xs text-gray-500 mb-2">{formatWhen(r.createdAt)}</p>
-                          <p className="text-gray-300 whitespace-pre-wrap mb-3">{r.text}</p>
-                          <div className="flex flex-wrap gap-2">
-                            <button
-                              type="button"
-                              disabled={busyId === r.id}
-                              onClick={() => act(r.id, "unpublish")}
-                              className="px-3 py-1.5 rounded-lg border border-white/20 text-sm hover:border-[#a77a23]/50 disabled:opacity-50"
-                            >
-                              Unpublish
-                            </button>
-                            <button
-                              type="button"
-                              disabled={busyId === r.id}
-                              onClick={() => act(r.id, "reject")}
-                              className="px-3 py-1.5 rounded-lg border border-red-400/40 text-sm text-red-300 disabled:opacity-50"
-                            >
-                              Decline
-                            </button>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  )}
-                </section>
-
-                <section
-                  id="reply-translator"
-                  className="rounded-2xl border border-[#a77a23]/40 bg-gray-950/90 p-5 md:p-6"
-                >
-                  <h2 className="text-lg font-semibold mb-1" style={{ color: GOLD }}>
-                    Reply translator
-                  </h2>
-                  <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-                    Write in <strong className="text-gray-200">English</strong>, convert to their language, then copy or open email.
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                    <div>
-                      <label className="block text-sm text-gray-300 mb-1" htmlFor="reply-lang">
-                        Their language
-                      </label>
-                      <select
-                        id="reply-lang"
-                        value={replyLang}
-                        onChange={(e) => setReplyLang(normalizeLang(e.target.value))}
-                        className="w-full rounded-xl border border-gray-700 bg-black px-3 py-2.5 text-sm"
-                      >
-                        {SITE_LANGUAGES.map((l) => (
-                          <option key={l.code} value={l.code}>
-                            {l.native} — {l.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-300 mb-1" htmlFor="reply-to">
-                        Their email (optional)
-                      </label>
-                      <input
-                        id="reply-to"
-                        type="email"
-                        value={replyTo}
-                        onChange={(e) => setReplyTo(e.target.value)}
-                        placeholder="visitor@email.com"
-                        className="w-full rounded-xl border border-gray-700 bg-black px-3 py-2.5 text-sm"
-                      />
-                    </div>
-                  </div>
-                  <label className="block text-sm text-gray-300 mb-1" htmlFor="reply-en">
-                    Your reply in English
-                  </label>
-                  <textarea
-                    id="reply-en"
-                    rows={6}
-                    value={replyEnglish}
-                    onChange={(e) => setReplyEnglish(e.target.value)}
-                    placeholder="Type what you want to say in English…"
-                    className="w-full rounded-xl border border-gray-700 bg-black px-3 py-3 text-sm mb-3"
-                  />
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <button
-                      type="button"
-                      disabled={replyBusy || !replyEnglish.trim()}
-                      onClick={translateReply}
-                      className="px-4 py-2.5 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50"
-                    >
-                      {replyBusy ? "Translating…" : "Convert to their language"}
-                    </button>
-                    <button
-                      type="button"
-                      disabled={!replyOut}
-                      onClick={copyReply}
-                      className="px-4 py-2.5 rounded-lg border border-white/20 hover:border-[#a77a23]/60 disabled:opacity-40"
-                    >
-                      Copy
-                    </button>
-                    <button
-                      type="button"
-                      disabled={!replyOut}
-                      onClick={openMailtoReply}
-                      className="px-4 py-2.5 rounded-lg border border-white/20 hover:border-[#a77a23]/60 disabled:opacity-40"
-                    >
-                      Open in email
-                    </button>
-                  </div>
-                  {replyMsg ? <p className="text-sm text-gray-300 mb-2">{replyMsg}</p> : null}
-                  {replyOut ? (
-                    <div>
-                      <label className="block text-sm text-gray-300 mb-1">Their language version</label>
-                      <textarea
-                        readOnly
-                        rows={6}
-                        value={replyOut}
-                        className="w-full rounded-xl border border-[#a77a23]/35 bg-black/80 px-3 py-3 text-sm text-[#f5f0e4]"
-                      />
-                    </div>
-                  ) : null}
-                </section>
-              </>
+              <AdminReviewsPanel
+                pending={pending}
+                approved={approved}
+                storage={storage}
+                actionMsg={actionMsg}
+                busyId={busyId}
+                onAct={act}
+                formatWhen={formatWhen}
+                replyLang={replyLang}
+                setReplyLang={setReplyLang}
+                replyTo={replyTo}
+                setReplyTo={setReplyTo}
+                replyEnglish={replyEnglish}
+                setReplyEnglish={setReplyEnglish}
+                replyOut={replyOut}
+                replyBusy={replyBusy}
+                replyMsg={replyMsg}
+                onTranslate={translateReply}
+                onCopy={copyReply}
+                onMailto={openMailtoReply}
+                openReplyTab={Boolean(replyTo)}
+              />
             )}
           </>
         )}

@@ -6,6 +6,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
 
 export default function ContactSafe() {
   const GOLD = "#a77a23";
@@ -46,6 +47,7 @@ export default function ContactSafe() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kind: "contact",
           name: form.name,
           email: form.email,
           message: form.message,
@@ -123,6 +125,7 @@ export default function ContactSafe() {
         <div className="card">
           <div className="card-body">
             <form onSubmit={onSubmit} className="space-y-5 text-left" noValidate>
+              <FormRequiredNote className="text-xs text-gray-500 mb-2" />
               {/* Honeypot field (bots will fill this; humans never see it) */}
               <div className="hp-wrap" aria-hidden="true">
                 <label htmlFor="hp">Leave this field empty</label>
@@ -130,7 +133,9 @@ export default function ContactSafe() {
               </div>
 
               <div>
-                <label className="label" htmlFor="name">Your name</label>
+                <FormFieldLabel htmlFor="name" className="label" required>
+                  Your name
+                </FormFieldLabel>
                 <input
                   id="name"
                   name="name"
@@ -145,7 +150,9 @@ export default function ContactSafe() {
               </div>
 
               <div>
-                <label className="label" htmlFor="email">Email address</label>
+                <FormFieldLabel htmlFor="email" className="label" required>
+                  Email address
+                </FormFieldLabel>
                 <input
                   id="email"
                   name="email"
@@ -160,7 +167,9 @@ export default function ContactSafe() {
               </div>
 
               <div>
-                <label className="label" htmlFor="message">Message</label>
+                <FormFieldLabel htmlFor="message" className="label" required>
+                  Message
+                </FormFieldLabel>
                 <textarea
                   id="message"
                   name="message"

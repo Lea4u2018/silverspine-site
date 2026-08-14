@@ -12,11 +12,31 @@ export default function Document() {
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="en_US" />
         <meta name="twitter:card" content="summary_large_image" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        {/* Google Search wants a crawlable square favicon (multiple of 48px). Absolute URLs help. */}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="48x48"
+          href="https://www.silverspinestudio.com/favicon-48.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="96x96"
+          href="https://www.silverspinestudio.com/favicon-96.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="https://www.silverspinestudio.com/favicon-192.png"
+        />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="mask-icon" href="/favicon-192.png" color="#000000" />
         <style
           dangerouslySetInnerHTML={{
             __html: `
