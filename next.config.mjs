@@ -17,12 +17,7 @@ const nextConfig = {
   poweredByHeader: false, // hide "X-Powered-By: Next.js"
   serverExternalPackages: ["nodemailer"],
   outputFileTracingExcludes: {
-    "/api/admin/launch": ADMIN_TRACE_EXCLUDES,
-    "/api/admin/neighbors": ADMIN_TRACE_EXCLUDES,
-    "/api/admin/reviews": ADMIN_TRACE_EXCLUDES,
-    "/api/admin/blog": ADMIN_TRACE_EXCLUDES,
-    "/api/contact-safe": ADMIN_TRACE_EXCLUDES,
-    "/api/neighbors/submit": ADMIN_TRACE_EXCLUDES,
+    "*": ADMIN_TRACE_EXCLUDES,
   },
   async headers() {
     return [
