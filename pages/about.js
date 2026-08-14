@@ -380,7 +380,7 @@ export default function About() {
            <div className="max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
              <p>
                <span className="font-semibold" style={{ color: GOLD }}>Leameso James</span>,
-               born a northerner, raised a southerner, has always been drawn to
+               born in Newark, New Jersey, and raised in Tuskegee, Alabama, has always been drawn to
                stories that feel cinematic and human. Not darkness for its own sake—but the places where
                courage is forged, where love and conscience light the way through the storm.
              </p>
