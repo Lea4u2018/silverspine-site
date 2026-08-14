@@ -5,9 +5,10 @@
       "name": "Jose Menendez",
       "text": "So far so good! I can sense that this will be a very good book. Can't wait to read it all.",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-14T06:35:11.752Z"
+      "createdAt": "2026-08-14T06:35:11.752Z",
+      "approvedAt": "2026-08-14T07:09:10.759Z"
     },
     {
       "id": "8ddf4c1821bf8efe",
