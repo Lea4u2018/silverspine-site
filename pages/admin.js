@@ -427,7 +427,7 @@ export default function AdminPage() {
               </p>
             ) : null}
             <div
-              className="mb-8 flex flex-wrap gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-black/60 sticky top-0 z-20"
+              className="mb-8 flex flex-wrap gap-2 p-1 rounded-xl border border-[#a77a23]/40 bg-gray-950 shadow-[0_8px_28px_rgba(0,0,0,0.55)] backdrop-blur-sm sticky top-0 z-30 isolate"
               role="tablist"
               aria-label="Admin sections"
             >
