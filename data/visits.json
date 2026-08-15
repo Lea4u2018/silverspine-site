@@ -1,6 +1,6 @@
 {
   "people": 34,
-  "visits": 41,
+  "visits": 42,
   "days": {
     "2026-08-13": {
       "visits": 19,
@@ -48,9 +48,10 @@
       ]
     },
     "2026-08-15": {
-      "visits": 1,
+      "visits": 2,
       "ids": [
-        "8f3531ba0befcf04"
+        "8f3531ba0befcf04",
+        "1188348fd38bca05"
       ]
     }
   },
