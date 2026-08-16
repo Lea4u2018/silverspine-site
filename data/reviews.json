@@ -1,6 +1,15 @@
 {
   "reviews": [
     {
+      "id": "2a38d7ff0db7e980",
+      "name": "Faith Aponte",
+      "text": "Amazing  Website  clean easy to navigate. Excited for this book to drop perfect timing for the fall season read. ⭐️⭐️⭐️⭐️⭐️🎃📖",
+      "rating": 5,
+      "approved": false,
+      "rejected": false,
+      "createdAt": "2026-08-16T18:05:50.307Z"
+    },
+    {
       "id": "f04eedce15b7f43d",
       "name": "Ashley",
       "text": "I absolutely love this book so far. I read just a few pages and couldn’t put the book down! I can’t wait to read the rest of the series!",
