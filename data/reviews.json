@@ -5,9 +5,10 @@
       "name": "Faith Aponte",
       "text": "Amazing  Website  clean easy to navigate. Excited for this book to drop perfect timing for the fall season read. ⭐️⭐️⭐️⭐️⭐️🎃📖",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-16T18:05:50.307Z"
+      "createdAt": "2026-08-16T18:05:50.307Z",
+      "approvedAt": "2026-08-16T18:08:06.158Z"
     },
     {
       "id": "f04eedce15b7f43d",
