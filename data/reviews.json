@@ -1,6 +1,15 @@
 {
   "reviews": [
     {
+      "id": "f04eedce15b7f43d",
+      "name": "Ashley",
+      "text": "I absolutely love this book so far. I read just a few pages and couldn’t put the book down! I can’t wait to read the rest of the series!",
+      "rating": 5,
+      "approved": false,
+      "rejected": false,
+      "createdAt": "2026-08-16T04:36:32.205Z"
+    },
+    {
       "id": "d619e3b763aec7bb",
       "name": "Jose Menendez",
       "text": "So far so good! I can sense that this will be a very good book. Can't wait to read it all.",
