@@ -5,9 +5,10 @@
       "name": "Ms. Mimi",
       "text": "So far I am so intrigued about \"The Beautiful Beast\" written by Ms Leameso James. I can barely contain myself. I am absolutely ready to embark on this stormy journey. Everybody get on board with you.",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-16T22:12:27.229Z"
+      "createdAt": "2026-08-16T22:12:27.229Z",
+      "approvedAt": "2026-08-16T22:13:25.629Z"
     },
     {
       "id": "2a38d7ff0db7e980",
