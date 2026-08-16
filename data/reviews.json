@@ -5,9 +5,10 @@
       "name": "Ashley",
       "text": "I absolutely love this book so far. I read just a few pages and couldn’t put the book down! I can’t wait to read the rest of the series!",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-16T04:36:32.205Z"
+      "createdAt": "2026-08-16T04:36:32.205Z",
+      "approvedAt": "2026-08-16T04:54:36.572Z"
     },
     {
       "id": "d619e3b763aec7bb",
