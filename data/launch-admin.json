@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "a0c16a1680151453",
+      "name": "Ross Bettis",
+      "email": "ross_bettis@yahoo.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:34:32.886Z",
+      "updatedAt": "2026-08-17T17:34:32.886Z",
+      "appliedAt": "2026-08-17T17:34:32.886Z"
+    },
+    {
       "id": "20208eae3e59ed02",
       "name": "Sharnea Dickenson",
       "email": "sharneadickenson@gmail.com",
