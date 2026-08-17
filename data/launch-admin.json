@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "9f1e9b054c1d67cb",
+      "name": "Pierre Sears",
+      "email": "poebiggs6866@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:50:00.967Z",
+      "updatedAt": "2026-08-17T17:50:00.967Z",
+      "appliedAt": "2026-08-17T17:50:00.967Z"
+    },
+    {
       "id": "d60fee2560f3e32f",
       "name": "Leameso James",
       "email": "leameso.james@icloud.com",
