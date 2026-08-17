@@ -94,7 +94,8 @@
     "fullDigitalPdf": {
       "label": "Full Digital Copy (PDF)",
       "path": "",
-      "filename": ""
+      "filename": "",
+      "updatedAt": ""
     }
   },
   "recipients": [
@@ -234,13 +235,14 @@
       "email": "tajiatoshi25@gmail.com",
       "phone": "",
       "company": "",
-      "notes": "Requested ARC",
+      "notes": "Requested ARC · Requested free ARC during Aug 7–14, 2026 window. List closed.",
       "tags": [
         "ARC applicant",
-        "Needs reply"
+        "Needs reply",
+        "ARC"
       ],
       "createdAt": "2026-08-17T12:18:03.415Z",
-      "updatedAt": "2026-08-17T12:18:03.415Z"
+      "updatedAt": "2026-08-17T17:34:28.634Z"
     },
     {
       "id": "da9789de8222da3c",
