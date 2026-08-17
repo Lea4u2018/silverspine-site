@@ -356,6 +356,19 @@
   "trackingNotes": {},
   "contacts": [
     {
+      "id": "0cf72220dc90e7a9",
+      "name": "Jose Mendez",
+      "email": "makutimi@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:38.296Z",
+      "updatedAt": "2026-08-17T17:34:38.296Z"
+    },
+    {
       "id": "163fe131b92682eb",
       "name": "Kenji Hundley",
       "email": "ijnek96@yahoo.com",
