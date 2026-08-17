@@ -9,6 +9,18 @@ const STATUS_COPY = {
   library: "At libraries",
 };
 
+function StoreName({ name, formats, className = "" }) {
+  const showFormats = formats && !/\(.*\)/.test(name);
+  return (
+    <span className={className}>
+      {name}
+      {showFormats ? (
+        <span className="font-semibold opacity-80"> ({formats})</span>
+      ) : null}
+    </span>
+  );
+}
+
 const STORE_ICONS = {
   gumroad: FaBookOpen,
   amazon: SiAmazon,
@@ -62,7 +74,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                     <Icon className="shrink-0 text-base text-[#a77a23]" aria-hidden />
                     <span className="min-w-0">
                       <span className="block text-[12px] sm:text-[13px] font-extrabold leading-snug break-words">
-                        {name}
+                        <StoreName name={name} formats={store.formats} />
                       </span>
                       <span className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#a77a23]">
                         Ask your library
@@ -84,15 +96,13 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   rel="noopener noreferrer"
                   role="listitem"
                   title={store.label}
-                  className={`${
-                    store.key === "gumroad" ? "gumroad-button " : ""
-                  }inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-left py-2.5 px-2.5 rounded-lg shadow-[0_3px_10px_rgba(167,122,35,0.3)]`}
+                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-left py-2.5 px-2.5 rounded-lg shadow-[0_3px_10px_rgba(167,122,35,0.3)]"
                 >
                   <span className="inline-flex items-center gap-1.5 min-w-0 flex-1">
                     <Icon className="shrink-0 text-base" aria-hidden />
                     <span className="min-w-0">
                       <span className="block text-[12px] sm:text-[13px] font-extrabold leading-snug break-words">
-                        {name}
+                        <StoreName name={name} formats={store.formats} />
                       </span>
                       <span className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-black/70">
                         Get your copy
@@ -117,7 +127,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   <Icon className="shrink-0 text-base opacity-50" aria-hidden />
                   <span className="min-w-0">
                     <span className="block text-[12px] sm:text-[13px] font-semibold leading-snug text-gray-300 break-words">
-                      {name}
+                      <StoreName name={name} formats={store.formats} />
                     </span>
                     <span className="block text-[9px] sm:text-[10px] uppercase tracking-wider text-gray-500">
                       {STATUS_COPY[store.status] || "Coming soon"}
@@ -162,7 +172,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold text-base md:text-lg tracking-wide leading-snug break-words">
-                      {store.label}
+                      <StoreName name={store.label} formats={store.formats} />
                     </p>
                     <p className="text-xs md:text-sm text-gray-300 mt-0.5 leading-snug">
                       {store.description}
@@ -188,9 +198,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
               target="_blank"
               rel="noopener noreferrer"
               role="listitem"
-              className={`${
-                store.key === "gumroad" ? "gumroad-button " : ""
-              }store-live block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23] text-black px-4 sm:px-5 py-4 transition-all duration-200 hover:bg-[#c49231]`}
+              className="store-live block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23] text-black px-4 sm:px-5 py-4 transition-all duration-200 hover:bg-[#c49231]"
             >
               <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-start sm:items-center gap-3 min-w-0 text-left flex-1">
@@ -199,7 +207,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold text-base md:text-lg tracking-wide leading-snug break-words">
-                      {store.label}
+                      <StoreName name={store.label} formats={store.formats} />
                     </p>
                     <p className="text-xs md:text-sm text-black/75 mt-0.5 leading-snug">
                       {store.description}
@@ -230,9 +238,9 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   <Icon className="text-xl opacity-50" aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-base md:text-lg tracking-wide text-gray-300 leading-snug break-words">
-                    {store.label}
-                  </p>
+                    <p className="font-semibold text-base md:text-lg tracking-wide text-gray-300 leading-snug break-words">
+                      <StoreName name={store.label} formats={store.formats} />
+                    </p>
                   <p className="text-xs md:text-sm text-gray-500 mt-0.5 leading-snug">
                     {store.description}
                   </p>
