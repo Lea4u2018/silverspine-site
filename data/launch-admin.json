@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "503160519165de95",
+      "name": "Faith Aponte",
+      "email": "apontefaith21@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:34:39.127Z",
+      "updatedAt": "2026-08-17T17:34:39.127Z",
+      "appliedAt": "2026-08-17T17:34:39.127Z"
+    },
+    {
       "id": "a9f92cdb9f2987c1",
       "name": "Jose Mendez",
       "email": "makutimi@gmail.com",
