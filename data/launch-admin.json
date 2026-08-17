@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "a9f92cdb9f2987c1",
+      "name": "Jose Mendez",
+      "email": "makutimi@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:34:37.584Z",
+      "updatedAt": "2026-08-17T17:34:37.584Z",
+      "appliedAt": "2026-08-17T17:34:37.584Z"
+    },
+    {
       "id": "47395eb8310b8160",
       "name": "Kenji Hundley",
       "email": "ijnek96@yahoo.com",
