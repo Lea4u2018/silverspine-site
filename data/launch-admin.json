@@ -218,6 +218,20 @@
     }
   },
   "trackingNotes": {},
-  "contacts": [],
+  "contacts": [
+    {
+      "id": "2e32d1a80190ead6",
+      "name": "Ms. Leameso Sears",
+      "email": "1leameso6043@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested Early Release Copy  & get discount at purchase",
+      "tags": [
+        "reader"
+      ],
+      "createdAt": "2026-08-17T10:46:23.714Z",
+      "updatedAt": "2026-08-17T10:46:23.714Z"
+    }
+  ],
   "discountCodes": []
 }
