@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "1e7a7915a965f6f0",
+      "name": "Melvin Godfrey",
+      "email": "melving0212@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:34:42.437Z",
+      "updatedAt": "2026-08-17T17:34:42.437Z",
+      "appliedAt": "2026-08-17T17:34:42.437Z"
+    },
+    {
       "id": "1315bae281576b07",
       "name": "Ashley Aaron",
       "email": "ashleyaaron2378@gmail.com",
