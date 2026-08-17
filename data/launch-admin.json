@@ -90,6 +90,11 @@
       "path": "",
       "filename": "",
       "updatedAt": ""
+    },
+    "fullDigitalPdf": {
+      "label": "Full Digital Copy (PDF)",
+      "path": "",
+      "filename": ""
     }
   },
   "recipients": [
@@ -118,10 +123,10 @@
       "id": "edf282f5cd83eeaf",
       "name": "Martajia Sears",
       "email": "tajiatoshi25@gmail.com",
-      "role": "arc-applicant",
+      "role": "arc-selected",
       "format": "EPUB",
       "reviewSpot": "Gumroad Purchase",
-      "notes": "Requested ARC",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
       "removed": false,
       "sends": {
         "sneakPeek": null,
@@ -132,7 +137,7 @@
         "followUps": {}
       },
       "createdAt": "2026-08-17T10:34:34.213Z",
-      "updatedAt": "2026-08-17T12:18:04.337Z",
+      "updatedAt": "2026-08-17T17:34:27.864Z",
       "appliedAt": "2026-08-17T10:34:34.213Z"
     }
   ],
@@ -146,6 +151,10 @@
       "fullDigital": {
         "subject": "[FULL DIGITAL] Congratulations — your copy of The Beautiful Beast — Silver Spine Studio™",
         "body": "Hi {{firstName}},\n\nCongratulations — your full digital copy of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "fullDigitalPdf": {
+        "subject": "[FULL DIGITAL PDF] Congratulations — your PDF of The Beautiful Beast — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — your full digital PDF of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "arc": {
         "subject": "[ARC] Congratulations — you are on the ARC team — Silver Spine Studio™",
