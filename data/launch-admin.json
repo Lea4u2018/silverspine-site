@@ -431,8 +431,7 @@
         "selectionArc": {
           "sentAt": "2026-08-17T18:13:27.976Z",
           "subject": "Marked sent in Admin",
-          "filePath": "",
-          "manual": true
+          "filePath": ""
         },
         "selectionGiveaway": null,
         "followUps": {}
