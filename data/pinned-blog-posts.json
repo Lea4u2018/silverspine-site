@@ -10,7 +10,7 @@
       "mediaType": "video",
       "mediaUrl": "/characters/elliot-windsor-meet.mp4",
       "mediaPoster": "/characters/elliot-windsor-portrait.png",
-      "mediaCaption": "Elliot Windsor",
+      "mediaCaption": "",
       "videoLive": true,
       "figureKey": "",
       "expandBody": "",
@@ -22,7 +22,7 @@
       "published": true,
       "sortOrder": 60,
       "createdAt": "2026-08-17T16:00:11.128Z",
-      "updatedAt": "2026-08-17T16:29:05.673Z"
+      "updatedAt": "2026-08-17T16:33:08.566Z"
     },
     {
       "id": "pinned-website-inquiries",
