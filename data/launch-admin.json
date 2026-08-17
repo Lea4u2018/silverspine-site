@@ -109,7 +109,12 @@
       "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
       "removed": false,
       "sends": {
-        "sneakPeek": null,
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:14.918Z",
+          "subject": "Marked sent in Admin",
+          "filePath": "",
+          "manual": true
+        },
         "fullDigital": null,
         "arc": null,
         "selectionArc": null,
@@ -117,7 +122,7 @@
         "followUps": {}
       },
       "createdAt": "2026-08-17T17:50:00.967Z",
-      "updatedAt": "2026-08-17T17:50:00.967Z",
+      "updatedAt": "2026-08-17T18:02:15.045Z",
       "appliedAt": "2026-08-17T17:50:00.967Z"
     },
     {
