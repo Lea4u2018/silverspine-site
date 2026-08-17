@@ -229,8 +229,7 @@
         "sneakPeek": {
           "sentAt": "2026-08-17T18:02:34.987Z",
           "subject": "Marked sent in Admin",
-          "filePath": "",
-          "manual": true
+          "filePath": ""
         },
         "fullDigital": null,
         "arc": null,
@@ -378,7 +377,12 @@
       "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
       "removed": false,
       "sends": {
-        "sneakPeek": null,
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:51.913Z",
+          "subject": "Marked sent in Admin",
+          "filePath": "",
+          "manual": true
+        },
         "fullDigital": null,
         "arc": null,
         "selectionArc": null,
@@ -386,7 +390,7 @@
         "followUps": {}
       },
       "createdAt": "2026-08-17T10:34:34.213Z",
-      "updatedAt": "2026-08-17T17:34:27.864Z",
+      "updatedAt": "2026-08-17T18:02:52.641Z",
       "appliedAt": "2026-08-17T10:34:34.213Z"
     }
   ],
