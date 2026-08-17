@@ -350,15 +350,16 @@
         "fullDigital": null,
         "arc": null,
         "selectionArc": {
-          "sentAt": "2026-08-17T18:13:25.568Z",
-          "subject": "Marked sent in Admin",
-          "filePath": ""
+          "sentAt": "2026-08-17T18:30:44.314Z",
+          "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+          "filePath": "",
+          "manual": false
         },
         "selectionGiveaway": null,
         "followUps": {}
       },
       "createdAt": "2026-08-17T17:34:31.276Z",
-      "updatedAt": "2026-08-17T18:30:01.824Z",
+      "updatedAt": "2026-08-17T18:30:44.420Z",
       "appliedAt": "2026-08-17T17:34:31.276Z"
     },
     {
