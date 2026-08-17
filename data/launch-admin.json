@@ -121,7 +121,7 @@
       "role": "arc-applicant",
       "format": "EPUB",
       "reviewSpot": "Gumroad Purchase",
-      "notes": "MArtie purchased the Sneak Peak - Chosen for ARC",
+      "notes": "Requested ARC",
       "removed": false,
       "sends": {
         "sneakPeek": null,
@@ -132,7 +132,7 @@
         "followUps": {}
       },
       "createdAt": "2026-08-17T10:34:34.213Z",
-      "updatedAt": "2026-08-17T10:34:34.213Z",
+      "updatedAt": "2026-08-17T12:18:04.337Z",
       "appliedAt": "2026-08-17T10:34:34.213Z"
     }
   ],
