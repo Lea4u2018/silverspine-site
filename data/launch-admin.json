@@ -100,6 +100,27 @@
   },
   "recipients": [
     {
+      "id": "b800f8868669d987",
+      "name": "Xavier Sears",
+      "email": "xsears26@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T17:34:29.520Z",
+      "updatedAt": "2026-08-17T17:34:29.520Z",
+      "appliedAt": "2026-08-17T17:34:29.520Z"
+    },
+    {
       "id": "8ca7d87668518fde",
       "name": "Eric Upshaw Sr.",
       "email": "moose662025@outlook.com",
