@@ -1,10 +1,202 @@
 {
-  "countdownMatrix": [],
-  "countdownTargets": [],
+  "countdownMatrix": [
+    {
+      "icon": "🎨",
+      "when": "Aug 3, 2026",
+      "title": "Cover Reveal",
+      "note": "live"
+    },
+    {
+      "icon": "📖",
+      "when": "Aug 4, 2026",
+      "title": "Extended Sneak Peek Release",
+      "note": "Prologue & Chapters 1–2"
+    },
+    {
+      "icon": "📅",
+      "when": "Aug 7 – Aug 14, 2026",
+      "title": "ARC Sign-ups",
+      "note": "25 sleuths selected for early access to digital copy"
+    },
+    {
+      "icon": "📩",
+      "when": "Aug 17, 2026",
+      "title": "ARC Selection Emails Sent",
+      "note": ""
+    },
+    {
+      "icon": "🎬",
+      "when": "Aug 21, 2026",
+      "title": "Teaser Trailer 2 Drop",
+      "note": ""
+    },
+    {
+      "icon": "📦",
+      "when": "Sep 21–23, 2026",
+      "title": "Digital copy — ARC Delivery Window",
+      "note": ""
+    },
+    {
+      "icon": "🚀",
+      "when": "Sep 30 – Oct 14, 2026",
+      "title": "Full Digital Book Preorders Open at the Insider Deal",
+      "note": "$14.99 for whitelisted readers"
+    },
+    {
+      "icon": "⚡",
+      "when": "Oct 21–28, 2026",
+      "title": "Launch Week Events",
+      "note": ""
+    },
+    {
+      "icon": "⚖️",
+      "when": "Nov 1, 2026",
+      "title": "Official Release Day & Hardback orders accepted",
+      "note": "Regular retail $24.99"
+    }
+  ],
+  "countdownTargets": [
+    {
+      "key": "digitalPreorder",
+      "at": "2026-09-30T06:00:00.000Z",
+      "label": "Full DIGITAL preorder opens",
+      "detail": "Insider $14.99 for whitelisted readers",
+      "href": "/shop"
+    },
+    {
+      "key": "insiderClose",
+      "at": "2026-10-15T06:00:00.000Z",
+      "label": "Insider Deal window closes",
+      "detail": "Last chance at $14.99 on the full digital copy",
+      "href": "/shop"
+    },
+    {
+      "key": "hardcoverRelease",
+      "at": "2026-11-01T06:00:00.000Z",
+      "label": "Hardcover orders & official release",
+      "detail": "Regular retail $24.99",
+      "href": "/shop"
+    }
+  ],
   "distributionFiles": {
-    "sneakPeek": { "label": "Extended Sneak Peek", "path": "", "filename": "" },
-    "fullDigital": { "label": "Full Digital Copy", "path": "", "filename": "" }
+    "sneakPeek": {
+      "label": "Extended Sneak Peek",
+      "path": "",
+      "filename": "",
+      "updatedAt": ""
+    },
+    "fullDigital": {
+      "label": "Full Digital Copy",
+      "path": "",
+      "filename": "",
+      "updatedAt": ""
+    }
   },
-  "recipients": [],
-  "submissions": []
+  "recipients": [
+    {
+      "id": "edf282f5cd83eeaf",
+      "name": "Martajia Sears",
+      "email": "tajiatoshi25@gmail.com",
+      "role": "arc-applicant",
+      "format": "EPUB",
+      "reviewSpot": "Gumroad Purchase",
+      "notes": "MArtie purchased the Sneak Peak - Chosen for ARC",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-17T10:34:34.213Z",
+      "updatedAt": "2026-08-17T10:34:34.213Z",
+      "appliedAt": "2026-08-17T10:34:34.213Z"
+    }
+  ],
+  "submissions": [],
+  "emailTemplates": {
+    "distribution": {
+      "sneakPeek": {
+        "subject": "[SNEAK PEEK] Congratulations — your Extended Sneak Peek — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — and thank you for reading with Silver Spine Studio™.\n\nAttached is your Extended Sneak Peek of The Beautiful Beast (Prologue & Chapters 1–2). We are glad you are here for the storm.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis Extended Sneak Peek is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "fullDigital": {
+        "subject": "[FULL DIGITAL] Congratulations — your copy of The Beautiful Beast — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — your full digital copy of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arc": {
+        "subject": "[ARC] Congratulations — you are on the ARC team — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of our ARC sleuths for The Beautiful Beast.\n\nYour early-release digital copy is attached. Please treat it as a private reader copy until release day (November 1, 2026). If you review, thank you — honest words help independent studios more than you know.\n\nCOPYRIGHT & LICENSE — ARC / EARLY RELEASE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis ARC / early-release file is licensed for your personal review only. You may share a fair, honest review, but you may not copy, upload, resell, redistribute, or share the file (or substantial excerpts) with others.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    },
+    "selection": {
+      "arcSelected": {
+        "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You are on the early-access team for this digital ARC\n• ARC delivery window: September 21–23, 2026\n• Official release day: November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "giveawayWinner": {
+        "subject": "[WINNER] You won a full digital copy — The Beautiful Beast — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you are one of the {{giveawayWinners}} lucky winners from the Silver Spine Studio™ launch list.\n\nYOUR PRIZE\nOne free full digital copy of The Beautiful Beast, readable on your devices.\n\nYou will receive a separate email with your download when we send winner copies. This message is your winner notice for August 17, 2026.\n\nThank you for joining the launch list and for cheering on this house.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    },
+    "followUp": {
+      "arcApplicationReceived": {
+        "subject": "[ARC FOLLOW-UP] We received your early-release request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for requesting an ARC of The Beautiful Beast. This follow-up confirms we received your application.\n\nTIMELINE\n• Sign-up window: Aug 7 – Aug 14, 2026\n• Selection emails: Aug 17, 2026\n• If selected, delivery: Sep 21–23, 2026\n\nApplying does not guarantee a spot. If you are chosen, you will hear from us separately.\n\nREMINDER — ARC files are for personal review only. Please do not share files or substantial excerpts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arcNotSelected": {
+        "subject": "[ARC FOLLOW-UP] Thank you for applying — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for applying for the ARC team on The Beautiful Beast. We appreciate your interest in sleuthing with us.\n\nThis round we selected {{arcTeamSize}} readers for early access. You were not selected this time, but the storm still welcomes you — the Extended Sneak Peek and full novel remain available through the Shop when you are ready.\n\nWe hope you will stay on the launch list for updates and the mid-October drawing ({{giveawayWinners}} winners each receive a full digital copy).\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arcDeliveryReminder": {
+        "subject": "[ARC FOLLOW-UP] Your ARC file is coming — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nQuick follow-up for our ARC sleuths: your early-release digital copy of The Beautiful Beast will arrive during the delivery window ({{arcDeliveryWindow}}).\n\nWatch this inbox — the download will come in a separate email with copyright terms attached.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "launchListWelcome": {
+        "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for joining the Silver Spine Studio™ launch list. This follow-up confirms you are signed up for updates on The Beautiful Beast and the seven-fold chronicle.\n\nDRAWING\nThree lucky winners will each receive a free full digital copy. Drawing from launch-list signups — winners announced mid-October 2026.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "launchListDrawing": {
+        "subject": "[LAUNCH LIST] Giveaway drawing reminder — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nYou are on the Silver Spine Studio™ launch list. This is a friendly reminder that we will draw {{giveawayWinners}} winners for a free full digital copy of The Beautiful Beast around ${LAUNCH_MILESTONES.digitalGiveawayAnnounce}.\n\nWinners will be notified by email. No purchase necessary — you are already entered.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "contactGeneral": {
+        "subject": "[FOLLOW-UP] We received your message — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for contacting Silver Spine Studio™. This follow-up confirms we received your message and Leameso will reply personally as soon as possible.\n\nFor quick answers on downloads, ARC, and launch dates, the FAQ at silverspinestudio.com/faq may help while you wait.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "mediaPress": {
+        "subject": "[MEDIA FOLLOW-UP] We received your press / interview request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for your media or interview request regarding Silver Spine Studio™ and The Beautiful Beast.\n\nThis follow-up confirms your request is in the studio inbox. We will respond with press materials, availability, or next steps as soon as we can.\n\n{{outletLine}}\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "websiteInquiry": {
+        "subject": "[WEBSITE FOLLOW-UP] Your custom site inquiry — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for asking about a custom website in the Silver Spine Studio™ style.\n\nThis follow-up confirms we received your inquiry. Custom builds are by request only — Leameso will reply with availability and next steps.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborReceived": {
+        "subject": "[COMMUNITY FOLLOW-UP] We received your porch request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for asking to be listed in the Silver Spine Studio™ community (Investing in the Community).\n\nThis follow-up confirms we received your request for {{businessName}}. Nothing goes live until Leameso approves it manually.\n\nPurchase verification is reviewed privately — you will hear back by email.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborApproved": {
+        "subject": "[COMMUNITY] You are live on the porch — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — {{businessName}} is now approved and listed on the Silver Spine Studio™ community wall.\n\nYour card is live at silverspinestudio.com/neighbors. Thank you for investing in this house — we are glad to invest in you.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborDeclined": {
+        "subject": "[COMMUNITY FOLLOW-UP] About your porch request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for your interest in the Silver Spine Studio™ community wall.\n\nAfter review, we are not able to list this request at this time. If you believe this was an error, reply to this email with any details we should reconsider.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "insiderPreorder": {
+        "subject": "[INSIDER] Full digital preorder opens {{insiderStart}} — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nFollow-up for readers on the Silver Spine Studio™ list: the full digital novel opens for Insider preorder on {{insiderStart}} at {{insiderPrice}} (save {{insiderSave}} vs retail {{retailPrice}}).\n\nHardcover orders open {{hardcoverDate}}.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "releaseDay": {
+        "subject": "[RELEASE] The Beautiful Beast — out now — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThe storm breaks today — The Beautiful Beast is officially released.\n\nHardcover and retail digital are available through the Shop at silverspinestudio.com/shop. Thank you for being part of this launch.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    }
+  },
+  "trackingNotes": {},
+  "contacts": [],
+  "discountCodes": []
 }
