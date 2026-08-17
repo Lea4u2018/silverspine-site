@@ -402,8 +402,7 @@
         "selectionArc": {
           "sentAt": "2026-08-17T18:13:27.168Z",
           "subject": "Marked sent in Admin",
-          "filePath": "",
-          "manual": true
+          "filePath": ""
         },
         "selectionGiveaway": null,
         "followUps": {}
@@ -429,12 +428,17 @@
         },
         "fullDigital": null,
         "arc": null,
-        "selectionArc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:27.976Z",
+          "subject": "Marked sent in Admin",
+          "filePath": "",
+          "manual": true
+        },
         "selectionGiveaway": null,
         "followUps": {}
       },
       "createdAt": "2026-08-17T10:34:34.213Z",
-      "updatedAt": "2026-08-17T18:02:52.641Z",
+      "updatedAt": "2026-08-17T18:13:28.076Z",
       "appliedAt": "2026-08-17T10:34:34.213Z"
     }
   ],
