@@ -1,6 +1,36 @@
 {
   "pinned": [
     {
+      "id": "pinned-arc-lucky-sleuthers",
+      "category": "Announcement",
+      "dateISO": "2026-08-17",
+      "title": "Lucky Sleuthers — The ARC 25 Have Been Notified",
+      "body": "The ARC request window for The Beautiful Beast is closed. Silver Spine Studio™ has selected twenty-five Lucky Sleuthers for early access, and selection notices have been sent.\n\nIf you requested an ARC, please check your email inbox — and look in Junk / Spam as well. Notices went out August 17, 2026 from contact@silverspinestudio.com.\n\nCongratulations from Silver Spine Studio to everyone selected. Thank you to every reader who applied and took part — your support means more than you know.\n\nPlease keep an eye on silverspinestudio.com for updates and new release information. Official global release day is November 1, 2026 for the full digital edition, paperback, and hardcover.\n\nComing next for Extended Sneak Peek buyers: the Insider Deal window opens September 30 and runs through October 14, 2026. If you purchased the Sneak Peek, you are on the whitelist for the full digital novel at $14.99 during that window (regular digital price is $19.99 from November 1; paperback $24.99; hardcover $29.99).\n\nQuestions or concerns? Please reach out anytime at contact@silverspinestudio.com — we are glad to help.\n\nHappy Sleuthing!",
+      "bullets": [
+        "25 Lucky Sleuthers selected and notified August 17, 2026 — check inbox + Junk / Spam",
+        "Thank you to every applicant and participant",
+        "Next for Sneak Peek buyers: Insider Deal Sep 30 – Oct 14 · full digital $14.99",
+        "Official release November 1, 2026 — digital $19.99 · paperback $24.99 · hardcover $29.99"
+      ],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "cover",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "books",
+        "shop",
+        "launch-list"
+      ],
+      "published": true,
+      "sortOrder": 70,
+      "createdAt": "2026-08-17T19:00:51.442Z",
+      "updatedAt": "2026-08-17T19:00:51.442Z"
+    },
+    {
       "id": "pinned-meet-elliot",
       "category": "Cast",
       "dateISO": "2026-08-17",
