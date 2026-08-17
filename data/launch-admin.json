@@ -220,6 +220,20 @@
   "trackingNotes": {},
   "contacts": [
     {
+      "id": "495e700eb3200571",
+      "name": "Martajia Sears",
+      "email": "tajiatoshi25@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested ARC",
+      "tags": [
+        "ARC applicant",
+        "Needs reply"
+      ],
+      "createdAt": "2026-08-17T12:18:03.415Z",
+      "updatedAt": "2026-08-17T12:18:03.415Z"
+    },
+    {
       "id": "da9789de8222da3c",
       "name": "Eric Upshaw Sr.",
       "email": "moose662025@outlook.com",
