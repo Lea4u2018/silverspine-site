@@ -5,9 +5,10 @@
       "name": "Lauren Ferguson",
       "text": "I am so excited for this new book release!! Leameso is very passionate when it comes to her work, so I know that “The Beautiful Beast” will be a hit! ❤️",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-08-19T21:41:02.874Z"
+      "createdAt": "2026-08-19T21:41:02.874Z",
+      "approvedAt": "2026-08-19T22:09:50.392Z"
     },
     {
       "id": "38ad0d0f6724db15",
