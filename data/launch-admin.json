@@ -580,10 +580,11 @@
       "company": "U.S.",
       "notes": "Launch list request",
       "tags": [
-        "reader"
+        "reader",
+        "Launch list"
       ],
       "createdAt": "2026-08-19T22:17:20.965Z",
-      "updatedAt": "2026-08-19T22:17:20.965Z"
+      "updatedAt": "2026-08-19T22:18:08.456Z"
     },
     {
       "id": "f5815b7b967efa14",
