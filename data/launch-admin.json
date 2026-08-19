@@ -552,6 +552,19 @@
   "trackingNotes": {},
   "contacts": [
     {
+      "id": "afd242e66ef6fdd2",
+      "name": "Lauren Ferguson",
+      "email": "fergusonlauren0130@gmail.com",
+      "phone": "",
+      "company": "U.S.",
+      "notes": "Launch list request",
+      "tags": [
+        "reader"
+      ],
+      "createdAt": "2026-08-19T22:17:20.965Z",
+      "updatedAt": "2026-08-19T22:17:20.965Z"
+    },
+    {
       "id": "f5815b7b967efa14",
       "name": "Pierre Sears",
       "email": "poebiggs6866@gmail.com",
