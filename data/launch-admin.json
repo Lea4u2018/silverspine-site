@@ -352,8 +352,7 @@
         "selectionArc": {
           "sentAt": "2026-08-17T18:30:44.314Z",
           "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
-          "filePath": "",
-          "manual": false
+          "filePath": ""
         },
         "selectionGiveaway": null,
         "followUps": {}
@@ -442,7 +441,25 @@
       "appliedAt": "2026-08-17T10:34:34.213Z"
     }
   ],
-  "submissions": [],
+  "submissions": [
+    {
+      "id": "4d620cc00e756459",
+      "kind": "list",
+      "name": "Lauren Ferguson",
+      "email": "fergusonlauren0130@gmail.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 lucky winners will each receive a FULL digital copy (winners announced mid-October 2026).",
+      "receivedAt": "2026-08-19T21:44:41.114Z",
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
+    }
+  ],
   "emailTemplates": {
     "distribution": {
       "sneakPeek": {
