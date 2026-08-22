@@ -40,7 +40,7 @@
       "mediaType": "video",
       "mediaUrl": "/characters/elliot-windsor-meet.mp4",
       "mediaPoster": "/characters/elliot-windsor-portrait.png",
-      "mediaCaption": "",
+      "mediaCaption": "Meet Elliot — motion portrait (this clip is silent)",
       "videoLive": true,
       "figureKey": "",
       "expandBody": "",
@@ -52,7 +52,7 @@
       "published": true,
       "sortOrder": 60,
       "createdAt": "2026-08-17T16:00:11.128Z",
-      "updatedAt": "2026-08-17T16:40:00.230Z"
+      "updatedAt": "2026-08-22T06:56:31.967Z"
     },
     {
       "id": "pinned-website-inquiries",
