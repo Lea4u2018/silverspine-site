@@ -16,7 +16,7 @@
       "icon": "📅",
       "when": "Aug 7 – Aug 14, 2026",
       "title": "ARC Sign-ups",
-      "note": "25 sleuths selected for early access to digital copy"
+      "note": "List closed · recipients chosen and will be notified"
     },
     {
       "icon": "📩",
@@ -32,15 +32,15 @@
     },
     {
       "icon": "📦",
-      "when": "Sep 21–23, 2026",
+      "when": "Oct 1–3, 2026",
       "title": "Digital copy — ARC Delivery Window",
       "note": ""
     },
     {
       "icon": "🚀",
-      "when": "Sep 30 – Oct 14, 2026",
-      "title": "Full Digital Book Preorders Open at the Insider Deal",
-      "note": "$14.99 for whitelisted readers"
+      "when": "Oct 8 – Oct 22, 2026",
+      "title": "Full Digital Insider Deal opens on Gumroad",
+      "note": "$14.99 on Gumroad for whitelisted readers"
     },
     {
       "icon": "⚡",
@@ -51,30 +51,37 @@
     {
       "icon": "⚖️",
       "when": "Nov 1, 2026",
-      "title": "Official Release Day & Hardback orders accepted",
-      "note": "Regular retail $24.99"
+      "title": "Official Release Day & print orders open",
+      "note": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99"
     }
   ],
   "countdownTargets": [
     {
+      "key": "arcDelivery",
+      "at": "2026-10-01T06:00:00.000Z",
+      "label": "ARC digital copies deliver",
+      "detail": "Lucky Sleuthers · Oct 1–3 window",
+      "href": "/blog"
+    },
+    {
       "key": "digitalPreorder",
-      "at": "2026-09-30T06:00:00.000Z",
-      "label": "Full DIGITAL preorder opens",
-      "detail": "Insider $14.99 for whitelisted readers",
+      "at": "2026-10-08T06:00:00.000Z",
+      "label": "Full DIGITAL Insider Deal opens (Gumroad)",
+      "detail": "$14.99 on Gumroad for whitelisted readers",
       "href": "/shop"
     },
     {
       "key": "insiderClose",
-      "at": "2026-10-15T06:00:00.000Z",
-      "label": "Insider Deal window closes",
-      "detail": "Last chance at $14.99 on the full digital copy",
+      "at": "2026-10-23T06:00:00.000Z",
+      "label": "Insider Deal window closes (Gumroad)",
+      "detail": "Last chance at $14.99 on Gumroad for the full digital copy",
       "href": "/shop"
     },
     {
       "key": "hardcoverRelease",
       "at": "2026-11-01T06:00:00.000Z",
-      "label": "Hardcover orders & official release",
-      "detail": "Regular retail $24.99",
+      "label": "Print orders & official release",
+      "detail": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99",
       "href": "/shop"
     }
   ],
@@ -106,7 +113,7 @@
       "role": "arc-selected",
       "format": "EPUB",
       "reviewSpot": "Requested",
-      "notes": "Late update...added member to the ARC list of winners. Member was not on the list. Was put in as a Launch reminder only.",
+      "notes": "Added visitor to the ARC list. Also send member a personal  watermarked/non-sharable PDF FREE copy in advance of the Sneak Peek.",
       "removed": false,
       "sends": {
         "sneakPeek": null,
@@ -115,14 +122,13 @@
         "selectionArc": {
           "sentAt": "2026-08-27T16:43:24.857Z",
           "subject": "Marked sent in Admin",
-          "filePath": "",
-          "manual": true
+          "filePath": ""
         },
         "selectionGiveaway": null,
         "followUps": {}
       },
       "createdAt": "2026-08-19T22:18:07.449Z",
-      "updatedAt": "2026-08-27T16:43:25.005Z",
+      "updatedAt": "2026-08-27T18:35:18.541Z",
       "appliedAt": "2026-08-19T21:44:41.114Z"
     },
     {
@@ -532,6 +538,10 @@
       "arcDeliveryReminder": {
         "subject": "[ARC FOLLOW-UP] Your ARC file is coming — Silver Spine Studio™",
         "body": "Hi {{firstName}},\n\nQuick follow-up for our ARC sleuths: your early-release digital copy of The Beautiful Beast will arrive during the delivery window ({{arcDeliveryWindow}}).\n\nWatch this inbox — the download will come in a separate email with copyright terms attached.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arcDeliveryDateChange": {
+        "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nQuick update from Silver Spine Studio™ on The Beautiful Beast.\n\nIf you are one of the 25 Lucky Sleuthers (ARC team):\nYour free digital copy of the full novel is still coming. Delivery is moving from September 21–23, 2026 to October 1–3, 2026. The full manuscript is already complete — we are in the final stage of publishing: a careful line-by-line continuity check for story balance before files go out. You will get a separate email with your download in that window. No file is attached to this message.\n\nFor everyone on this list:\nOfficial release day is unchanged — November 1, 2026 (digital, paperback, and hardcover).\n\nAlso on the calendar:\n• Extended Sneak Peek — available now ($4.99)\n• Full digital Insider Deal for whitelist / sneak-peek buyers — Oct 8, 2026 – Oct 22, 2026 ($14.99) · Gumroad\n• Mid-October — drawing for 3 free full digital copies from the launch list\n• Launch week — Oct 21–28, 2026\n• Official release — Nov 1, 2026\n\nThank you for your patience and for sleuthing with us. If this lands in Junk / Spam, please mark it Not junk and add contact@silverspinestudio.com to your contacts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "launchListWelcome": {
         "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™",
