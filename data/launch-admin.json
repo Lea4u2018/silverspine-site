@@ -113,7 +113,7 @@
       "role": "arc-selected",
       "format": "EPUB",
       "reviewSpot": "Requested",
-      "notes": "Added visitor to the ARC list. Also send member a personal  watermarked/non-sharable PDF FREE copy in advance of the Sneak Peek.",
+      "notes": "Added visitor to the ARC list. Also sent member a personal  watermarked/non-sharable PDF FREE copy in advance of the Sneak Peek.",
       "removed": false,
       "sends": {
         "sneakPeek": null,
@@ -128,7 +128,7 @@
         "followUps": {}
       },
       "createdAt": "2026-08-19T22:18:07.449Z",
-      "updatedAt": "2026-08-27T18:35:18.541Z",
+      "updatedAt": "2026-08-27T18:35:47.274Z",
       "appliedAt": "2026-08-19T21:44:41.114Z"
     },
     {
