@@ -112,12 +112,17 @@
         "sneakPeek": null,
         "fullDigital": null,
         "arc": null,
-        "selectionArc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-27T16:43:24.857Z",
+          "subject": "Marked sent in Admin",
+          "filePath": "",
+          "manual": true
+        },
         "selectionGiveaway": null,
         "followUps": {}
       },
       "createdAt": "2026-08-19T22:18:07.449Z",
-      "updatedAt": "2026-08-27T16:43:05.978Z",
+      "updatedAt": "2026-08-27T16:43:25.005Z",
       "appliedAt": "2026-08-19T21:44:41.114Z"
     },
     {
