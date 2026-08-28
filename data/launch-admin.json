@@ -679,6 +679,19 @@
   "trackingNotes": {},
   "contacts": [
     {
+      "id": "65d3fea70af9a375",
+      "name": "William Jones",
+      "email": "wbjnet@yahoo.com",
+      "phone": "",
+      "company": "",
+      "notes": "Sent WBJ a free copy to review: Copy blocked from sharing with PDF notices aabout do not share and copyright information.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-28T05:24:53.417Z",
+      "updatedAt": "2026-08-28T05:24:53.417Z"
+    },
+    {
       "id": "afd242e66ef6fdd2",
       "name": "Lauren Ferguson",
       "email": "fergusonlauren0130@gmail.com",
