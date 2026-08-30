@@ -38,7 +38,7 @@ export default function TheBeautifulBeast() {
   };
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative z-10">
+    <div className="text-gray-100 min-h-screen flex flex-col relative z-10">
       <StormAtmosphere mood="noir" />
       <Head>
         <title>{title}</title>
@@ -93,7 +93,7 @@ export default function TheBeautifulBeast() {
           <StoreHub variant="compact" liveOnly />
           <Link
             href="/shop"
-            className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
+            className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#dfcfb5] border border-[#dfcfb5]/45 hover:bg-[#dfcfb5]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
           >
             Full store hub · coming soon doors
           </Link>

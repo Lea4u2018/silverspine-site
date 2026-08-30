@@ -1,48 +1,14 @@
 // /pages/about.js
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
-import SiteNav from "@/components/SiteNav";
+import { useEffect, useState } from "react";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import StoreHub from "@/components/StoreHub";
-import { bindChromeVars } from "@/lib/chromeVars";
 import { buildAboutPageSchema, PUBLIC_AUTHOR_NAME, SITE_ORIGIN } from "@/lib/authorIdentity";
 import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
 
 export default function About() {
-  const GOLD = "#a77a23";
-
-  // ===== Header sizing (do not observe footer — jump loop) =====
-  const headerRef = useRef(null);
-  useEffect(() => bindChromeVars(headerRef.current), []);
-
-  // ---------- Logo (instant primary — no cache-bust delay) ----------
-  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
-  const [useTextLogo, setUseTextLogo] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let cancelled = false;
-    const tryLoad = (i = 0) => {
-      if (i >= DISC_LOGO_CANDIDATES.length) {
-        if (!cancelled) setUseTextLogo(true);
-        return;
-      }
-      const img = new Image();
-      img.onload = () => {
-        if (!cancelled) {
-          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
-          setUseTextLogo(false);
-        }
-      };
-      img.onerror = () => tryLoad(i + 1);
-      img.src = DISC_LOGO_CANDIDATES[i];
-    };
-    tryLoad();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const GOLD = "#dfcfb5";
 
   // ---------- Starfield ----------
   useEffect(() => {
@@ -108,7 +74,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="bg-black text-gray-100">
+    <div className="text-gray-100">
       <Head>
         <title>About {PUBLIC_AUTHOR_NAME} | Silver Spine Studio™</title>
         <meta
@@ -122,9 +88,32 @@ export default function About() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildAboutPageSchema()) }}
         />
         <style>{`
-          :root { --header-h: 140px; --footer-h: 72px; }
-          /* Trimmed middle so the global footer is fully visible */
-          .page-frame { min-height: calc(100vh - var(--header-h) - var(--footer-h) - 96px); display: flex; flex-direction: column; }
+          :root { --header-h: 56px; --footer-h: 136px; }
+          html, body { height: auto !important; overflow-x: clip; overflow-y: auto !important; }
+          #__next { height: auto; overflow: visible; }
+          .page-frame {
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+          }
+          .about-heading {
+            padding-top: 0;
+            margin-top: -4.25rem;
+          }
+          .heading { text-align:center; color:${GOLD}; font-size:2.15rem; font-weight:800; line-height:1.18; margin:0; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+          .subheading { text-align:center; color:#f3e2b8; font-size:.95rem; font-style:italic; margin:.12rem 0 1.35rem; }
+          .about-bio-scroll {
+            height: 40rem;
+            max-height: 40rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+            scrollbar-color: #dfcfb5 #111;
+          }
+          .about-bio-scroll::-webkit-scrollbar { width: 10px; }
+          .about-bio-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
 
           /* Soft live motion until CapCut author-motion.mp4 is dropped in */
           @keyframes authorPortraitBreathe {
@@ -197,25 +186,17 @@ export default function About() {
           .nav-link:hover { color: ${GOLD}; }
           .nav-active { color: #b91c1c; font-weight: 600; }
 
-          /* Nebula ribbons — tightened to pull footer up */
-          .nebula { position: relative; width: 100%; background-image: url('/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg'); background-size: cover; background-position: center; filter: saturate(1.1) contrast(1.06); }
-          .nebula-top    { height: 56px; }                  /* ↓ a bit more */
-          .nebula-bottom { height: 36px; margin-top: -6px; }/* ↓ a bit more */
-
-          .mask-top { -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0)); mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 82%, rgba(0,0,0,0)); }
-          .mask-bottom { -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 82%, rgba(0,0,0,0)); mask-image: linear-gradient(to top, rgba(0,0,0,1) 82%, rgba(0,0,0,0)); }
-
-          .letterbox-bar { position:absolute; left:0; right:0; height:6px; background: rgba(0,0,0,0.95); } /* thinner bars */
-          .letterbox-bar.top-edge { bottom:0; }
-          .letterbox-bar.bottom-edge { top:0; }
-
           /* Heading spacing tightened */
-          .heading { text-align:center; color:${GOLD}; font-size:2.15rem; font-weight:800; line-height:1.18; margin:.1rem 0 0; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
-          .subheading { text-align:center; color:#f3e2b8; font-size:.95rem; font-style:italic; margin:.12rem 0 .45rem; }
 
           /* Card spacing tightened */
-          .nebula-sheet { position: relative; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(15,15,15,0.72); box-shadow: 0 20px 48px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.03); }
-          .nebula-sheet::before { content:""; position:absolute; inset:0; background-image:url('/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg'); background-size:cover; background-position:center; opacity:.18; filter:saturate(1.05) contrast(1.0); }
+          .nebula-sheet {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(15,15,15,0.78);
+            box-shadow: 0 20px 48px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.03);
+          }
           .nebula-sheet > .content { position:relative; }
           .card-wrap { padding: 12px 16px; } /* ↓ padding */
           .card-wrap + .controls-row { margin-top: .45rem; } /* tighter */
@@ -259,68 +240,12 @@ export default function About() {
         <div className="about-rain" />
       </div>
 
-      {/* HEADER */}
-    <header
-  ref={headerRef}
-  className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#c9ced6]/25"
->
-  <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
-    <Link
-      href="/"
-      className="flex items-center gap-3 md:gap-4 group"
-      aria-label="Silver Spine Studio — Home"
-    >
-      {logoSrc && !useTextLogo ? (
-        <span className="sss-logo-halo">
-          <img
-            src={logoSrc}
-            alt="Silver Spine Studio logo"
-            className="sss-logo-glow h-[88px] md:h-[108px] lg:h-[122px] w-auto select-none"
-            draggable="false"
-          />
-        </span>
-      ) : (
-        <span
-          className="text-2xl md:text-3xl font-extrabold"
-          style={{
-            color: "#eef2f7",
-            textShadow:
-              "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
-          }}
-        >
-          Silver Spine Studio
-          <span className="align-super text-base md:text-lg">™</span>
-        </span>
-      )}
-
-      <span
-        className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
-        style={{
-          color: "#eef2f7",
-          textShadow:
-            "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
-        }}
-      >
-        Silver Spine Studio
-        <span className="align-super text-sm md:text-base">™</span>
-      </span>
-    </Link>
-
-    <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
-  </div>
-</header>
-
       <StormAtmosphere mood="author" />
-
-      {/* TOP NEBULA (tight) */}
-      <div className="nebula nebula-top mask-top relative z-10">
-        <div className="letterbox-bar top-edge" />
-      </div>
 
       {/* ===== Between header and footer (no local footer below) ===== */}
       <div className="page-frame relative z-10">
         {/* HEADING */}
-        <section className="relative max-w-6xl mx-auto w-full px-4 md:px-6 pt-1 text-center">
+        <section className="about-heading relative max-w-[1140px] mx-auto w-full px-4 md:px-6 text-center">
           <h1
             className="heading mx-auto w-full text-center"
             style={{
@@ -337,15 +262,15 @@ export default function About() {
         </section>
 
        {/* MAIN — bio */}
- <main className="px-6 pb-0 text-center max-w-7xl mx-auto w-full pt-2">
-   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+ <main className="about-main px-6 pb-16 text-center max-w-[1140px] mx-auto w-full pt-3">
+   <div className="about-grid grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
      {/* YOUR EXACT ABOUT SECTION (Shifted to 7 Columns to make room on the side) */}
-     <div className="lg:col-span-7">
+     <div className="about-bio-col lg:col-span-7">
        <div className="nebula-sheet mt-1 mb-1">
          <div className="content card-wrap">
            {showAuthorImg && (
-             <div className="flex justify-center mb-4">
+             <div className="flex justify-center mb-3">
                <div
                  className="author-portrait-ring w-[150px] h-[150px] rounded-full overflow-hidden border-2"
                  style={{ borderColor: GOLD }}
@@ -377,7 +302,7 @@ export default function About() {
              </div>
            )}
            {/* --- YOUR EXACT UNTOUCHED BIO COPY --- */}
-           <div className="max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
+           <div className="about-bio-scroll max-w-3xl mx-auto text-left text-[1rem] leading-7 space-y-5">
              <p>
                <span className="font-semibold" style={{ color: GOLD }}>Leameso James</span>,
                born in Newark, New Jersey, and raised in Tuskegee, Alabama, has always been drawn to
@@ -412,9 +337,9 @@ export default function About() {
      </div>
 
      {/* THE NEW SALES BOX PLACED EXACTLY ON THE SIDE (Spans 5 Columns) */}
-     <div className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-gray-950 to-black border border-[#a77a23]/30 p-6 rounded-2xl shadow-2xl text-left space-y-4">
+     <div className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-gray-950 to-black border border-[#dfcfb5]/30 p-6 rounded-2xl shadow-2xl text-left space-y-4">
        <div className="text-center space-y-1">
-         <span className="text-[#a77a23] text-xs font-bold uppercase tracking-widest block">Limited Preview Event</span>
+         <span className="text-[#dfcfb5] text-xs font-bold uppercase tracking-widest block">Limited Preview Event</span>
          <h3 className="text-xl font-extrabold text-white tracking-tight">The Beautiful Beast</h3>
          <p className="text-xs text-gray-400 italic">Prologue + Chapters 1–2</p>
        </div>
@@ -423,15 +348,15 @@ export default function About() {
          <p className="mb-2 text-white font-semibold">Welcome in — thank you for stopping by.</p>
          <p className="mb-3">
            The <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}
-           <span className="text-[#a77a23] font-bold">$4.99</span>. That purchase places you on the{" "}
-           <span className="text-[#a77a23] font-bold">Insider Deal</span> whitelist for the discounted full DIGITAL copy.
+           <span className="text-[#dfcfb5] font-bold">$4.99</span>. That purchase places you on the{" "}
+           <span className="text-[#dfcfb5] font-bold">Insider Deal</span> whitelist for the discounted full DIGITAL copy.
          </p>
          <p className="mb-3 text-amber-100/95 border border-amber-500/35 bg-amber-950/25 rounded-lg px-3 py-2 text-sm">
            {PREORDER_STATUS.headline}
          </p>
          <p>
            Full DIGITAL Insider preorder: <span className="text-white font-bold">{NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}</span> at{" "}
-           <span className="text-[#a77a23] font-bold">{NOVEL_PRICING.insider}</span> for whitelisted readers.
+           <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> for whitelisted readers.
            Hardcover orders from <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>.
            Digital retail <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
          </p>
@@ -441,7 +366,7 @@ export default function About() {
          <StoreHub variant="compact" liveOnly />
          <Link
            href="/shop"
-           className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#a77a23] border border-[#a77a23]/45 hover:bg-[#a77a23]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
+           className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#dfcfb5] border border-[#dfcfb5]/45 hover:bg-[#dfcfb5]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
          >
            Full store hub · coming soon doors
          </Link>
@@ -451,12 +376,6 @@ export default function About() {
 
    </div>
  </main>
-
-
-        {/* BOTTOM NEBULA (tight) */}
-        <div className="nebula nebula-bottom mask-bottom relative">
-          <div className="letterbox-bar bottom-edge" />
-        </div>
       </div>
 
       {/* No local footer here — global Footer renders separately. */}

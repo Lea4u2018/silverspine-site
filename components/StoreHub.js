@@ -68,20 +68,20 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   key={store.key}
                   role="listitem"
                   title={store.label}
-                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-[#f5f0e4] border border-[#a77a23]/50 bg-[#a77a23]/15 text-left py-2.5 px-2.5 rounded-lg"
+                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-[#f5f0e4] border border-[#dfcfb5]/50 bg-[#dfcfb5]/15 text-left py-2.5 px-2.5 rounded-lg"
                 >
                   <span className="inline-flex items-center gap-1.5 min-w-0 flex-1">
-                    <Icon className="shrink-0 text-base text-[#a77a23]" aria-hidden />
+                    <Icon className="shrink-0 text-base text-[#dfcfb5]" aria-hidden />
                     <span className="min-w-0">
                       <span className="block text-[12px] sm:text-[13px] font-extrabold leading-snug break-words">
                         <StoreName name={name} formats={store.formats} />
                       </span>
-                      <span className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#a77a23]">
+                      <span className="block text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#dfcfb5]">
                         Ask your library
                       </span>
                     </span>
                   </span>
-                  <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider text-[#f5f0e4] bg-[#a77a23]/40 px-1.5 py-0.5 rounded">
+                  <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider text-[#f5f0e4] bg-[#dfcfb5]/40 px-1.5 py-0.5 rounded">
                     Live
                   </span>
                 </div>
@@ -96,7 +96,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                   rel="noopener noreferrer"
                   role="listitem"
                   title={store.label}
-                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-black bg-[#a77a23] hover:bg-[#c49231] transform hover:-translate-y-0.5 transition-all duration-200 text-left py-2.5 px-2.5 rounded-lg shadow-[0_3px_10px_rgba(167,122,35,0.3)]"
+                  className="inline-flex items-center justify-between gap-1.5 font-semibold tracking-wide text-black bg-[#dfcfb5] hover:bg-[#c5a059] transform hover:-translate-y-0.5 transition-all duration-200 text-left py-2.5 px-2.5 rounded-lg shadow-[0_3px_10px_rgba(223,207,181,0.3)]"
                 >
                   <span className="inline-flex items-center gap-1.5 min-w-0 flex-1">
                     <Icon className="shrink-0 text-base" aria-hidden />
@@ -145,7 +145,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
   return (
     <div className={`space-y-3 ${className}`} role="list" aria-label="Get your copy — storefront hub">
       <p className="text-xs md:text-sm text-gray-300 leading-relaxed mb-1">
-        <span className="text-[#a77a23] font-semibold">Available worldwide.</span>{" "}
+        <span className="text-[#dfcfb5] font-semibold">Available worldwide.</span>{" "}
         Amazon Kindle is live in the US, Canada, UK, Australia, Europe, Japan, Brazil, Mexico, India &amp; more.
         Kobo and Apple Books also open country storefronts for local readers.
       </p>
@@ -163,12 +163,12 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
             <div
               key={store.key}
               role="listitem"
-              className="block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23]/10 text-[#f5f0e4] px-4 sm:px-5 py-4"
+              className="block w-full rounded-xl border border-[#dfcfb5]/45 bg-[#dfcfb5]/10 text-[#f5f0e4] px-4 sm:px-5 py-4"
             >
               <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-start sm:items-center gap-3 min-w-0 text-left flex-1">
-                  <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#a77a23]/20">
-                    <Icon className="text-xl text-[#a77a23]" aria-hidden />
+                  <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-[#dfcfb5]/20">
+                    <Icon className="text-xl text-[#dfcfb5]" aria-hidden />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-extrabold text-base md:text-lg tracking-wide leading-snug break-words">
@@ -177,12 +177,12 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
                     <p className="text-xs md:text-sm text-gray-300 mt-0.5 leading-snug">
                       {store.description}
                     </p>
-                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#a77a23] mt-1">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#dfcfb5] mt-1">
                       Live for libraries · no public checkout link
                     </p>
                   </div>
                 </div>
-                <span className="shrink-0 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#f5f0e4] bg-[#a77a23]/40 px-2 sm:px-2.5 py-1 rounded-md mt-0.5">
+                <span className="shrink-0 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-[#f5f0e4] bg-[#dfcfb5]/40 px-2 sm:px-2.5 py-1 rounded-md mt-0.5">
                   {status}
                 </span>
               </div>
@@ -198,7 +198,7 @@ export default function StoreHub({ variant = "full", className = "", liveOnly = 
               target="_blank"
               rel="noopener noreferrer"
               role="listitem"
-              className="store-live block w-full rounded-xl border border-[#a77a23]/45 bg-[#a77a23] text-black px-4 sm:px-5 py-4 transition-all duration-200 hover:bg-[#c49231]"
+              className="store-live block w-full rounded-xl border border-[#dfcfb5]/45 bg-[#dfcfb5] text-black px-4 sm:px-5 py-4 transition-all duration-200 hover:bg-[#c5a059]"
             >
               <div className="flex items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div className="flex items-start sm:items-center gap-3 min-w-0 text-left flex-1">

@@ -4,12 +4,11 @@
 // Visit it locally at http://localhost:3000/contact-safe
 
 import Head from "next/head";
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
 
 export default function ContactSafe() {
-  const GOLD = "#a77a23";
+  const GOLD = "#dfcfb5";
 
   // Track when the form first rendered (for time-to-submit check)
   const startedAt = useMemo(() => Date.now(), []);
@@ -73,7 +72,7 @@ export default function ContactSafe() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-gray-100">
+    <div className="min-h-screen text-gray-100">
       <Head>
         <title>Contact (Safe) | Silver Spine Studio™</title>
         <meta name="description" content="Secure, vendor-free contact form." />
@@ -107,16 +106,6 @@ export default function ContactSafe() {
           .link:hover { color:${GOLD}; }
         `}</style>
       </Head>
-
-      {/* Simple local header to avoid touching your global layout */}
-      <header className="border-b border-[#a77a23]/30">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
-          <Link href="/" className="link font-semibold">
-            ← Home
-          </Link>
-          <div className="text-sm text-gray-400">Safe contact (dev only)</div>
-        </div>
-      </header>
 
       <main className="px-4">
         <h1 className="heading">Contact Silver Spine Studio<span className="align-super text-xs">™</span></h1>

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import BlogFigures from "@/components/BlogFigures";
+import BlogVideo from "@/components/BlogVideo";
+import ConfettiBurst from "@/components/ConfettiBurst";
 import { BLOG_IMG } from "@/lib/blogImages";
 
-const GOLD = "#a77a23";
+const GOLD = "#dfcfb5";
 const REQUEST_EMAIL = "contact@silverspinestudio.com";
 
 function formatDate(iso) {
@@ -30,7 +32,7 @@ function ExpandBlock({ body, id, openLabel = "View details", closeLabel = "Hide 
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
+        className="inline-block px-3 py-2 rounded-lg bg-[#dfcfb5] text-black text-sm font-semibold hover:opacity-90 transition"
         aria-expanded={open}
         aria-controls={id}
       >
@@ -45,7 +47,7 @@ function ExpandBlock({ body, id, openLabel = "View details", closeLabel = "Hide 
           transition: "max-height 260ms ease, opacity 220ms ease",
         }}
       >
-        <div className="rounded-lg border border-white/10 p-4 bg-black/40 text-sm text-gray-200 space-y-3">
+        <div className="rounded-lg border border-[#dfcfb5]/45 p-4 bg-black/40 text-sm text-gray-200 space-y-3">
           {blocks.map((block, i) => {
             const lines = block.split("\n").filter(Boolean);
             const isList = lines.every((l) => /^[\d]+\.|^•/.test(l.trim()));
@@ -92,7 +94,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
       <Link
         key="contact-sites"
         href="/contact?topic=sites"
-        className="inline-block px-3 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold hover:opacity-90 transition"
+        className="inline-block px-3 py-2 rounded-lg bg-[#dfcfb5] text-black text-sm font-semibold hover:opacity-90 transition"
       >
         Contact — website inquiries
       </Link>
@@ -105,8 +107,8 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         href="/books"
         className={`inline-block px-3 py-2 rounded-lg text-sm font-semibold transition ${
           actionButtons.length === 0
-            ? "bg-[#a77a23] text-black hover:opacity-90"
-            : "border border-[#a77a23]/60 text-[#a77a23] hover:bg-[#a77a23]/10"
+            ? "bg-[#dfcfb5] text-black hover:opacity-90"
+            : "border border-[#dfcfb5]/60 text-[#dfcfb5] hover:bg-[#dfcfb5]/10"
         }`}
       >
         {actions.includes("contact-sites") ? "Back to Books" : "Explore the Books"}
@@ -118,7 +120,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
       <Link
         key="shop"
         href="/shop"
-        className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
+        className="inline-block px-3 py-2 rounded-lg border border-[#dfcfb5]/60 text-[#dfcfb5] text-sm font-semibold hover:bg-[#dfcfb5]/10 transition"
       >
         Visit the Shop
       </Link>
@@ -132,8 +134,8 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         onClick={onLaunchList}
         className={`inline-block px-3 py-2 rounded-lg text-sm font-semibold transition ${
           actionButtons.length === 0
-            ? "bg-[#a77a23] text-black hover:opacity-90"
-            : "border border-[#a77a23]/60 text-[#a77a23] hover:bg-[#a77a23]/10"
+            ? "bg-[#dfcfb5] text-black hover:opacity-90"
+            : "border border-[#dfcfb5]/60 text-[#dfcfb5] hover:bg-[#dfcfb5]/10"
         }`}
       >
         Join the launch list
@@ -146,7 +148,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         key="arc"
         type="button"
         onClick={onArc}
-        className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
+        className="inline-block px-3 py-2 rounded-lg border border-[#dfcfb5]/60 text-[#dfcfb5] text-sm font-semibold hover:bg-[#dfcfb5]/10 transition"
       >
         Request early-release ARC
       </button>
@@ -158,7 +160,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         key="press"
         type="button"
         onClick={onPress}
-        className="inline-block px-3 py-2 rounded-lg border border-[#a77a23]/60 text-[#a77a23] text-sm font-semibold hover:bg-[#a77a23]/10 transition"
+        className="inline-block px-3 py-2 rounded-lg border border-[#dfcfb5]/60 text-[#dfcfb5] text-sm font-semibold hover:bg-[#dfcfb5]/10 transition"
       >
         Request press kit
       </button>
@@ -167,25 +169,19 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
 
   const hasTimelineToggle = actions.includes("timeline-toggle");
   const hasBrandToggle = actions.includes("brand-notes-toggle");
+  const showConfetti = post.id === "pinned-arc-lucky-sleuthers" || post.confetti === true;
 
-  return (
-    <article className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]">
-      <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-        <span className="uppercase tracking-wide">{post.category || "Announcement"}</span>
-        {date.label ? <time dateTime={date.attr}>{date.label}</time> : null}
-      </div>
-      <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
-        {post.title}
-      </h3>
+  const bodyBlock = (
+    <>
       {post.body
         ? post.body.split(/\n\n+/).map((para, i) => (
-            <p key={i} className="text-gray-300 mb-3 text-sm whitespace-pre-wrap">
+            <p key={i} className="text-gray-200 mb-3 text-base leading-relaxed whitespace-pre-wrap">
               {para.includes("contact@") ? (
                 <>
                   {para.split("contact@silverspinestudio.com")[0]}
                   <a
                     href={`mailto:${REQUEST_EMAIL}`}
-                    className="text-[#a77a23] font-semibold hover:underline"
+                    className="text-[#dfcfb5] font-semibold hover:underline"
                   >
                     {REQUEST_EMAIL}
                   </a>
@@ -194,7 +190,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
               ) : para.includes("silverspinestudio.com/contact") ? (
                 <>
                   {para.split("silverspinestudio.com/contact?topic=sites")[0]}
-                  <Link href="/contact?topic=sites" className="text-[#a77a23] font-semibold hover:underline">
+                  <Link href="/contact?topic=sites" className="text-[#dfcfb5] font-semibold hover:underline">
                     silverspinestudio.com/contact?topic=sites
                   </Link>
                   {para.split("silverspinestudio.com/contact?topic=sites")[1] || ""}
@@ -206,26 +202,45 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
           ))
         : null}
       {post.bullets?.length ? (
-        <ul className="text-gray-300 text-sm list-disc ml-5 mb-4">
+        <ul className="text-gray-200 text-base list-disc ml-5 mb-1 space-y-1.5">
           {post.bullets.map((b) => (
             <li key={b}>{b}</li>
           ))}
         </ul>
       ) : null}
+    </>
+  );
+
+  return (
+    <article className="relative overflow-visible rounded-xl bg-black/75 border border-[#dfcfb5]/55 p-5 hover:border-[#dfcfb5] transition backdrop-blur-[1px]">
+      {showConfetti ? <ConfettiBurst whenVisible delayMs={350} durationMs={11000} /> : null}
+      <div className="relative z-[1]">
+      <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
+        <span className="uppercase tracking-wide">{post.category || "Announcement"}</span>
+        {date.label ? <time dateTime={date.attr}>{date.label}</time> : null}
+      </div>
+      <h3 className="text-2xl font-semibold mb-3 leading-snug" style={{ color: GOLD }}>
+        {post.title}
+      </h3>
 
       {post.mediaType === "video" && post.mediaUrl ? (
-        <figure className="my-4 overflow-hidden rounded-xl border border-white/10 bg-black">
-          <video
-            className="w-full h-auto block"
+        <BlogVideo
+          src={post.mediaUrl}
+          poster={post.mediaPoster}
+          caption={post.mediaCaption}
+          label={post.title}
+        />
+      ) : null}
+
+      {post.mediaType === "figure" && figure ? <BlogFigures images={[figure]} /> : null}
+
+      {post.mediaType === "image" && post.mediaUrl ? (
+        <figure className="my-4 overflow-hidden rounded-xl border border-[#dfcfb5]/40 bg-black flex flex-col items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={post.mediaUrl}
-            poster={post.mediaPoster || undefined}
-            autoPlay={post.videoLive !== false}
-            muted={post.videoLive !== false}
-            loop={post.videoLive !== false}
-            controls={post.videoLive === false}
-            playsInline
-            preload="metadata"
-            aria-label={post.mediaCaption || post.title}
+            alt={post.mediaCaption || post.title}
+            className="w-full max-w-[420px] h-auto max-h-[min(72vh,720px)] object-contain block mx-auto"
           />
           {post.mediaCaption ? (
             <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
@@ -235,19 +250,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         </figure>
       ) : null}
 
-      {post.mediaType === "figure" && figure ? <BlogFigures images={[figure]} /> : null}
-
-      {post.mediaType === "image" && post.mediaUrl ? (
-        <figure className="my-4 overflow-hidden rounded-xl border border-white/10 bg-black">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={post.mediaUrl} alt={post.mediaCaption || post.title} className="w-full h-auto block" />
-          {post.mediaCaption ? (
-            <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
-              {post.mediaCaption}
-            </figcaption>
-          ) : null}
-        </figure>
-      ) : null}
+      {post.body || post.bullets?.length ? <div className="pinned-copy-scroll">{bodyBlock}</div> : null}
 
       <div className="flex flex-wrap gap-3 mt-4">
         {hasTimelineToggle && post.expandBody ? (
@@ -270,6 +273,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
       </div>
 
       <p className="text-gray-400 text-xs mt-4 italic">Happy Sleuthing.</p>
+      </div>
     </article>
   );
 }

@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import FixedMusicControl from "@/components/FixedMusicControl";
 
-/** Mute control — fixed upper-right. Language control removed for stability. */
+/** Mute overlay only on the storm gate. Public pages use the header control. */
 export default function TopRightControls() {
-  const router = useRouter();
   const [onGate, setOnGate] = useState(false);
-  const isHome = router.pathname === "/";
 
   useEffect(() => {
     const syncGate = () => {
@@ -21,9 +18,8 @@ export default function TopRightControls() {
     return () => window.removeEventListener("sss-storm-gate", syncGate);
   }, []);
 
-  // Home mute sits centered above the Welcome box — keep this control off Home
-  // so it never covers Shop when a tablet turns or the window shrinks.
-  if (isHome && !onGate) return null;
+  // Mute lives in the header on every public page. Only show this overlay on the storm gate.
+  if (!onGate) return null;
 
   const topClass = onGate
     ? "top-3 sm:top-4"

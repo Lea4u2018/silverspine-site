@@ -83,7 +83,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60"
         />
       </div>
       <div>
@@ -93,7 +93,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60"
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -102,7 +102,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
           <select
             value={format}
             onChange={(e) => setFormat(e.target.value)}
-            className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+            className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60"
           >
             <option value="EPUB">EPUB (phones, tablets, most e-readers)</option>
             <option value="PDF">PDF</option>
@@ -113,7 +113,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
           <select
             value={reviewSpot}
             onChange={(e) => setReviewSpot(e.target.value)}
-            className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60"
+            className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60"
           >
             <option>Social media</option>
             <option>Personal blog / website</option>
@@ -156,7 +156,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
         <button
           type="submit"
           disabled={!agree || status.state === "sending"}
-          className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50"
+          className="px-4 py-2 rounded-lg bg-[#dfcfb5] text-black font-semibold hover:opacity-90 disabled:opacity-50"
         >
           {status.state === "sending" ? "Sending…" : "Submit ARC request"}
         </button>

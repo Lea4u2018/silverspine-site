@@ -2,32 +2,23 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaRegCommentDots } from "react-icons/fa";
 import StarRating, { StarDisplay } from "@/components/StarRating";
-import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
-import { bindChromeVars } from "@/lib/chromeVars";
 
 export default function ReviewsPage() {
 
-  const GOLD = "#a77a23";
-  const NEBULA = "/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg";
- const DISC_LOGO = "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png";
-  // header sizing for disc logo
-  const headerRef = useRef(null);
+  const GOLD = "#dfcfb5";
   useEffect(() => {
     if (typeof document === "undefined") return;
     const root = document.documentElement;
     root.classList.add("sss-reviews-lock");
     return () => {
       root.classList.remove("sss-reviews-lock");
-      root.style.removeProperty("--header-h");
-      root.style.removeProperty("--footer-h");
     };
   }, []);
-  useEffect(() => bindChromeVars(headerRef.current), []);
 
   // form
   const [rating, setRating] = useState(5.0);
@@ -78,13 +69,13 @@ export default function ReviewsPage() {
   }, []);
 
   return (
-    <div className="reviews-page bg-black text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden">
+    <div className="reviews-page text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden">
       <StormAtmosphere mood="ash" />
       <Head>
         <title>Reviews | Silver Spine Studio™</title>
         <meta name="description" content="Leave a review and read what others are saying." />
         <style>{`
-          :root { --gold: ${GOLD}; --header-h: 140px; --footer-h: 72px; }
+          :root { --gold: ${GOLD}; --header-h: 56px; --footer-h: 136px; }
 
           @keyframes twinkle {
             0%, 100% { opacity: 0.3; transform: scale(1); }
@@ -97,28 +88,7 @@ export default function ReviewsPage() {
             animation-delay: var(--delay, 0s);
           }
 
-          .z-header { z-index: 50; }
           .z-content { z-index: 20; position: relative; }
-
-          /* ribbons */
-          .nebula-ribbon, .bottom-nebula {
-            position: relative; width: 100%; height: 140px;
-            background: #000; outline: 12px solid #000; overflow: hidden;
-          }
-          .nebula-ribbon { margin: 22px 0 26px; box-shadow: 0 16px 48px rgba(0,0,0,0.55); }
-
-          /* keep the bottom band position the same, but ensure it's UNDER the footer */
-          .bottom-nebula { 
-            margin: 14px 0 0; 
-            outline-width: 8px; 
-            box-shadow: 0 -16px 48px rgba(0,0,0,0.55);
-            z-index: 10;                  /* footer sits above at z 40 */
-          }
-          .nebula-ribbon img, .bottom-nebula img {
-            width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
-          }
-          .nebula-title { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
-          .nebula-title h1 { color:#000; font-weight:800; letter-spacing:.02em; margin-top:-4px; font-size: clamp(2.2rem, 6vw, 3.5rem); }
 
           /* cards */
           .sheet {
@@ -127,161 +97,29 @@ export default function ReviewsPage() {
           }
 
           /* LIFT content up slightly without touching the nebula bands */
-          .boxes-offset { margin-top: 8px; }                /* was 22/32px */
+          .boxes-offset { margin-top: 8px; }
           @media (min-width: 768px){ .boxes-offset { margin-top: 12px; } }
-
-          /* tighter spacing around the thunder toggle */
-          .toggle-tight { margin-top: -4px; margin-bottom: 10px; } /* was mb-20ish accumulative */
-
-          @media (max-width: 768px){
-            .nebula-ribbon, .bottom-nebula { height: 110px; }
-            .nebula-ribbon { margin: 16px 0 18px; }
-            .bottom-nebula { margin: 10px 0 0; outline-width: 8px; }
-          }
 
           /* Ensure page scrolls normally */
           html, body { margin:0; background:#000; height:auto; overflow-y:auto; }
           #__next { height:auto; overflow:visible; }
 
-          /* Reviews chrome: header + footer stay put; page content scrolls */
+          /* Reviews chrome: page content scrolls; global header/footer stay frozen */
           html.sss-reviews-lock #site-footer {
-            padding-top: 0.4rem !important;
-            padding-bottom: 0.4rem !important;
-          }
-          html.sss-reviews-lock #site-footer .sss-footer-icons {
-            flex-direction: row !important;
-            flex-wrap: nowrap !important;
-            gap: 0.4rem 0.55rem !important;
-          }
-          html.sss-reviews-lock #site-footer .sss-footer-icon-group {
-            flex-wrap: nowrap !important;
-            gap: 0.3rem !important;
-          }
-          html.sss-reviews-lock #site-footer .sss-footer-icons > span {
-            width: 1px !important;
-            height: 1.6rem !important;
-          }
-          html.sss-reviews-lock #site-footer a[aria-label] {
-            width: 1.65rem !important;
-            height: 1.65rem !important;
-          }
-          html.sss-reviews-lock #site-footer a[aria-label] svg {
-            width: 0.75rem !important;
-            height: 0.75rem !important;
-          }
-          html.sss-reviews-lock #site-footer .sss-footer-credits {
-            display: none !important;
-          }
-          html.sss-reviews-lock #site-footer nav[aria-label="Legal"] {
-            margin-top: 0.2rem !important;
-            flex-wrap: nowrap !important;
-            font-size: 10px !important;
-          }
-          html.sss-reviews-lock #site-footer p {
-            font-size: 10px !important;
-            line-height: 1.25 !important;
+            position: fixed !important;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 40;
           }
 
           @media (min-width: 768px) {
-            html.sss-reviews-lock,
-            html.sss-reviews-lock body,
-            html.sss-reviews-lock #__next {
-              height: 100%;
-              overflow: hidden;
-            }
-            html.sss-reviews-lock #__next > div.bg-black {
-              height: 100dvh;
-              max-height: 100dvh;
-              display: flex;
-              flex-direction: column;
-              overflow: hidden;
-            }
-            html.sss-reviews-lock #__next > div.bg-black > main {
-              flex: 1 1 auto;
-              min-height: 0;
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-            }
-            html.sss-reviews-lock .reviews-page {
-              flex: 1 1 auto;
-              min-height: 0;
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-            }
             html.sss-reviews-lock .reviews-page > main {
-              flex: 1 1 auto;
-              min-height: 0;
               overflow-x: hidden;
-              overflow-y: auto;
-            }
-            html.sss-reviews-lock #site-footer {
-              flex-shrink: 0;
-              position: relative;
-              z-index: 40;
-            }
-          }
-
-          @media (max-width: 767px) {
-            html.sss-reviews-lock #site-footer {
-              position: fixed;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              z-index: 40;
-              box-shadow: 0 -8px 24px rgba(0,0,0,0.45);
-            }
-            html.sss-reviews-lock .reviews-page {
-              padding-bottom: calc(var(--footer-h) + 8px);
             }
           }
         `}</style>
       </Head>
-
-      {/* ===== HEADER ===== */}
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-header bg-gradient-to-b from-gray-900 to-gray-800 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-5 max-w-[1400px] min-w-0">
-          <div className="flex items-center shrink-0">
-            <Link
-              href="/"
-              aria-label="Silver Spine Studio — Home"
-              className="flex items-center gap-3 md:gap-4"
-            >
-              <span className="sss-logo-halo">
-                <Image
-                  src={DISC_LOGO}
-                  alt="Silver Spine Studio"
-                  width={512}
-                  height={512}
-                  priority
-                  className="sss-logo-glow disc-logo select-none"
-                  style={{
-                    height: "clamp(56px, calc(var(--header-h) - 28px), 108px)",
-                    width: "auto",
-                  }}
-                />
-              </span>
-              <span
-                className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
-                style={{
-                  color: "#eef2f7",
-                  textShadow:
-                    "0 0 10px rgba(201,206,214,0.20), 0 2px 10px rgba(0,0,0,0.82)",
-                }}
-              >
-                Silver Spine Studio
-                <span className="align-super text-sm md:text-base">™</span>
-              </span>
-            </Link>
-          </div>
-
-          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end tracking-wide" />
-        </div>
-      </header>
 
       {/* stars layer */}
       <div className="stars">
@@ -302,15 +140,16 @@ export default function ReviewsPage() {
         ))}
       </div>
 
-      {/* top ribbon */}
-      <div className="nebula-ribbon">
-        <img src={NEBULA} alt="Nebula ribbon" />
-        <div className="nebula-title"><h1>Reviews</h1></div>
-      </div>
+      <h1
+        className="relative z-content text-center text-4xl md:text-5xl font-extrabold tracking-tight pt-8 pb-2"
+        style={{ color: GOLD, textShadow: "0 2px 10px rgba(0,0,0,0.82)" }}
+      >
+        Reviews
+      </h1>
 
       {/* ===== MAIN ===== */}
-      <main className="flex-1 z-content px-6 md:px-8 pb-0">
-        <section className="mx-auto w-full max-w-6xl boxes-offset">
+      <main className="flex-1 z-content px-6 md:px-8 pb-10">
+        <section className="mx-auto w-full max-w-[1140px] boxes-offset">
           {/* stats row */}
           <div className="flex items-center justify-between mb-5">
             <div className="text-gray-300">
@@ -404,7 +243,7 @@ export default function ReviewsPage() {
                     </FormFieldLabel>
                     <input
                       id="name"
-                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 focus:outline-none focus:border-[#a77a23] transition"
+                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 focus:outline-none focus:border-[#dfcfb5] transition"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g., A. Reader"
@@ -419,7 +258,7 @@ export default function ReviewsPage() {
                     </FormFieldLabel>
                     <textarea
                       id="text"
-                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 h-28 resize-y focus:outline-none focus:border-[#a77a23] transition"
+                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 min-h-[12rem] text-base resize-y focus:outline-none focus:border-[#dfcfb5] transition"
                       value={text}
                       onChange={(e) => setText(e.target.value)}
                       placeholder="Share your honest thoughts (no spoilers please!)"
@@ -433,7 +272,7 @@ export default function ReviewsPage() {
                     <button
                       type="submit"
                       disabled={submitting}
-                      className="px-5 py-3 rounded-xl bg-[#a77a23] text-black font-semibold hover:opacity-90 transition disabled:opacity-60"
+                      className="px-5 py-3 rounded-xl bg-[#dfcfb5] text-black font-semibold hover:opacity-90 transition disabled:opacity-60"
                     >
                       {submitting ? "Sending…" : "Submit Review"}
                     </button>
@@ -446,12 +285,12 @@ export default function ReviewsPage() {
             <div className="sheet">
               <div className="p-5 md:p-7">
                 <h3 className="text-xl font-semibold mb-4" style={{ color: GOLD }}>What readers are saying</h3>
-                <div className="space-y-4">
+                <div className="space-y-4 max-h-[32rem] overflow-y-auto pr-1">
                   {reviews.length > 0 ? (
                     reviews.map((r) => (
                       <article
                         key={r.id}
-                        className="rounded-xl p-4 border border-white/10 transition hover:border-[#a77a23]/40"
+                        className="rounded-xl p-4 border border-white/10 transition hover:border-[#dfcfb5]/40"
                         style={{ background: "#0d0d0d" }}
                       >
                         <div className="flex items-center justify-between mb-2">
@@ -472,11 +311,6 @@ export default function ReviewsPage() {
           </div>
         </section>
       </main>
-
-      {/* bottom ribbon */}
-      <div className="bottom-nebula">
-        <img src={NEBULA} alt="Nebula footer ribbon" />
-      </div>
     </div>
   );
 }

@@ -3,27 +3,18 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import SiteNav from "@/components/SiteNav";
-import StormAtmosphere from "@/components/StormAtmosphere";
-import FixedMusicControl from "@/components/FixedMusicControl";
 import { useCinematicAudio } from "@/components/CinematicAudio";
 import { writePianoMuted } from "@/lib/cinematicAudio";
 import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
-import { bindChromeVars } from "@/lib/chromeVars";
 import { buildHomeSchemaGraph } from "@/lib/authorIdentity";
-import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
-import { NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
+import LaunchListForm from "@/components/LaunchListForm";
+import { DIGITAL_COPY_GIVEAWAY, NOVEL_PRICING, PREORDER_STATUS } from "@/lib/store";
+import { BookMark, QuillMark, NeighborsMark, ShopMark } from "@/components/HubMarks";
 
 export default function Home() {
   const audioRef = useRef(null);
   const videoRef = useRef(null);
-  const headerRef = useRef(null);
   const { ensurePlaying: ensurePiano } = useCinematicAudio();
-
-  useEffect(() => {
-    // Header-only — observing the footer fed a resize/jump loop with hero height
-    return bindChromeVars(headerRef.current);
-  }, []);
 
   const THUNDER_VOLUME = 0.38;
   const THUNDER_PREF_KEY = "sss-home-thunder-muted";
@@ -240,16 +231,9 @@ export default function Home() {
     }, 700);
   };
 
-  // Keep the loop short — long duplicated tracks race past on phones even with slow durations.
-  const SERIES_TICKER_ITEMS = Array.from(
-    { length: 2 },
-    () =>
-      "The Silver Spine Studio™ Series: The Seven-Fold Chronicle — thrillers forged in storm and consequence"
-  );
-  // Short segments read cleaner than one giant uppercase sentence.
   const LAUNCH_TICKER_ITEMS = Array.from({ length: 2 }, () => [
     { label: "Sneak Peek $4.99 — Prologue & Ch. 1–2 · Insider whitelist", outNow: true },
-    { label: "3 lucky winners will each receive a FULL digital copy — join the launch list · Happy Sleuthing!", outNow: false },
+    { label: "Drawing for 3 full digital copies in mid-October 2026 from the launch list and left reviews. No purchase necessary.", outNow: false },
     { label: PREORDER_STATUS.digitalTicker, outNow: false },
     { label: PREORDER_STATUS.hardcoverTicker, outNow: false },
     { label: `Official release · ${NOVEL_PRICING.releaseLabel} · Regular ${NOVEL_PRICING.retail}`, outNow: false },
@@ -266,7 +250,7 @@ export default function Home() {
           >
             <div className="storm-gate-flash" aria-hidden="true" />
             <div className="relative z-10 max-w-xl mx-auto">
-              <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#a77a23" }}>
+              <p className="text-xs md:text-sm font-bold uppercase tracking-[0.3em] mb-4" style={{ color: "#dfcfb5" }}>
                 Silver Spine Studio™
               </p>
               <h2
@@ -291,8 +275,7 @@ export default function Home() {
       : null;
 
   return (
-    <div className="bg-black text-gray-100 relative">
-      <StormAtmosphere mood="threshold" />
+    <div className="text-gray-100 relative">
       {stormGate}
 
       <Head>
@@ -333,8 +316,8 @@ export default function Home() {
         />
         <style>{`
           :root {
-            --header-h: 140px;
-            --footer-h: 72px;
+            --header-h: 56px;
+            --footer-h: 136px;
           }
 
           @keyframes twinkle { 0%,100% { opacity: .3 } 50% { opacity: 1 } }
@@ -344,9 +327,11 @@ export default function Home() {
           .ticker-wrap {
             position: relative;
             overflow: hidden;
-            background: rgba(0,0,0,0.95);
-            border-top: 1px solid rgba(167,122,35,0.3);
-            border-bottom: 1px solid rgba(0,0,0,0.4);
+            width: 100%;
+            padding: 0.42rem 0;
+            background: rgba(0,0,0,0.92);
+            border-top: 1px solid rgba(223,207,181,0.35);
+            border-bottom: 1px solid rgba(223,207,181,0.22);
           }
           @media (min-width: 769px) {
             .ticker-wrap {
@@ -433,12 +418,55 @@ export default function Home() {
             }
             .ticker-item::after { display: none; }
             .storm-gate-flash { animation: none !important; opacity: 0 !important; }
+            .home-book-photo { transform: none !important; }
           }
 
           .hero-frame {
-            height: clamp(60vh, calc(100vh - var(--header-h) - var(--footer-h)), 78vh);
+            height: calc(100vh - var(--header-h) - var(--footer-h) - 2.4rem);
             overflow: hidden;
-            isolation: isolate;
+          }
+          .home-book-stage {
+            position: relative;
+            z-index: 8;
+            display: block;
+            width: min(70%, 300px);
+            margin: 0.25rem auto 0.5rem;
+          }
+          @media (min-width: 768px) {
+            .home-book-stage {
+              position: absolute;
+              left: 11%;
+              top: 4%;
+              width: auto;
+              max-width: min(50vw, 580px);
+              max-height: calc(100dvh - var(--footer-h) - 17rem);
+              margin: 0;
+            }
+          }
+          .home-book-photo {
+            width: auto;
+            height: auto;
+            max-width: min(50vw, 580px);
+            max-height: calc(100dvh - var(--footer-h) - 17rem);
+            display: block;
+            object-fit: contain;
+            object-position: left top;
+            filter: drop-shadow(0 18px 28px rgba(0,0,0,0.72));
+            transition: transform 0.35s ease;
+          }
+          .home-book-stage:hover .home-book-photo {
+            transform: translateY(-4px);
+          }
+          .hero-copy-wrap {
+            position: relative;
+            z-index: 10;
+          }
+          @media (min-width: 768px) {
+            .hero-copy-wrap {
+              display: flex;
+              justify-content: flex-end;
+              padding-right: 3%;
+            }
           }
           /*
             Real lightning bolts through the hero (not a blurry pulse light).
@@ -446,24 +474,22 @@ export default function Home() {
           */
           .hero-storm-wrap {
             position: absolute;
-            left: 0;
-            right: 0;
-            top: 14%;
-            bottom: 0;
-            z-index: 10;
+            inset: 0;
+            z-index: 1;
             overflow: hidden;
             pointer-events: none;
-            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 100%);
-            mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 100%);
+            /* Blend the video with the mountain photo. Mix-blend on the video
+               itself fails once this wrap has a z-index (it covers the scene). */
+            mix-blend-mode: screen;
           }
           .hero-storm {
             width: 100%;
             height: 115%;
             object-fit: cover;
-            object-position: center 55%;
-            opacity: 0.85;
-            mix-blend-mode: screen;
-            filter: contrast(1.2) brightness(1.08) saturate(1.1);
+            object-position: center 45%;
+            /* White bolts only — the mp4 is green; grayscale keeps the cover’s night color */
+            opacity: 0.32;
+            filter: grayscale(1) contrast(1.7) brightness(0.95);
           }
           .hero-top-shade {
             position: absolute;
@@ -516,82 +542,116 @@ export default function Home() {
             justify-content: center;
             padding: 0.9rem 1.6rem;
             border-radius: 999px;
-            border: 1px solid rgba(167,122,35,0.7);
-            background: #a77a23;
+            border: 1px solid rgba(223,207,181,0.7);
+            background: #dfcfb5;
             color: #000;
             font-weight: 800;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            box-shadow: 0 10px 30px rgba(167,122,35,0.28);
+            box-shadow: 0 10px 30px rgba(223,207,181,0.28);
             transition: transform 0.2s ease, background 0.2s ease;
           }
           .storm-enter-btn:hover {
             transform: translateY(-2px);
-            background: #c49231;
+            background: #c5a059;
           }
+          .home-cover-title {
+            font-family: "Cinzel", Palatino, Georgia, serif;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+          }
+          .launch-gold-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem 1.75rem;
+            border-radius: 4px;
+            font-family: "Cinzel", Palatino, Georgia, serif;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            border: 2px solid #dfcfb5;
+          }
+          .launch-gold-btn.solid {
+            background: #dfcfb5;
+            color: #111;
+          }
+          .launch-gold-btn.solid:hover { background: #c5a059; }
+          .launch-gold-btn.scroll-cue {
+            padding: 0.35rem 1.05rem 0.28rem;
+            font-size: 0.68rem;
+            letter-spacing: 0.12em;
+            border-width: 1px;
+            line-height: 1.1;
+            gap: 0;
+            bottom: calc(var(--footer-h) + 8rem);
+          }
+          .launch-gold-btn.scroll-cue .scroll-cue-arrow {
+            font-size: 0.7rem;
+            line-height: 1;
+            margin-top: -0.05rem;
+          }
+          .launch-gold-btn.line {
+            background: #dfcfb5;
+            color: #111;
+          }
+          .launch-gold-btn.line:hover { background: #c5a059; }
+          .hub-mark {
+            flex-shrink: 0;
+            color: #dfcfb5;
+            width: 3.5rem;
+            height: 3.5rem;
+          }
+          .hub-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+            max-width: 920px;
+            margin: 0 auto;
+          }
+          @media (min-width: 640px) {
+            .hub-grid { grid-template-columns: repeat(2, 1fr); }
+          }
+          .hub-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            text-align: left;
+            position: relative;
+            padding: 1.5rem 2.5rem 1.5rem 1.5rem;
+          }
+          .hub-card-arrow {
+            position: absolute;
+            right: 1rem;
+            bottom: 1rem;
+            color: #dfcfb5;
+            font-size: 1.05rem;
+          }
+          .launch-card {
+            border: 1px solid rgba(223, 207, 181, 0.45);
+            background: rgba(30, 36, 44, 0.55);
+          }
+          .launch-card:hover { border-color: #dfcfb5; }
         `}</style>
       </Head>
 
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-2 md:py-3 min-w-0">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
-            {logoSrc && !useTextLogo ? (
-              <span className="sss-logo-halo">
-                <img
-                  src={logoSrc}
-                  alt="Silver Spine Studio logo"
-                  className="sss-logo-glow h-[72px] md:h-[108px] lg:h-[122px] w-auto select-none"
-                  draggable="false"
-                />
-              </span>
-            ) : (
-              <span className="text-2xl md:text-3xl font-extrabold select-none" style={{ color: SILVER }}>
-                Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
-              </span>
-            )}
-          </Link>
-
-          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
-        </div>
-
-        <div className="ticker-wrap notranslate" translate="no">
-          <div
-            className="ticker-track text-[0.9rem] md:text-base tracking-wide border-b border-white/5"
-            style={{ color: "#f5edd7", padding: "6px 0" }}
-            aria-label="Series announcement ticker"
-          >
-            <div className="ticker-group">
-              {SERIES_TICKER_ITEMS.map((t, i) => (
-                <span className="ticker-item" key={`a-${i}`}>{t}</span>
-              ))}
-            </div>
-            <div className="ticker-group" aria-hidden="true">
-              {SERIES_TICKER_ITEMS.map((t, i) => (
-                <span className="ticker-item" key={`b-${i}`}>{t}</span>
-              ))}
-            </div>
-          </div>
-
-          <div
-            className="ticker-track ticker-launch text-[0.8rem] md:text-sm tracking-wide font-semibold"
-            style={{ color: "#f5edd7", padding: "5px 0", background: "rgba(0,0,0,0.2)" }}
-            aria-label="Launch alert: out now"
-          >
+      <main className="relative z-10">
+        <div className="ticker-wrap" role="region" aria-label="Studio news ticker">
+          <div className="ticker-track ticker-launch text-[0.8rem] md:text-[0.86rem] text-[#dfcfb5]">
             <div className="ticker-group">
               {LAUNCH_TICKER_ITEMS.map((item, i) => (
-                <span className="ticker-item" key={`c-${i}`}>
-                  {item.outNow && <span className="ticker-out-now">OUT NOW:</span>}
+                <span key={`t1-${i}`} className="ticker-item">
+                  {item.outNow ? <span className="ticker-out-now">OUT NOW</span> : null}
                   {item.label}
                 </span>
               ))}
             </div>
             <div className="ticker-group" aria-hidden="true">
               {LAUNCH_TICKER_ITEMS.map((item, i) => (
-                <span className="ticker-item" key={`d-${i}`}>
-                  {item.outNow && <span className="ticker-out-now">OUT NOW:</span>}
+                <span key={`t2-${i}`} className="ticker-item">
+                  {item.outNow ? <span className="ticker-out-now">OUT NOW</span> : null}
                   {item.label}
                 </span>
               ))}
@@ -599,86 +659,157 @@ export default function Home() {
           </div>
         </div>
 
-        <LaunchMilestoneCountdown variant="home" />
+        <section className="relative border-b border-[#dfcfb5]/20">
+          <div className="relative w-full hero-frame">
+            <img
+              src="/covers/hero-user-highway.jpg"
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover z-0"
+              style={{ objectPosition: "center 52%" }}
+            />
 
-      </header>
-
-      <main className="relative z-10 overflow-hidden flex items-center justify-center text-center">
-        <div className="relative w-full hero-frame">
-          <img
-            src="/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg"
-            alt="Nebula background"
-            className="absolute inset-0 w-full h-full object-cover object-center z-0 contrast-110 saturate-125"
-          />
-
-          <div className="hero-storm-wrap overlay-fix" aria-hidden="true">
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="auto"
-              className="hero-storm"
-            >
-              <source src="/storm-lightning.mp4" type="video/mp4" />
-            </video>
-          </div>
-
-          <div className="absolute inset-0 z-20 overlay-fix">
-            {stars.map((s, i) => (
-              <div
-                key={i}
-                className="absolute bg-white rounded-full"
-                style={{
-                  top: `${Math.max(8, s.top)}%`,
-                  left: `${s.left}%`,
-                  width: `${s.size}px`,
-                  height: `${s.size}px`,
-                  opacity: s.opacity,
-                  animation: `twinkle ${3 + Math.random() * 3}s ease-in-out infinite`,
-                  animationDelay: `${s.delay}s`,
-                }}
-              />
-            ))}
-          </div>
-
-          <div className="absolute inset-0 bg-[rgba(10,14,22,0.16)] z-30 overlay-fix" />
-
-          <div className="hero-top-shade" aria-hidden="true" />
-
-          <div className="absolute inset-0 flex items-center justify-center z-50 px-4">
-            <div className="flex flex-col items-center gap-3 md:gap-4">
-              <FixedMusicControl embedded />
-              <div className="inline-block rounded-xl bg-black/35 backdrop-blur-[1.5px] px-4 py-3 md:px-6 md:py-4 shadow-[0_6px_24px_rgba(0,0,0,0.45)]">
-              <h1
-                className="text-5xl md:text-7xl font-extrabold mb-2 md:mb-3 tracking-wide leading-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
-                style={{ color: SILVER }}
+            <div className="hero-storm-wrap overlay-fix" aria-hidden="true">
+              <video
+                ref={videoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="hero-storm"
               >
-                Welcome to Silver Spine Studio
-                <span className="align-super text-2xl">™</span>
-              </h1>
+                <source src="/storm-lightning.mp4" type="video/mp4" />
+              </video>
+            </div>
 
-              <h2 className="text-lg md:text-2xl text-gray-100 mb-2 tracking-widest italic drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-                Where thrillers strike like lightning…
-              </h2>
+            <Link
+              href="/books"
+              className="home-book-stage"
+              aria-label="The Beautiful Beast — hardcover"
+            >
+              <img
+                src="/covers/1-the-beautiful-beast-hardcover.png"
+                alt="The Beautiful Beast hardcover by Leameso James"
+                className="home-book-photo"
+                draggable="false"
+              />
+            </Link>
 
-              <p className="text-base md:text-xl text-gray-100 max-w-[60ch] mx-auto italic tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Stories are forged in storms of consequence, as beauty and danger share the same breath.
-              </p>
+            <div className="hero-copy-wrap relative z-10 px-6 py-10 md:py-14 max-w-[1140px] mx-auto">
+              <div className="w-full md:max-w-[32rem] text-center">
+                  <h1
+                    className="home-cover-title text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.25] mb-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] uppercase"
+                    style={{ color: "#dfcfb5" }}
+                  >
+                    The storm is coming.
+                    <br />
+                    Prepare for The Beautiful Beast.
+                  </h1>
+                  <p className="text-base md:text-lg text-[#c9d0d8] mb-8">
+                    The gripping new mystery thriller by{" "}
+                    <strong style={{ color: "#dfcfb5" }}>Leameso James</strong>
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
+                    <Link href="#email-capture-anchor" className="launch-gold-btn solid">
+                      Join giveaway
+                    </Link>
+                    <Link href="/shop" className="launch-gold-btn solid">
+                      Buy sneak peek
+                    </Link>
+                  </div>
+                  <p className="text-base md:text-lg text-[#c9d0d8] leading-relaxed">
+                    Drawing for <strong className="not-italic" style={{ color: "#dfcfb5" }}>{DIGITAL_COPY_GIVEAWAY.winners} full digital copies</strong> in {DIGITAL_COPY_GIVEAWAY.announceLabel} from the launch list and left reviews. No purchase necessary.
+                  </p>
+                </div>
+            </div>
+
+            <a
+              href="#home-more"
+              className="launch-gold-btn solid scroll-cue absolute left-1/2 -translate-x-1/2 z-20 no-underline flex-col"
+            >
+              <span>Scroll for more</span>
+              <span aria-hidden="true" className="scroll-cue-arrow">▾</span>
+            </a>
+            <audio
+              id="sss-home-thunder"
+              ref={audioRef}
+              src="/thunder_rumble.mp3"
+              preload="auto"
+              playsInline
+              loop
+            />
+          </div>
+        </section>
+
+        <section id="home-more" className="py-14 md:py-20 px-6 bg-black/55 border-b border-[#dfcfb5]/20">
+          <div className="launch-card max-w-[1140px] mx-auto rounded p-8 md:p-12">
+            <h2 className="text-xl md:text-2xl tracking-[0.18em] uppercase mb-8 md:mb-10 text-center" style={{ color: "#dfcfb5" }}>
+              Meet the author &amp; the studio
+            </h2>
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="w-[120px] h-[140px] md:w-[132px] md:h-[154px] shrink-0 overflow-hidden rounded-sm border-2 bg-black" style={{ borderColor: "#dfcfb5" }}>
+                <img src="/author.jpg" alt="Leameso James" className="w-full h-full object-cover object-top" draggable="false" />
               </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-base md:text-lg text-white font-semibold mb-3 tracking-[0.08em] uppercase">
+                  Welcome to Silver Spine Studio.
+                </h3>
+                <p className="text-gray-400 leading-relaxed mb-4 text-sm md:text-[0.95rem]">
+                  Leameso James writes atmospheric mysteries and storm-soaked thrillers. This studio is the home of{" "}
+                  <em>The Beautiful Beast</em> and the seven-fold chronicle.
+                </p>
+                <Link href="/about" className="text-sm font-bold tracking-wider hover:text-white uppercase" style={{ color: "#dfcfb5" }}>
+                  [ Learn more about Leameso James ]
+                </Link>
+              </div>
+              {logoSrc && !useTextLogo ? (
+                <div className="hidden md:block shrink-0 md:border-l md:pl-8" style={{ borderColor: "rgba(167,122,35,0.25)" }}>
+                  <img src={logoSrc} alt="Silver Spine Studio" className="h-20 w-auto" draggable="false" />
+                </div>
+              ) : null}
             </div>
           </div>
+        </section>
 
-          <audio
-            id="sss-home-thunder"
-            ref={audioRef}
-            src="/thunder_rumble.mp3"
-            preload="auto"
-            playsInline
-            loop
-          />
-        </div>
+        <section className="py-14 md:py-20 px-6 bg-[#0b0d10]">
+          <div className="max-w-[1140px] mx-auto">
+            <h2 className="text-xl md:text-2xl tracking-[0.18em] text-center uppercase mb-10" style={{ color: "#dfcfb5" }}>
+              Explore the hub
+            </h2>
+            <div className="hub-grid">
+              {[
+                { href: "/books", label: "Books", copy: "The Beautiful Beast and the seven-fold chronicle.", Mark: BookMark },
+                { href: "/blog", label: "Blog", copy: "Launch notes, character work, and studio news.", Mark: QuillMark },
+                { href: "/neighbors", label: "Neighbors", copy: "Fellow sleuths and the studio community.", Mark: NeighborsMark },
+                { href: "/shop", label: "Shop", copy: `Extended Sneak Peek ${NOVEL_PRICING.sneakPeek} and live storefronts.`, Mark: ShopMark },
+              ].map((card) => (
+                <Link
+                  key={card.href}
+                  href={card.href}
+                  className="launch-card hub-card rounded-sm transition-transform duration-200 hover:-translate-y-1"
+                >
+                  <card.Mark />
+                  <div className="min-w-0 pr-2">
+                    <h3 className="text-base mb-1 tracking-[0.16em] uppercase" style={{ color: "#dfcfb5" }}>{card.label}</h3>
+                    <p className="text-sm text-gray-300 mb-2">{card.copy}</p>
+                    <span className="text-xs font-mono" style={{ color: "#dfcfb5" }}>{card.href}</span>
+                  </div>
+                  <span className="hub-card-arrow" aria-hidden="true">→</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="email-capture-anchor" className="py-16 px-6 bg-black/55 border-t border-[#dfcfb5]/15">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-2xl text-center mb-2" style={{ color: "#dfcfb5" }}>Join the launch list</h3>
+            <p className="text-sm text-gray-300 mb-6 text-center leading-relaxed">
+              Enter the {DIGITAL_COPY_GIVEAWAY.announceLabel} drawing from the launch list and left reviews. No purchase necessary.
+            </p>
+            <LaunchListForm />
+          </div>
+        </section>
       </main>
     </div>
   );

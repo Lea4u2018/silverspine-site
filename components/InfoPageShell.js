@@ -1,75 +1,22 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
-import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
-import { bindChromeVars } from "@/lib/chromeVars";
 
-const GOLD = "#a77a23";
-const SILVER = "#c9ced6";
+const GOLD = "#dfcfb5";
 
 /**
  * Shared shell for Privacy / FAQ / Refunds — one calm reading composition.
  */
 export default function InfoPageShell({ title, description, eyebrow, tone, children }) {
-  const headerRef = useRef(null);
-  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
-  const [useTextLogo, setUseTextLogo] = useState(false);
-
-  useEffect(() => bindChromeVars(headerRef.current), []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let cancelled = false;
-    const tryLoad = (i = 0) => {
-      if (i >= DISC_LOGO_CANDIDATES.length) {
-        if (!cancelled) setUseTextLogo(true);
-        return;
-      }
-      const img = new Image();
-      img.onload = () => {
-        if (!cancelled) {
-          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
-          setUseTextLogo(false);
-        }
-      };
-      img.onerror = () => tryLoad(i + 1);
-      img.src = DISC_LOGO_CANDIDATES[i];
-    };
-    tryLoad();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
-    <div className="bg-black text-gray-100 min-h-screen">
+    <div className="text-gray-100 min-h-screen">
       <StormAtmosphere mood="quiet" />
       <Head>
         <title>{title} | Silver Spine Studio™</title>
         <meta name="description" content={description} />
         <style>{`
-          :root { --header-h: 140px; --footer-h: 72px; }
+          :root { --header-h: 56px; --footer-h: 136px; }
           .info-frame { min-height: calc(100vh - var(--header-h) - var(--footer-h)); }
-          .nebula {
-            position: relative;
-            width: 100%;
-            background-image: url('/FB_Cover_Nebula_DarkerShadows_Fix_1640x624.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: saturate(1.12) contrast(1.08);
-          }
-          .nebula-top { height: 40px; }
-          .nebula-bottom { height: 72px; margin-top: -8px; }
-          .mask-top {
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-          }
-          .mask-bottom {
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-            mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-          }
           .info-prose h2 {
             color: ${GOLD};
             font-size: 1.05rem;
@@ -138,33 +85,7 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
         `}</style>
       </Head>
 
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 shrink-0" aria-label="Silver Spine Studio — Home">
-            {logoSrc && !useTextLogo ? (
-              <span className="sss-logo-halo">
-                <img
-                  src={logoSrc}
-                  alt="Silver Spine Studio logo"
-                  className="sss-logo-glow h-[64px] md:h-[88px] w-auto select-none"
-                  draggable="false"
-                />
-              </span>
-            ) : (
-              <span className="text-xl md:text-2xl font-extrabold" style={{ color: SILVER }}>
-                Silver Spine Studio<span className="align-super text-sm">™</span>
-              </span>
-            )}
-          </Link>
-          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
-        </div>
-      </header>
-
       <div className="info-frame relative z-10">
-        <div className="nebula nebula-top mask-top" aria-hidden="true" />
         <main className="relative z-10 max-w-3xl mx-auto px-4 md:px-6 py-8 md:py-12">
           <p className="text-xs font-bold uppercase tracking-[0.28em] mb-3" style={{ color: GOLD }}>
             {eyebrow || "Silver Spine Studio™"}
@@ -187,12 +108,11 @@ export default function InfoPageShell({ title, description, eyebrow, tone, child
           </div>
           <p className="mt-6 text-center text-xs text-gray-500">
             Questions?{" "}
-            <Link href="/contact" className="text-[#a77a23] hover:underline">
+            <Link href="/contact" className="text-[#dfcfb5] hover:underline">
               Contact us
             </Link>
           </p>
         </main>
-        <div className="nebula nebula-bottom mask-bottom" aria-hidden="true" />
       </div>
     </div>
   );

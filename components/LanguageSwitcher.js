@@ -71,10 +71,10 @@ export default function LanguageSwitcher({ embedded = false }) {
         title="Choose a language. English is always available. Your choice follows as you click through the site."
         className={[
           "notranslate min-w-[10rem] max-w-[15rem] sm:min-w-[12rem] sm:max-w-[17rem]",
-          "rounded-full border border-[#a77a23]/70 bg-black/85 text-[#f5f0e4]",
+          "rounded-full border border-[#dfcfb5]/70 bg-black/85 text-[#f5f0e4]",
           "px-2.5 py-1.5 text-[11px] sm:text-xs md:text-sm font-semibold tracking-wide",
           "shadow-[0_6px_16px_rgba(0,0,0,0.45)] outline-none",
-          "focus:border-[#c49231] focus:ring-2 focus:ring-[#a77a23]/35",
+          "focus:border-[#c5a059] focus:ring-2 focus:ring-[#dfcfb5]/35",
         ].join(" ")}
         aria-label="Choose language. First option is English."
       >

@@ -6,19 +6,17 @@ import { useEffect, useRef, useState } from "react";
 import LaunchListForm from "@/components/LaunchListForm";
 import ArcRequestForm from "@/components/ArcRequestForm";
 import PinnedBlogCard from "@/components/PinnedBlogCard";
+import BlogVideo from "@/components/BlogVideo";
+import BlogRichBody from "@/components/BlogRichBody";
 import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
-import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
-import { bindChromeVars } from "@/lib/chromeVars";
 import { readPreferredLang } from "@/lib/i18n";
 
 export default function Blog() {
 
   // ---- brand / assets ----
-  const GOLD = "#a77a23";
- const DISC_LOGO = "/Final_Silver_Spine_Circular_Logo_With_Words_Transparant.png";
+  const GOLD = "#dfcfb5";
  const BIG_LOGO = "/Final_Silver_Spine_Square_Logo_With_Words_Transparant.png";
- const NEBULA = "/FB_Cover_Nebula_DarkerShadows_Fix_1640x624.jpg";
   // Realistic snow-mountain cliffside (from studio art) — blends from Welcome toward the blog
   const STORM_ROAD = "/blog/snow-mountain-road.jpg";
   const CLIFFSIDE = "/blog/cliffside-snow.jpg";
@@ -48,22 +46,7 @@ export default function Blog() {
   }, []);
 
   // ---- header + footer heights (keep icons always on-screen) ----
-  const headerRef = useRef(null);
   const silverStormRef = useRef(null);
-
-  // Scope aggressive layout locks to this page only (never leak to Home/etc.)
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const root = document.documentElement;
-    root.classList.add("sss-blog-lock");
-    return () => {
-      root.classList.remove("sss-blog-lock");
-      root.style.removeProperty("--header-h");
-      root.style.removeProperty("--footer-h");
-    };
-  }, []);
-
-  useEffect(() => bindChromeVars(headerRef.current), []);
 
   // ---- silver lightning (visual only) ----
   useEffect(() => {
@@ -78,7 +61,7 @@ export default function Blog() {
     vid.defaultMuted = true;
     vid.playsInline = true;
     vid.loop = true;
-    vid.playbackRate = 0.28;
+    vid.playbackRate = 0.85;
     const play = () => {
       vid.play().catch(() => {});
     };
@@ -186,7 +169,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="blog-page bg-black text-gray-100 min-h-screen flex flex-col relative z-10">
+    <div className="blog-page text-gray-100 min-h-screen flex flex-col relative z-10">
       {/* Soft storm around the room — cliffside panel still owns the main visual */}
       <StormAtmosphere mood="ridge" />
       <Head>
@@ -198,86 +181,13 @@ export default function Blog() {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <style>{`
           :root {
-            --header-h: 140px; /* JS updates */
-            --footer-h: 72px;
+            --header-h: 56px;
+            --footer-h: 136px;
             --gold: ${GOLD};
           }
 
           html, body { margin: 0; background:#000; min-height: 100%; }
           #__next { height:auto; overflow:visible; }
-
-          /*
-            Blog chrome (ONLY while html.sss-blog-lock is on):
-            header + footer always visible; blog column scrolls.
-          */
-          @media (min-width: 768px) {
-            html.sss-blog-lock,
-            html.sss-blog-lock body,
-            html.sss-blog-lock #__next {
-              height: 100%;
-              overflow: hidden;
-            }
-            html.sss-blog-lock #__next > div.bg-black {
-              height: 100dvh;
-              max-height: 100dvh;
-              display: flex;
-              flex-direction: column;
-              overflow: hidden;
-            }
-            html.sss-blog-lock #__next > div.bg-black > main {
-              flex: 1 1 auto;
-              min-height: 0;
-              overflow: hidden;
-              display: flex;
-              flex-direction: column;
-            }
-            html.sss-blog-lock .blog-page {
-              flex: 1 1 auto;
-              min-height: 0;
-              height: auto;
-              max-height: none;
-              overflow: hidden;
-            }
-            html.sss-blog-lock .blog-page .page-frame {
-              flex: 1 1 auto;
-              min-height: 0;
-              overflow: hidden;
-            }
-            html.sss-blog-lock #site-footer {
-              flex-shrink: 0;
-              position: relative;
-              z-index: 40;
-            }
-          }
-
-          /* Slim footer on Blog only */
-          html.sss-blog-lock #site-footer {
-            padding-top: 0.35rem !important;
-            padding-bottom: 0.35rem !important;
-          }
-          html.sss-blog-lock #site-footer .max-w-6xl {
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
-          }
-          html.sss-blog-lock #site-footer .max-w-6xl > div:first-child {
-            gap: 0.35rem !important;
-          }
-          html.sss-blog-lock #site-footer a[aria-label] {
-            width: 1.85rem !important;
-            height: 1.85rem !important;
-          }
-          html.sss-blog-lock #site-footer a[aria-label] svg {
-            width: 0.85rem !important;
-            height: 0.85rem !important;
-          }
-          html.sss-blog-lock #site-footer p,
-          html.sss-blog-lock #site-footer nav {
-            font-size: 10px !important;
-            line-height: 1.25 !important;
-          }
-          html.sss-blog-lock #site-footer nav {
-            margin-top: 0.25rem !important;
-          }
 
           .nav-wrap { max-width: 1400px; }
           .nav-link { color: #e5e7eb; }
@@ -290,6 +200,8 @@ export default function Blog() {
             z-index: 1;
             display: flex;
             flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
             overflow: visible !important;
           }
           .page-frame > *:last-child { margin-bottom: 0 !important; }
@@ -311,7 +223,7 @@ export default function Blog() {
             /* Snow cliffside road — cool night grade for realism */
             object-position: 58% 45%;
             filter: saturate(0.92) contrast(1.08) brightness(0.98) hue-rotate(8deg);
-            opacity: 1;
+            opacity: 0;
             animation: storm-drift 48s ease-in-out infinite alternate;
             will-change: transform;
             -webkit-mask-image: linear-gradient(
@@ -444,7 +356,7 @@ export default function Blog() {
             margin: -0.35rem -0.35rem 0.85rem;
             border-radius: 0.85rem;
             overflow: hidden;
-            border: 1px solid rgba(167,122,35,0.35);
+            border: 1px solid rgba(223,207,181,0.55);
             box-shadow: 0 12px 28px rgba(0,0,0,0.45);
           }
           .blog-mountain-window img {
@@ -523,7 +435,7 @@ export default function Blog() {
             .blog-snow { display: none; }
           }
 
-          /* Desktop: Welcome stays put; only the blog column scrolls */
+          /* Desktop: Welcome fills down to the footer; left column scrolls */
           .blog-split {
             display: grid;
             grid-template-columns: 1fr;
@@ -536,7 +448,54 @@ export default function Blog() {
           .blog-welcome-pane {
             min-width: 0;
           }
+          .blog-welcome-card {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+          }
+          .blog-welcome-inner {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+          }
+          .blog-welcome-copy {
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-right: 0.25rem;
+            scrollbar-color: #dfcfb5 #111;
+            scrollbar-width: thin;
+          }
+          .blog-welcome-copy::-webkit-scrollbar { width: 10px; }
+          .blog-welcome-copy::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
+          .pinned-copy-scroll {
+            max-height: 12.5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-right: 0.45rem;
+            margin-bottom: 0.75rem;
+            overscroll-behavior: contain;
+            scrollbar-color: #dfcfb5 #111;
+            scrollbar-width: thin;
+          }
+          .pinned-copy-scroll::-webkit-scrollbar { width: 10px; }
+          .pinned-copy-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
+          .studio-copy-scroll {
+            max-height: 18.5rem;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-right: 0.45rem;
+            margin-bottom: 0.75rem;
+            overscroll-behavior: contain;
+            scrollbar-color: #dfcfb5 #111;
+            scrollbar-width: thin;
+          }
+          .studio-copy-scroll::-webkit-scrollbar { width: 10px; }
+          .studio-copy-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
           @media (min-width: 768px) {
+            .page-frame {
+              height: calc(100vh - var(--header-h) - var(--footer-h));
+              max-height: calc(100vh - var(--header-h) - var(--footer-h));
+            }
             .blog-split {
               grid-template-columns: 1fr 1fr;
               gap: 1.75rem;
@@ -545,38 +504,24 @@ export default function Blog() {
               height: 100%;
               max-height: 100%;
               overflow: hidden;
+              align-items: stretch;
             }
             .blog-feed {
               height: 100%;
               overflow-x: hidden;
-              overflow-y: scroll; /* keep scrollbar track visible for traditional users */
-              padding-right: 0.2rem;
+              overflow-y: auto;
+              padding-right: 0.35rem;
               overscroll-behavior: contain;
-              -webkit-overflow-scrolling: touch;
               scrollbar-gutter: stable;
-              scrollbar-width: thin; /* Firefox */
-              scrollbar-color: rgba(167,122,35,0.75) rgba(255,255,255,0.06);
+              scrollbar-width: auto;
+              scrollbar-color: #dfcfb5 #111111;
             }
-            /* Chromium / Safari — visible gold scrollbar on the blog window */
-            .blog-feed::-webkit-scrollbar {
-              width: 10px;
-            }
-            .blog-feed::-webkit-scrollbar-track {
-              background: rgba(255,255,255,0.06);
-              border-radius: 999px;
-              margin: 6px 0;
-            }
+            .blog-feed::-webkit-scrollbar { width: 22px; }
+            .blog-feed::-webkit-scrollbar-track { background: #111111; }
             .blog-feed::-webkit-scrollbar-thumb {
-              background: linear-gradient(
-                to bottom,
-                rgba(167,122,35,0.55),
-                rgba(167,122,35,0.9)
-              );
-              border-radius: 999px;
-              border: 2px solid rgba(0,0,0,0.35);
-            }
-            .blog-feed::-webkit-scrollbar-thumb:hover {
-              background: rgba(196,150,60,0.95);
+              background: #dfcfb5;
+              border-radius: 12px;
+              border: 3px solid #111111;
             }
             .blog-welcome-pane {
               height: 100%;
@@ -585,66 +530,28 @@ export default function Blog() {
               top: 0;
               align-self: stretch;
             }
-            .blog-welcome-pane .blog-welcome-card {
+            .blog-welcome-card {
               height: 100%;
               display: flex;
               flex-direction: column;
               min-height: 0;
             }
-            .blog-welcome-pane .blog-welcome-inner {
+            .blog-welcome-inner {
               flex: 1 1 auto;
               min-height: 0;
               overflow: hidden;
               display: flex;
               flex-direction: column;
             }
-            .blog-welcome-pane .blog-welcome-copy {
+            .blog-welcome-copy {
               flex: 1 1 auto;
               min-height: 0;
-              /* Welcome stays pinned; only scrolls inside if the screen is too short */
+              max-height: none;
               overflow-x: hidden;
               overflow-y: auto;
-              overscroll-behavior: contain;
               padding-right: 0.25rem;
+              overscroll-behavior: contain;
             }
-          }
-
-          /* Phone: footer docked on Blog only */
-          @media (max-width: 767px) {
-            html.sss-blog-lock #site-footer {
-              position: fixed;
-              left: 0;
-              right: 0;
-              bottom: 0;
-              z-index: 40;
-              box-shadow: 0 -8px 24px rgba(0,0,0,0.45);
-            }
-            html.sss-blog-lock .blog-page {
-              padding-bottom: calc(var(--footer-h) + 8px);
-            }
-          }
-
-          /* Nebula ribbons (unchanged) */
-          .nebula {
-            width: 100%;
-            background-image: url('${NEBULA}');
-            background-size: cover;
-            background-position: center;
-            filter: saturate(1.06) contrast(1.05);
-          }
-          .nebula-top,
-          .nebula-bottom {
-            height: 32px;
-          }
-          .nebula-top {
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 80%, transparent);
-                    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 80%, transparent);
-          }
-          .nebula-bottom {
-            position: relative;
-            z-index: 0; /* keep it behind content above */
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 80%, transparent);
-                    mask-image: linear-gradient(to top, rgba(0,0,0,1) 80%, transparent);
           }
 
           /* Thunder chip */
@@ -671,46 +578,6 @@ export default function Blog() {
 
         `}</style>
       </Head>
-
-      {/* ===== HEADER (GREY GRADIENT) ===== */}
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-50 bg-gradient-to-b from-gray-950 to-gray-900 border-b border-[#a77a23]/30 shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
-      >
-        <div className="nav-wrap mx-auto flex flex-col gap-2 md:flex-row md:items-center md:justify-between px-4 md:px-6 py-3 md:py-4">
-          <div className="flex items-center gap-3 md:gap-4">
-            <Link href="/" className="flex items-center gap-3 md:gap-4" aria-label="Silver Spine Studio — Home">
-              <span className="sss-logo-halo">
-                <Image
-                  src={DISC_LOGO}
-                  alt="Silver Spine Studio logo"
-                  width={512}
-                  height={512}
-                  priority
-                  className="sss-logo-glow w-auto select-none"
-                  style={{
-                    height: "72px",
-                  }}
-                  sizes="(min-width: 1024px) 512px, (min-width: 768px) 420px, 320px"
-                />
-              </span>
-              <span
-                className="hidden sm:inline text-xl md:text-2xl font-semibold tracking-wide"
-                style={{
-                  color: "#d1d5db",
-                  textShadow:
-                    "0 0 10px rgba(255,255,255,0.10), 0 0 22px rgba(255,255,255,0.08)",
-                }}
-              >
-                Silver Spine Studio
-                <span className="align-super text-sm md:text-base">™</span>
-              </span>
-            </Link>
-          </div>
-
-          <SiteNav className="w-full md:w-auto justify-center md:justify-end md:mr-28 lg:mr-36 tracking-wide" />
-        </div>
-      </header>
 
       {/* ===== MAIN ===== */}
       <main className="page-frame">
@@ -740,14 +607,11 @@ export default function Blog() {
           <div className="blog-atmosphere-veil" />
         </div>
 
-        {/* Top ribbon */}
-        <div className="nebula nebula-top relative z-[1]" aria-hidden="true" />
-
         <div className="relative z-[1] max-w-7xl mx-auto px-6 md:px-8 pt-4 md:pt-6 pb-4 md:pb-6 flex-1 min-h-0 w-full">
           <div className="blog-split">
             {/* LEFT: logo + blog cards (scrolls on desktop) */}
             <section className="blog-feed space-y-4 order-2 md:order-1">
-              <div className="bg-black/85 rounded-2xl border border-white/10 shadow-[0_18px_48px_rgba(0,0,0,0.6)] p-3 backdrop-blur-[2px]">
+              <div className="bg-black/85 rounded-2xl border border-[#dfcfb5]/55 shadow-[0_18px_48px_rgba(0,0,0,0.6)] p-3 backdrop-blur-[2px]">
                 <div className="bg-black/80 rounded-xl p-3">
                   <img
                     src={BIG_LOGO}
@@ -776,23 +640,22 @@ export default function Blog() {
                 return (
                   <article
                     key={p.id}
-                    className="rounded-xl bg-black/75 border border-white/10 p-5 hover:border-[#a77a23]/40 transition backdrop-blur-[1px]"
+                    className="rounded-xl bg-black/75 border border-[#dfcfb5]/55 p-5 hover:border-[#dfcfb5] transition backdrop-blur-[1px]"
                   >
                     <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
                       <span className="uppercase tracking-wide">Studio update</span>
                       {dateLabel ? <time dateTime={dateAttr}>{dateLabel}</time> : null}
                     </div>
-                    <h3 className="text-xl font-semibold mb-2 leading-snug" style={{ color: GOLD }}>
+                    <h3 className="text-2xl font-semibold mb-3 leading-snug" style={{ color: GOLD }}>
                       {p.title}
                     </h3>
-                    <p className="text-gray-300 mb-3 text-sm whitespace-pre-wrap">{p.body}</p>
                     {p.mediaType === "image" && p.mediaUrl ? (
-                      <figure className="my-4 overflow-hidden rounded-xl border border-white/10 bg-black">
+                      <figure className="mb-4 overflow-hidden rounded-xl border border-[#dfcfb5]/40 bg-black flex flex-col items-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={p.mediaUrl}
                           alt={p.mediaCaption || p.title}
-                          className="w-full h-auto block"
+                          className="w-full max-w-[420px] h-auto max-h-[min(72vh,720px)] object-contain block mx-auto"
                         />
                         {p.mediaCaption ? (
                           <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
@@ -802,25 +665,28 @@ export default function Blog() {
                       </figure>
                     ) : null}
                     {p.mediaType === "video" && p.mediaUrl ? (
-                      <figure className="my-4 overflow-hidden rounded-xl border border-white/10 bg-black">
-                        <video
-                          className="w-full h-auto block"
-                          src={p.mediaUrl}
-                          poster={p.mediaPoster || undefined}
-                          autoPlay={p.videoLive !== false}
-                          muted={p.videoLive !== false}
-                          loop={p.videoLive !== false}
-                          controls={p.videoLive === false}
-                          playsInline
-                          preload="metadata"
-                          aria-label={p.mediaCaption || p.title}
-                        />
-                        {p.mediaCaption ? (
-                          <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
-                            {p.mediaCaption}
-                          </figcaption>
-                        ) : null}
-                      </figure>
+                      <BlogVideo
+                        src={p.mediaUrl}
+                        poster={p.mediaPoster}
+                        caption={p.mediaCaption}
+                        label={p.title}
+                      />
+                    ) : null}
+                    {p.audioUrl ? (
+                      <audio
+                        className="w-full my-3"
+                        src={p.audioUrl}
+                        controls
+                        preload="metadata"
+                        controlsList="nodownload"
+                        aria-label={`${p.title} audio`}
+                      />
+                    ) : null}
+                    {p.about || p.body ? (
+                      <div className="studio-copy-scroll">
+                        {p.about ? <BlogRichBody body={p.about} className="text-gray-200 text-base" /> : null}
+                        {p.body ? <BlogRichBody body={p.body} className="text-gray-200 text-base" /> : null}
+                      </div>
                     ) : null}
                     <p className="text-gray-400 text-xs mt-4 italic">Happy Sleuthing.</p>
                   </article>
@@ -842,7 +708,7 @@ export default function Blog() {
             {/* RIGHT: Welcome stays fixed on desktop while blog scrolls */}
             <section className="blog-welcome-pane order-1 md:order-2">
               <div
-                className="blog-welcome-card rounded-2xl p-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.65)] overflow-hidden relative"
+                className="blog-welcome-card rounded-2xl p-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.65)] overflow-hidden relative border border-[#dfcfb5]/55"
                 style={{
                   backgroundImage: `linear-gradient(160deg, rgba(8,16,32,0.2), rgba(0,0,0,0.4)), url(${CLIFFSIDE})`,
                   backgroundSize: "cover",
@@ -850,7 +716,7 @@ export default function Blog() {
                   backgroundRepeat: "no-repeat",
                 }}
               >
-                <div className="blog-welcome-inner relative z-[1] rounded-xl border border-[#a77a23]/45 bg-[rgba(8,8,10,0.5)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] p-5 md:p-7 backdrop-blur-[1.5px]">
+                <div className="blog-welcome-inner relative z-[1] rounded-xl border border-[#dfcfb5]/50 bg-[rgba(8,8,10,0.5)] shadow-[0_24px_60px_rgba(0,0,0,0.55)] p-5 md:p-7 backdrop-blur-[1.5px]">
                   <div className="blog-mountain-window shrink-0">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={CLIFFSIDE} alt="Snowy cliffside overlooking a mountain valley in the storm" draggable="false" />
@@ -858,27 +724,27 @@ export default function Blog() {
                   </div>
                   {clockPair.mountain && clockPair.local ? (
                     <div
-                      className="mb-3 flex flex-wrap items-center justify-center gap-2"
+                      className="mb-3 flex flex-wrap items-center justify-center gap-2 shrink-0"
                       title="Colorado mountain time and your local time"
                     >
                       <time
-                        className="inline-flex items-center gap-1.5 rounded-full border border-[#a77a23]/35 bg-black/45 px-2.5 py-1 text-[10px] sm:text-[11px] tracking-[0.12em] text-gray-300"
+                        className="inline-flex items-center gap-2 rounded-full border border-[#dfcfb5]/45 bg-black/45 px-3.5 py-1.5 text-sm sm:text-base tracking-[0.12em] text-gray-300"
                         aria-label={`Colorado mountain time ${clockPair.mountain}`}
                       >
                         <span
-                          className="inline-block h-1.5 w-1.5 rounded-full shrink-0"
+                          className="inline-block h-2 w-2 rounded-full shrink-0"
                           style={{ background: GOLD, boxShadow: `0 0 8px ${GOLD}` }}
                           aria-hidden="true"
                         />
                         <span style={{ color: GOLD }}>{clockPair.mountain}</span>
-                        <span className="text-gray-500 tracking-normal normal-case">MT</span>
+                        <span className="text-gray-400 tracking-normal normal-case text-sm">MT</span>
                       </time>
                       <time
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/35 px-2.5 py-1 text-[10px] sm:text-[11px] tracking-[0.12em] text-gray-300"
+                        className="inline-flex items-center gap-2 rounded-full border border-[#dfcfb5]/35 bg-black/35 px-3.5 py-1.5 text-sm sm:text-base tracking-[0.12em] text-gray-300"
                         aria-label={`Your local time ${clockPair.local}`}
                       >
                         <span style={{ color: "#c9ced6" }}>{clockPair.local}</span>
-                        <span className="text-gray-500 tracking-normal normal-case">you</span>
+                        <span className="text-gray-400 tracking-normal normal-case text-sm">you</span>
                       </time>
                     </div>
                   ) : null}
@@ -901,15 +767,12 @@ export default function Blog() {
             </section>
           </div>
         </div>
-
-        {/* Bottom ribbon */}
-        <div className="nebula nebula-bottom relative z-[1]" aria-hidden="true" />
       </main>
 
       {/* Modals */}
       {showList && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
-          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-[#dfcfb5]/50 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Join the launch list</h3>
               <button onClick={() => setShowList(false)} className="text-gray-300 hover:text-white">✕</button>
@@ -929,7 +792,7 @@ export default function Blog() {
 
       {showArc && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
-          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-[#dfcfb5]/50 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Request early-release ARC — The Beautiful Beast</h3>
               <button onClick={() => setShowArc(false)} className="text-gray-300 hover:text-white">✕</button>
@@ -949,7 +812,7 @@ export default function Blog() {
 
       {showPress && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[rgba(0,0,0,0.6)] px-4">
-          <div className="w-full max-w-lg bg-[#0f0f0f] border border-white/10 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
+          <div className="w-full max-w-lg bg-[#0f0f0f] border border-[#dfcfb5]/50 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.6)] p-6">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-xl font-semibold" style={{ color: GOLD }}>Press Request — Private</h3>
               <button onClick={() => setShowPress(false)} className="text-gray-300 hover:text-white">✕</button>
@@ -968,28 +831,28 @@ export default function Blog() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <FormFieldLabel required>Your name</FormFieldLabel>
-                  <input value={pressName} onChange={e => setPressName(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                  <input value={pressName} onChange={e => setPressName(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
                 </div>
                 <div>
                   <FormFieldLabel required>Outlet</FormFieldLabel>
-                  <input value={pressOutlet} onChange={e => setPressOutlet(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                  <input value={pressOutlet} onChange={e => setPressOutlet(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <FormFieldLabel required>Email</FormFieldLabel>
-                  <input type="email" value={pressEmail} onChange={e => setPressEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                  <input type="email" value={pressEmail} onChange={e => setPressEmail(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
                 </div>
                 <div>
                   <FormFieldLabel optional>Deadline</FormFieldLabel>
-                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2026" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2026" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
                 </div>
               </div>
 
               <div>
                 <FormFieldLabel required>What you need</FormFieldLabel>
-                <input value={pressNeeds} onChange={e => setPressNeeds(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60" />
+                <input value={pressNeeds} onChange={e => setPressNeeds(e.target.value)} required className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
               </div>
 
               <label className="flex items-start gap-2 text-xs text-gray-300">
@@ -1011,14 +874,14 @@ export default function Blog() {
 
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button type="button" onClick={() => setShowPress(false)} className="px-4 py-2 rounded-lg border border-white/15 text-gray-200 hover:bg-white/5">Cancel</button>
-                <button type="submit" disabled={!pressAgree || pressStatus.state === "sending"} className="px-4 py-2 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50">
+                <button type="submit" disabled={!pressAgree || pressStatus.state === "sending"} className="px-4 py-2 rounded-lg bg-[#dfcfb5] text-black font-semibold hover:opacity-90 disabled:opacity-50">
                   {pressStatus.state === "sending" ? "Sending…" : "Send request"}
                 </button>
               </div>
 
               <p className="text-xs text-gray-400 mt-2">
                 Sends securely to the studio inbox (tagged [MEDIA REQUEST]). Or use{" "}
-                <Link href="/contact?topic=media" className="text-[#a77a23] font-semibold hover:underline">
+                <Link href="/contact?topic=media" className="text-[#dfcfb5] font-semibold hover:underline">
                   Contact → Media request &amp; interviews
                 </Link>
                 . No files are shared on this page.

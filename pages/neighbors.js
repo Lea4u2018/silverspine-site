@@ -4,7 +4,7 @@ import InfoPageShell from "@/components/InfoPageShell";
 import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
 import { NEIGHBOR_CATEGORIES, NEIGHBOR_PURCHASE_SOURCES } from "@/lib/neighborRules";
 
-const GOLD = "#a77a23";
+const GOLD = "#dfcfb5";
 
 export default function NeighborsPage() {
   const [listings, setListings] = useState([]);
@@ -100,7 +100,7 @@ export default function NeighborsPage() {
   };
 
   const inputClass =
-    "w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-gray-100 focus:outline-none focus:border-[#a77a23]";
+    "w-full rounded-xl border border-gray-700 bg-black px-4 py-3 text-gray-100 focus:outline-none focus:border-[#dfcfb5]";
 
   return (
     <InfoPageShell
@@ -111,7 +111,7 @@ export default function NeighborsPage() {
       <p className="text-gray-200 mb-4">
         This is how Silver Spine Studio™ gives back. You invest in this house — starting with a
         purchase from the{" "}
-        <Link href="/shop" className="text-[#a77a23] underline underline-offset-2">
+        <Link href="/shop" className="text-[#dfcfb5] underline underline-offset-2">
           Shop
         </Link>
         — and the studio invests in you. Your name, your work, and how to reach you live here. You do
@@ -279,7 +279,7 @@ export default function NeighborsPage() {
           />
         </div>
 
-        <div className="rounded-xl border border-[#a77a23]/30 bg-[#a77a23]/10 p-4 space-y-4">
+        <div className="rounded-xl border border-[#dfcfb5]/30 bg-[#dfcfb5]/10 p-4 space-y-4">
           <p className="text-sm text-gray-200 font-semibold" style={{ color: GOLD }}>
             Purchase verification (private — admin only, not shown on your public card)
           </p>
@@ -370,7 +370,7 @@ export default function NeighborsPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-xl bg-[#a77a23] text-black font-semibold py-3 hover:opacity-90 disabled:opacity-60"
+          className="w-full rounded-xl bg-[#dfcfb5] text-black font-semibold py-3 hover:opacity-90 disabled:opacity-60"
         >
           {submitting ? "Sending…" : "Ask to join the community"}
         </button>
@@ -387,7 +387,7 @@ function telHref(phone) {
 function NeighborCard({ n }) {
   const tel = telHref(n.phone);
   return (
-    <article className="rounded-xl border border-[#a77a23]/25 bg-black/40 p-5">
+    <article className="rounded-xl border border-[#dfcfb5]/25 bg-black/40 p-5">
       <p className="text-[0.65rem] font-bold uppercase tracking-[0.22em] mb-2" style={{ color: GOLD }}>
         Investing in the community · Silver Spine Studio™
       </p>
@@ -402,7 +402,7 @@ function NeighborCard({ n }) {
         {n.phone ? (
           <p>
             {tel ? (
-              <a href={tel} className="text-[#a77a23] underline underline-offset-2">
+              <a href={tel} className="text-[#dfcfb5] underline underline-offset-2">
                 {n.phone}
               </a>
             ) : (
@@ -412,7 +412,7 @@ function NeighborCard({ n }) {
         ) : null}
         {n.email ? (
           <p>
-            <a href={`mailto:${n.email}`} className="text-[#a77a23] underline underline-offset-2 break-all">
+            <a href={`mailto:${n.email}`} className="text-[#dfcfb5] underline underline-offset-2 break-all">
               {n.email}
             </a>
           </p>
@@ -423,7 +423,7 @@ function NeighborCard({ n }) {
               href={n.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#a77a23] underline underline-offset-2 break-all"
+              className="text-[#dfcfb5] underline underline-offset-2 break-all"
             >
               Visit their site
             </a>

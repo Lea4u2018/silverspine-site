@@ -29,7 +29,7 @@ export default function LaunchListForm({
           email,
           language: readPreferredLang(),
           message:
-            "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 lucky winners will each receive a FULL digital copy (winners announced mid-October 2026).",
+            "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
           hp,
           startedAt,
         }),
@@ -38,7 +38,7 @@ export default function LaunchListForm({
       if (res.ok && data.ok) {
         setStatus({
           state: "success",
-          msg: "You're on the list — entered for a chance to be one of 3 lucky winners (each receives a FULL digital copy). Happy Sleuthing!",
+          msg: "You're on the list — entered for the mid-October drawing for 3 full digital copies (launch list and left reviews). Happy Sleuthing!",
         });
         setName("");
         setEmail("");
@@ -73,7 +73,7 @@ export default function LaunchListForm({
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60 text-white"
+          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60 text-white"
         />
       </div>
       <div>
@@ -83,7 +83,7 @@ export default function LaunchListForm({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#a77a23]/60 text-white"
+          className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60 text-white"
         />
       </div>
       {status.msg && (
@@ -94,7 +94,7 @@ export default function LaunchListForm({
       <button
         type="submit"
         disabled={status.state === "sending"}
-        className="w-full px-4 py-2.5 rounded-lg bg-[#a77a23] text-black font-semibold hover:opacity-90 disabled:opacity-50 transition"
+        className="w-full px-4 py-2.5 rounded-lg bg-[#dfcfb5] text-black font-semibold hover:bg-[#c5a059] disabled:opacity-50 transition"
       >
         {status.state === "sending" ? "Joining…" : "Join the launch list"}
       </button>

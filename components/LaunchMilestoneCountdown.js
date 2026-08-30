@@ -4,13 +4,13 @@ import { NOVEL_PRICING } from "@/lib/store";
 import { formatCountdownLabel, formatCountdownParts } from "@/lib/launchCountdown";
 import { LAUNCH_COUNTDOWN_TARGETS } from "@/lib/store";
 
-/** Brand deep gold — countdown digits */
-const DEEP_GOLD = "#a77a23";
+/** Brand champagne gold — tabs, countdown, tap chrome */
+const CHAMPAGNE = "#dfcfb5";
 
 const STRIP =
-  "launch-countdown-strip w-full px-4 py-2.5 md:px-5 md:py-3 text-[0.72rem] md:text-[0.78rem] leading-snug tracking-wide text-[#f5edd7] notranslate";
+  "launch-countdown-strip relative z-20 w-full px-3 py-2.5 md:px-5 md:py-3 text-[0.88rem] md:text-[0.98rem] leading-snug tracking-wide text-[#f5edd7] notranslate";
 const STRIP_BG =
-  "bg-gradient-to-b from-[rgba(167,122,35,0.14)] to-[rgba(0,0,0,0.55)] border-b border-[rgba(167,122,35,0.28)]";
+  "bg-gradient-to-b from-[rgba(223,207,181,0.16)] to-[rgba(0,0,0,0.55)] border-b border-[rgba(223,207,181,0.32)]";
 
 function getNextFromTargets(targets, now = Date.now()) {
   const list = Array.isArray(targets) && targets.length ? targets : LAUNCH_COUNTDOWN_TARGETS;
@@ -23,10 +23,10 @@ function getNextFromTargets(targets, now = Date.now()) {
 }
 
 const COUNTDOWN_TIME =
-  "font-extrabold tabular-nums tracking-wider whitespace-nowrap shrink-0";
+  "font-extrabold tabular-nums tracking-wider shrink-0 text-center";
 const COUNTDOWN_TIME_STYLE = {
-  color: DEEP_GOLD,
-  textShadow: "0 0 12px rgba(167,122,35,0.4)",
+  color: CHAMPAGNE,
+  textShadow: "0 0 12px rgba(223,207,181,0.4)",
 };
 
 /**
@@ -104,7 +104,7 @@ export default function LaunchMilestoneCountdown({
         </span>
         <Link
           href="/shop"
-          className="font-bold text-[#a77a23] underline underline-offset-2"
+          className="font-bold text-[#dfcfb5] underline underline-offset-2"
         >
           Shop now
         </Link>
@@ -116,13 +116,13 @@ export default function LaunchMilestoneCountdown({
   const digits = formatCountdownLabel(parts, { compact });
 
   const nextBadge = (
-    <span className="text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-[#a77a23] shrink-0">
+    <span className="text-[0.72rem] md:text-[0.78rem] font-extrabold uppercase tracking-[0.18em] text-[#dfcfb5] shrink-0">
       Next
     </span>
   );
 
   const milestoneLabel = (
-    <span className="font-semibold text-center leading-snug text-[#f5edd7]">
+    <span className="font-semibold text-center leading-snug text-[0.95rem] md:text-[1.05rem] text-[#f5edd7]">
       {target.label}
       {target.detail ? (
         <span className="font-medium text-[#c9ced6]"> · {target.detail}</span>
@@ -153,7 +153,7 @@ export default function LaunchMilestoneCountdown({
         {countdownTime}
       </div>
     ) : (
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 sm:flex-row sm:flex-nowrap sm:justify-center sm:gap-x-3 md:gap-x-4">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-3 md:gap-x-4">
         {nextBadge}
         <span className="sm:flex-1 sm:min-w-0 sm:text-center">{milestoneLabel}</span>
         {countdownTime}
@@ -164,7 +164,7 @@ export default function LaunchMilestoneCountdown({
     return (
       <Link
         href={target.href}
-        className={`${shellClass} no-underline hover:from-[rgba(167,122,35,0.22)] hover:to-[rgba(0,0,0,0.6)] transition-colors`}
+        className={`${shellClass} no-underline hover:from-[rgba(223,207,181,0.24)] hover:to-[rgba(0,0,0,0.6)] transition-colors`}
         translate="no"
         role="status"
         aria-live="polite"

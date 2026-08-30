@@ -1,26 +1,18 @@
 import Head from "next/head";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { NOVEL_PRICING, PREORDER_STATUS, SNEAK_PEEK_PRODUCT_COPY, LAUNCH_COUNTDOWN_MATRIX } from "@/lib/store";
-import { PRIMARY_DISC_LOGO, DISC_LOGO_CANDIDATES } from "@/lib/logo";
 import LaunchListForm from "@/components/LaunchListForm";
 import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
-import SiteNav from "@/components/SiteNav";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import StoreHub from "@/components/StoreHub";
-import { bindChromeVars } from "@/lib/chromeVars";
 
-const GOLD = "#a77a23";
+const GOLD = "#dfcfb5";
 const SILVER = "#c9ced6";
 
 export default function Shop() {
-  const headerRef = useRef(null);
-  const [logoSrc, setLogoSrc] = useState(PRIMARY_DISC_LOGO);
-  const [useTextLogo, setUseTextLogo] = useState(false);
   const [countdownMatrix, setCountdownMatrix] = useState(LAUNCH_COUNTDOWN_MATRIX);
   const [activePromos, setActivePromos] = useState([]);
-
-  useEffect(() => bindChromeVars(headerRef.current), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,32 +50,8 @@ export default function Shop() {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    let cancelled = false;
-    const tryLoad = (i = 0) => {
-      if (i >= DISC_LOGO_CANDIDATES.length) {
-        if (!cancelled) setUseTextLogo(true);
-        return;
-      }
-      const img = new Image();
-      img.onload = () => {
-        if (!cancelled) {
-          setLogoSrc(DISC_LOGO_CANDIDATES[i]);
-          setUseTextLogo(false);
-        }
-      };
-      img.onerror = () => tryLoad(i + 1);
-      img.src = DISC_LOGO_CANDIDATES[i];
-    };
-    tryLoad();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
-    <div className="bg-black text-gray-100 min-h-screen">
+    <div className="text-gray-100 min-h-screen">
       <Head>
         <title>Shop | Silver Spine Studio™</title>
         <meta
@@ -91,27 +59,9 @@ export default function Shop() {
           content="Buy The Beautiful Beast Extended Sneak Peek — choose your storefront and go straight to checkout."
         />
         <style>{`
-          :root { --header-h: 140px; --footer-h: 72px; }
+          :root { --header-h: 56px; --footer-h: 136px; }
           .shop-frame {
             min-height: calc(100vh - var(--header-h) - var(--footer-h));
-          }
-          .nebula {
-            position: relative;
-            width: 100%;
-            background-image: url('/FB_Cover_Nebula_DarkerShadows_fix_1640x624.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: saturate(1.15) contrast(1.1);
-          }
-          .nebula-top { height: 48px; }
-          .nebula-bottom { height: 88px; margin-top: -12px; }
-          .mask-top {
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-          }
-          .mask-bottom {
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
-            mask-image: linear-gradient(to top, rgba(0,0,0,1) 86%, rgba(0,0,0,0));
           }
           @keyframes shopRise {
             from { opacity: 0; transform: translateY(14px); }
@@ -135,7 +85,7 @@ export default function Shop() {
             appearance: none;
             border: 0;
             background: transparent;
-            color: #9ca3af;
+            color: #dfcfb5;
             font-weight: 800;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -144,12 +94,21 @@ export default function Shop() {
             border-bottom: 2px solid transparent;
             margin-bottom: -1px;
             cursor: pointer;
-            transition: color 0.2s ease, border-color 0.2s ease;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
           }
-          .shop-tab:hover { color: #e5e7eb; }
+          .shop-tab:hover {
+            color: #111;
+            background: #c5a059;
+            border-bottom-color: #c5a059;
+          }
           .shop-tab[aria-selected="true"] {
-            color: #a77a23;
-            border-bottom-color: #a77a23;
+            color: #111;
+            background: #dfcfb5;
+            border-bottom-color: #dfcfb5;
+          }
+          .shop-tab[aria-selected="true"]:hover {
+            background: #c5a059;
+            border-bottom-color: #c5a059;
           }
           @media (min-width: 768px) {
             .shop-tab { font-size: 0.8rem; letter-spacing: 0.18em; padding: 0.8rem 1.15rem 0.95rem; }
@@ -215,37 +174,11 @@ export default function Shop() {
         </video>
       </div>
 
-      <header
-        ref={headerRef}
-        className="sticky top-0 z-50 bg-gradient-to-b from-gray-900 to-gray-800/90 shadow-[0_8px_24px_rgba(0,0,0,0.35)] border-b border-[#a77a23]/30"
-      >
-        <div className="max-w-6xl mx-auto flex flex-col gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between px-4 md:px-6 py-3 md:py-4 min-w-0">
-          <Link href="/" className="flex items-center gap-3 md:gap-4 group shrink-0" aria-label="Silver Spine Studio — Home">
-            {logoSrc && !useTextLogo ? (
-              <span className="sss-logo-halo">
-                <img
-                  src={logoSrc}
-                  alt="Silver Spine Studio logo"
-                  className="sss-logo-glow h-[72px] md:h-[100px] lg:h-[112px] w-auto select-none"
-                  draggable="false"
-                />
-              </span>
-            ) : (
-              <span className="text-2xl md:text-3xl font-extrabold" style={{ color: SILVER }}>
-                Silver Spine Studio<span className="align-super text-base md:text-lg">™</span>
-              </span>
-            )}
-          </Link>
-          <SiteNav className="w-full sm:w-auto justify-center sm:justify-end" />
-        </div>
-        <LaunchMilestoneCountdown linked={false} />
-      </header>
+      <LaunchMilestoneCountdown linked={false} />
 
       <StormAtmosphere mood="ember" />
 
-      <div className="nebula nebula-top mask-top relative z-10" aria-hidden="true" />
-
-      <main className="shop-frame relative z-10 max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+      <main className="shop-frame relative z-10 max-w-[1140px] mx-auto px-4 md:px-6 py-8 md:py-12">
         <div className="shop-rise text-center mb-8 md:mb-10">
           <p className="text-xs md:text-sm font-bold uppercase tracking-[0.28em] mb-3" style={{ color: GOLD }}>
             Silver Spine Studio™ Shop
@@ -267,7 +200,7 @@ export default function Shop() {
             {activePromos.map((p) => (
               <p key={p.code} className="text-sm text-gray-200">
                 Use code{" "}
-                <strong className="font-mono text-[#a77a23] tracking-wide">{p.code}</strong> at checkout — {p.summary}
+                <strong className="font-mono text-[#dfcfb5] tracking-wide">{p.code}</strong> at checkout — {p.summary}
                 {p.expiresAt ? (
                   <span className="text-gray-500"> · through {new Date(p.expiresAt).toLocaleDateString()}</span>
                 ) : null}
@@ -302,14 +235,14 @@ export default function Shop() {
                 <h2 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
                   The Beautiful Beast
                 </h2>
-                <p className="text-[#a77a23] text-xs md:text-sm font-bold uppercase tracking-widest mt-1">
+                <p className="text-[#dfcfb5] text-xs md:text-sm font-bold uppercase tracking-widest mt-1">
                   Extended Sneak Peek · {NOVEL_PRICING.sneakPeek}
                 </p>
                 <p className="mt-3 text-sm md:text-base text-gray-300 leading-relaxed">
                   {SNEAK_PEEK_PRODUCT_COPY.intro}
                 </p>
-                <div className="mt-4 rounded-xl border border-[#a77a23]/40 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
-                  <p className="font-semibold text-[#a77a23] mb-2">Exclusive Insider perk</p>
+                <div className="mt-4 rounded-xl border border-[#dfcfb5]/40 bg-[#dfcfb5]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+                  <p className="font-semibold text-[#dfcfb5] mb-2">Exclusive Insider perk</p>
                   <p>{SNEAK_PEEK_PRODUCT_COPY.insiderPerk}</p>
                   <p className="mt-2 text-white font-semibold">{SNEAK_PEEK_PRODUCT_COPY.hardcoverNote}</p>
                 </div>
@@ -344,11 +277,11 @@ export default function Shop() {
                   © {new Date().getFullYear()} Silver Spine Studio™ / Leameso James. All rights reserved.
                   The work is protected by U.S. copyright. Purchase grants personal reading access only — not copyright ownership.
                   Files may not be copied, uploaded, resold, or shared. Digital sales are final after download/access.{" "}
-                  <Link href="/refunds" className="text-[#a77a23] hover:underline">
+                  <Link href="/refunds" className="text-[#dfcfb5] hover:underline">
                     Refund Policy
                   </Link>
                   {" · "}
-                  <Link href="/faq" className="text-[#a77a23] hover:underline">
+                  <Link href="/faq" className="text-[#dfcfb5] hover:underline">
                     FAQ
                   </Link>
                   .
@@ -360,15 +293,15 @@ export default function Shop() {
                 <p>{PREORDER_STATUS.detail}</p>
               </div>
 
-              <div className="rounded-xl border border-[#a77a23]/35 bg-[#a77a23]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+              <div className="rounded-xl border border-[#dfcfb5]/35 bg-[#dfcfb5]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
                 <p className="font-semibold text-white mb-1">Full DIGITAL copy pricing · hard cutoff</p>
                 <ul className="space-y-1.5 text-xs md:text-sm">
                   <li>
-                    <span className="text-[#a77a23] font-bold">Extended Sneak Peek {NOVEL_PRICING.sneakPeek}</span>
+                    <span className="text-[#dfcfb5] font-bold">Extended Sneak Peek {NOVEL_PRICING.sneakPeek}</span>
                     {" "}— Prologue &amp; Chapters 1–2; places you on the Insider Deal whitelist
                   </li>
                   <li>
-                    <span className="text-[#a77a23] font-bold">Digital Insider Deal {NOVEL_PRICING.insider}</span>
+                    <span className="text-[#dfcfb5] font-bold">Digital Insider Deal {NOVEL_PRICING.insider}</span>
                     {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy (
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span> –{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderEndLabel}</span>
@@ -387,7 +320,7 @@ export default function Shop() {
                     {" · "}
                     Official release: <span className="text-gray-300">{NOVEL_PRICING.releaseLabel}</span>
                     {" · "}
-                    <Link href="/blog" className="text-[#a77a23] hover:underline">
+                    <Link href="/blog" className="text-[#dfcfb5] hover:underline">
                       See full launch timeline on Blog
                     </Link>
                   </li>
@@ -396,7 +329,7 @@ export default function Shop() {
 
               <p className="text-xs text-gray-500 leading-relaxed">
                 Prefer the series page?{" "}
-                <Link href="/books#featured-book" className="text-[#a77a23] hover:underline">
+                <Link href="/books#featured-book" className="text-[#dfcfb5] hover:underline">
                   View the trailer on Books
                 </Link>
                 .
@@ -430,20 +363,18 @@ export default function Shop() {
         </section>
 
         <section
-          className="shop-rise shop-rise-delay mt-6 md:mt-8 rounded-2xl border border-[#a77a23]/30 bg-black/50 p-5 md:p-8 shadow-2xl max-w-xl mx-auto"
+          className="shop-rise shop-rise-delay mt-6 md:mt-8 rounded-2xl border border-[#dfcfb5]/30 bg-black/55 p-6 md:p-10 shadow-2xl max-w-3xl mx-auto"
           aria-label="Join the launch list"
         >
           <h2 className="text-xl md:text-2xl font-extrabold text-white tracking-tight mb-2">
             Not buying yet? Stay in the storm.
           </h2>
-          <p className="text-sm text-gray-300 mb-5 leading-relaxed">
+          <p className="text-base text-gray-200 mb-5 leading-relaxed">
             Join the launch list for sneak peek news, the Sep 30 full DIGITAL preorder window, hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
           </p>
           <LaunchListForm />
         </section>
       </main>
-
-      <div className="nebula nebula-bottom mask-bottom" aria-hidden="true" />
     </div>
   );
 }

@@ -1,10 +1,3 @@
-/**
- * Still images or short videos for a blog post.
- * Put files in /public/blog/, then pass:
- *   [{ src: "/blog/my-photo.jpg", alt: "…", caption: "…" }]
- *   [{ src: "/blog/my-clip.mp4", alt: "…", caption: "…" }]
- * Optional: type: "video" | "image" (auto-detected from extension if omitted)
- */
 function isVideoSrc(img) {
   if (img?.type === "video") return true;
   if (img?.type === "image") return false;
@@ -22,17 +15,16 @@ export default function BlogFigures({ images = [] }) {
         return (
           <figure
             key={img.src}
-            className="overflow-hidden rounded-lg border border-white/10 bg-black/50"
+            className="overflow-hidden rounded-lg border border-[#dfcfb5]/40 bg-black flex flex-col items-center"
           >
             {video ? (
               <video
                 src={img.src}
-                className="block w-full h-auto max-h-[420px] object-cover object-center bg-black"
+                className="block w-full max-w-[420px] h-auto max-h-[min(72vh,760px)] object-contain bg-black"
                 controls
                 playsInline
-                muted
-                loop
                 preload="metadata"
+                controlsList="nodownload"
                 aria-label={img.alt || "Blog video"}
               />
             ) : (
@@ -42,11 +34,11 @@ export default function BlogFigures({ images = [] }) {
                 alt={img.alt || ""}
                 loading="lazy"
                 draggable="false"
-                className="block w-full h-auto max-h-[420px] object-cover object-center"
+                className="block w-full max-w-[420px] h-auto max-h-[min(72vh,720px)] object-contain bg-black"
               />
             )}
             {img.caption ? (
-              <figcaption className="px-3 py-2 text-xs text-gray-300 border-t border-white/10 leading-relaxed">
+              <figcaption className="w-full px-3 py-2.5 text-sm text-gray-300 border-t border-[#dfcfb5]/25 leading-relaxed text-center">
                 {img.caption}
               </figcaption>
             ) : null}
