@@ -97,12 +97,6 @@
       "path": "",
       "filename": "",
       "updatedAt": ""
-    },
-    "fullDigitalPdf": {
-      "label": "Full Digital Copy (PDF)",
-      "path": "",
-      "filename": "",
-      "updatedAt": ""
     }
   },
   "recipients": [
@@ -566,6 +560,23 @@
   ],
   "submissions": [
     {
+      "id": "3e561294f69ffe75",
+      "kind": "list",
+      "name": "Michael Harkless",
+      "email": "mharkless203@gmail.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
+      "receivedAt": "2026-08-31T20:46:46.775Z",
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
+    },
+    {
       "id": "4d620cc00e756459",
       "kind": "list",
       "name": "Lauren Ferguson",
@@ -598,10 +609,6 @@
         "subject": "[FULL DIGITAL] Congratulations — your copy of The Beautiful Beast — Silver Spine Studio™",
         "body": "Hi {{firstName}},\n\nCongratulations — your full digital copy of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
-      "fullDigitalPdf": {
-        "subject": "[FULL DIGITAL PDF] Congratulations — your PDF of The Beautiful Beast — Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nCongratulations — your full digital PDF of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
-      },
       "arc": {
         "subject": "[ARC] Congratulations — you are on the ARC team — Silver Spine Studio™",
         "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of our ARC sleuths for The Beautiful Beast.\n\nYour early-release digital copy is attached. Please treat it as a private reader copy until release day (November 1, 2026). If you review, thank you — honest words help independent studios more than you know.\n\nCOPYRIGHT & LICENSE — ARC / EARLY RELEASE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis ARC / early-release file is licensed for your personal review only. You may share a fair, honest review, but you may not copy, upload, resell, redistribute, or share the file (or substantial excerpts) with others.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
@@ -629,10 +636,6 @@
       "arcDeliveryReminder": {
         "subject": "[ARC FOLLOW-UP] Your ARC file is coming — Silver Spine Studio™",
         "body": "Hi {{firstName}},\n\nQuick follow-up for our ARC sleuths: your early-release digital copy of The Beautiful Beast will arrive during the delivery window ({{arcDeliveryWindow}}).\n\nWatch this inbox — the download will come in a separate email with copyright terms attached.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
-      },
-      "arcDeliveryDateChange": {
-        "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nQuick update from Silver Spine Studio™ on The Beautiful Beast.\n\nIf you are one of the 25 Lucky Sleuthers (ARC team):\nYour free digital copy of the full novel is still coming. Delivery is moving from September 21–23, 2026 to October 1–3, 2026. The full manuscript is already complete — we are in the final stage of publishing: a careful line-by-line continuity check for story balance before files go out. You will get a separate email with your download in that window. No file is attached to this message.\n\nFor everyone on this list:\nOfficial release day is unchanged — November 1, 2026 (digital, paperback, and hardcover).\n\nAlso on the calendar:\n• Extended Sneak Peek — available now ($4.99)\n• Full digital Insider Deal for whitelist / sneak-peek buyers — Oct 8, 2026 – Oct 22, 2026 ($14.99) / Through Gumroad website \n• Mid-October — drawing for 3 free full digital copies from the launch list\n• Launch week — Oct 21–28, 2026\n• Official release — Nov 1, 2026\n\nThank you for your patience and for sleuthing with us. If this lands in Junk / Spam, please mark it Not junk and add contact@silverspinestudio.com to your contacts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "launchListWelcome": {
         "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™",
