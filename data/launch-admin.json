@@ -596,7 +596,12 @@
       "receivedAt": "2026-08-31T20:46:46.775Z",
       "status": "new",
       "importedRecipientId": "",
-      "followUpsSent": {}
+      "followUpsSent": {
+        "launchListWelcome": {
+          "sentAt": "2026-09-01T23:56:32.408Z",
+          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
+        }
+      }
     },
     {
       "id": "4d620cc00e756459",
