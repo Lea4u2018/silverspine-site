@@ -348,7 +348,7 @@ export default function About() {
          <p className="mb-2 text-white font-semibold">Welcome in — thank you for stopping by.</p>
          <p className="mb-3">
            The <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}
-           <span className="text-[#dfcfb5] font-bold">$4.99</span>. That purchase places you on the{" "}
+           <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.sneakPeek}</span>. That purchase places you on the{" "}
            <span className="text-[#dfcfb5] font-bold">Insider Deal</span> whitelist for the discounted full DIGITAL copy.
          </p>
          <p className="mb-3 text-amber-100/95 border border-amber-500/35 bg-amber-950/25 rounded-lg px-3 py-2 text-sm">
@@ -357,8 +357,8 @@ export default function About() {
          <p>
            Full DIGITAL Insider preorder: <span className="text-white font-bold">{NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}</span> at{" "}
            <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> for whitelisted readers.
-           Hardcover orders from <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>.
-           Digital retail <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
+           Hardcover {NOVEL_PRICING.hardcover} from <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>.
+           Paperback {NOVEL_PRICING.paperback}. Digital retail <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
          </p>
        </div>
 

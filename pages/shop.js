@@ -301,18 +301,22 @@ export default function Shop() {
                     {" "}— Prologue &amp; Chapters 1–2; places you on the Insider Deal whitelist
                   </li>
                   <li>
-                    <span className="text-[#dfcfb5] font-bold">Digital Insider Deal {NOVEL_PRICING.insider}</span>
+                    <span className="text-[#dfcfb5] font-bold">Digital early bird {NOVEL_PRICING.insider}</span>
                     {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy (
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span> –{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderEndLabel}</span>
                     ), for sneak-peek buyers
                   </li>
                   <li>
-                    <span className="text-white font-bold">Hardcover</span> — orders from{" "}
+                    <span className="text-white font-bold">Hardcover {NOVEL_PRICING.hardcover}</span> — orders from{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>
                   </li>
                   <li>
-                    <span className="text-white font-bold">Regular price {NOVEL_PRICING.retail}</span> — from{" "}
+                    <span className="text-white font-bold">Paperback {NOVEL_PRICING.paperback}</span> — from{" "}
+                    <span className="text-white font-semibold">{NOVEL_PRICING.retailFromLabel}</span>
+                  </li>
+                  <li>
+                    <span className="text-white font-bold">Digital {NOVEL_PRICING.retail}</span> — from{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.retailFromLabel}</span>
                   </li>
                   <li className="text-gray-400">

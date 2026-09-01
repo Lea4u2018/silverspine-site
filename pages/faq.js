@@ -208,19 +208,19 @@ const SECTIONS = [
     items: [
       {
         q: "Can I preorder the full DIGITAL copy now?",
-        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. The full DIGITAL copy opens for Insider preorder ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover is not available for order until ${NOVEL_PRICING.hardcoverOrderFromLabel}. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
+        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. The full DIGITAL copy opens for Insider preorder ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover is ${NOVEL_PRICING.hardcover} and is not available for order until ${NOVEL_PRICING.hardcoverOrderFromLabel}. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
       },
       {
         q: "When can I order the hardcover?",
-        a: `Hardcover orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Full DIGITAL copy preorder opens separately ${NOVEL_PRICING.digitalPreorderStartLabel}.`,
+        a: `Hardcover is ${NOVEL_PRICING.hardcover}. Orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Paperback is ${NOVEL_PRICING.paperback}. Full DIGITAL copy preorder opens separately ${NOVEL_PRICING.digitalPreorderStartLabel}.`,
       },
       {
         q: "What is the benefit of buying the Extended Sneak Peek today?",
-        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) when preorder opens (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover orders from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
+        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) when preorder opens (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover is ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Paperback is ${NOVEL_PRICING.paperback}.`,
       },
       {
         q: "How much does everything cost?",
-        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Digital Insider preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover orders from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}.`,
+        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Digital Insider preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}. Paperback: ${NOVEL_PRICING.paperback}. Hardcover: ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
       },
       {
         q: "Can I get a refund after I buy?",

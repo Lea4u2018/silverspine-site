@@ -100,7 +100,7 @@ export default function LaunchMilestoneCountdown({
         aria-live="polite"
       >
         <span className="font-semibold text-center">
-          Official release is live · Hardcover orders open · {NOVEL_PRICING.retail}
+          Official release is live · Digital {NOVEL_PRICING.retail} · Paperback {NOVEL_PRICING.paperback} · Hardcover {NOVEL_PRICING.hardcover}
         </span>
         <Link
           href="/shop"

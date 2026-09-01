@@ -444,7 +444,7 @@ export default function Books() {
                   <p className="text-sm text-gray-300 leading-relaxed">
                     The{" "}
                     <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}
-                    <span className="text-[#dfcfb5] font-bold">$4.99</span> — and places you on the{" "}
+                    <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.sneakPeek}</span> — and places you on the{" "}
                     <span className="text-[#dfcfb5] font-bold">Insider Deal</span> whitelist.
                   </p>
                   <p className="text-sm text-amber-100/95 leading-relaxed border border-amber-500/35 bg-amber-950/25 rounded-lg px-3 py-2">
@@ -455,8 +455,9 @@ export default function Books() {
                     <span className="text-white font-semibold">
                       {NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}
                     </span>
-                    {" "}(Insider whitelist). Hardcover orders from{" "}
-                    <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>. Digital retail{" "}
+                    {" "}(Insider whitelist). Hardcover {NOVEL_PRICING.hardcover} from{" "}
+                    <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>. Paperback{" "}
+                    {NOVEL_PRICING.paperback}. Digital retail{" "}
                     <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
                   </p>
                   <p className="text-xs text-gray-400 leading-normal">
