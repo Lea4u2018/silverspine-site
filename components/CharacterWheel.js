@@ -4,15 +4,15 @@ import { duckAmbientForNarration, restoreAmbientAfterNarration } from "@/lib/cin
 
 const PLAT = "#c9ced6";
 const GOLD = "#dfcfb5";
-const CARD_W = 220;
-const CARD_H = 292;
+const CARD_W = 236;
+const CARD_H = 314;
 const SLOTS = 6;
 
 export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const list = Array.isArray(faces) ? faces : [];
   const n = list.length || 1;
   const step = 360 / SLOTS;
-  const radius = Math.round((CARD_H * 0.42) / Math.tan(Math.PI / SLOTS));
+  const radius = Math.round((CARD_H * 0.52) / Math.tan(Math.PI / SLOTS));
   const [origin, setOrigin] = useState(0);
   const [musicOn, setMusicOn] = useState(false);
   const [musicError, setMusicError] = useState("");
@@ -354,12 +354,8 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
                     </div>
                   ) : (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={face.src} alt="" draggable="false" decoding="async" />
+                    <img src={face.src} alt={face.name || ""} draggable="false" decoding="async" />
                   )}
-                  <div className="character-wheel-oncard">
-                    <span className="character-wheel-oncard-name">{face.name || ""}</span>
-                    {face.line ? <span className="character-wheel-oncard-line">{face.line}</span> : null}
-                  </div>
                 </div>
                 );
               })}
@@ -377,7 +373,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       </div>
       <style>{`
         .character-wheel-card {
-          overflow: hidden;
+          overflow: visible !important;
           isolation: isolate;
         }
         .character-wheel {
@@ -486,37 +482,12 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           pointer-events: none;
         }
         .character-wheel-slot img {
+          display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: 50% 22%;
+          object-position: 50% 28%;
           pointer-events: none;
-        }
-        .character-wheel-oncard {
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 2;
-          padding: 1.6rem 0.45rem 0.45rem;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
-          text-align: center;
-        }
-        .character-wheel-oncard-name {
-          display: block;
-          color: ${GOLD};
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          font-size: 0.84rem;
-          line-height: 1.25;
-          text-transform: uppercase;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
-        }
-        .character-wheel-oncard-line {
-          display: block;
-          color: ${PLAT};
-          font-size: 0.62rem;
-          margin-top: 0.12rem;
         }
         .character-wheel-mystery {
           width: 100%;
