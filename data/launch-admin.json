@@ -101,6 +101,27 @@
   },
   "recipients": [
     {
+      "id": "5cc28edf38ddeb4f",
+      "name": "Yusuf",
+      "email": "yukentho@yahoo.com",
+      "role": "launch-list",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 ",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-09-02T00:03:05.937Z",
+      "updatedAt": "2026-09-02T00:03:05.937Z",
+      "appliedAt": "2026-09-01T04:33:54.715Z"
+    },
+    {
       "id": "6fc0b7e084307c23",
       "name": "William Jones",
       "email": "wbjnet@yahoo.com",
@@ -572,8 +593,8 @@
       "category": "",
       "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
       "receivedAt": "2026-09-01T04:33:54.715Z",
-      "status": "new",
-      "importedRecipientId": "",
+      "status": "imported",
+      "importedRecipientId": "5cc28edf38ddeb4f",
       "followUpsSent": {
         "launchListWelcome": {
           "sentAt": "2026-09-01T23:56:03.396Z",
