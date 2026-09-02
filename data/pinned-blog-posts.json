@@ -33,7 +33,7 @@
     {
       "id": "pinned-chapter-one-faces",
       "category": "Cast",
-      "dateISO": "2026-09-01",
+      "dateISO": "2026-09-02",
       "title": "Book 1: Meet the Characters",
       "body": "Pick your poison. The one in front comes clear. Two seats stay a question — on purpose.\n\nMusic: Behind the Shadow — Ruiqi Zhao · Epidemic Sound",
       "bullets": [],
@@ -47,9 +47,9 @@
       "expandLabel": "View details",
       "actions": ["books", "shop"],
       "published": true,
-      "sortOrder": 65,
-      "createdAt": "2026-09-01T21:24:00.000Z",
-      "updatedAt": "2026-09-01T21:24:00.000Z"
+      "sortOrder": 90,
+      "createdAt": "2026-09-02T16:00:00.000Z",
+      "updatedAt": "2026-09-02T16:00:00.000Z"
     },
     {
       "id": "pinned-meet-elliot",

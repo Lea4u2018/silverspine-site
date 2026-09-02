@@ -10,6 +10,7 @@ import BlogVideo from "@/components/BlogVideo";
 import BlogRichBody from "@/components/BlogRichBody";
 import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
 import StormAtmosphere from "@/components/StormAtmosphere";
+import HoldScrollArrows, { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { readPreferredLang } from "@/lib/i18n";
 
 export default function Blog() {
@@ -25,6 +26,7 @@ export default function Blog() {
 
   const [studioPosts, setStudioPosts] = useState([]);
   const [pinnedPosts, setPinnedPosts] = useState([]);
+  const blogFeedRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -167,6 +169,21 @@ export default function Blog() {
       });
     }
   };
+
+  const feedItems = [
+    ...pinnedPosts.map((p) => ({
+      kind: "pinned",
+      id: `pin-${p.id}`,
+      t: Date.parse(p.dateISO) || Date.parse(p.createdAt) || 0,
+      p,
+    })),
+    ...studioPosts.map((p) => ({
+      kind: "studio",
+      id: `studio-${p.id}`,
+      t: Date.parse(p.createdAt) || 0,
+      p,
+    })),
+  ].sort((a, b) => b.t - a.t);
 
   return (
     <div className="blog-page text-gray-100 min-h-screen flex flex-col relative z-10">
@@ -442,9 +459,57 @@ export default function Blog() {
             gap: 1.5rem;
             align-items: start;
           }
-          .blog-feed {
-            min-width: 0;
-          }
+            .blog-feed-wrap {
+              position: relative;
+              min-width: 0;
+              display: flex;
+              flex-direction: row;
+              align-items: stretch;
+              gap: 6px;
+            }
+            .blog-feed {
+              flex: 1 1 auto;
+              min-width: 0;
+            }
+            .blog-master-rail {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              flex: 0 0 40px;
+              width: 40px;
+            }
+            .blog-hold-scroll--master {
+              display: flex;
+            }
+            .blog-hold-scroll--master .blog-hold-scroll-btn {
+              width: 34px;
+              height: 34px;
+              font-size: 13px;
+            }
+            .blog-hold-scroll {
+              display: flex;
+              flex-direction: column;
+              gap: 5px;
+              flex-shrink: 0;
+              padding-top: 2px;
+            }
+            .blog-hold-scroll-btn {
+              width: 26px;
+              height: 26px;
+              border-radius: 6px;
+              border: 1px solid #dfcfb5;
+              background: #111111;
+              color: #dfcfb5;
+              font-size: 10px;
+              line-height: 1;
+              cursor: pointer;
+              padding: 0;
+            }
+            .blog-hold-scroll-btn:hover {
+              background: #dfcfb5;
+              color: #111111;
+            }
           .blog-welcome-pane {
             min-width: 0;
           }
@@ -462,35 +527,54 @@ export default function Blog() {
             overflow-x: hidden;
             overflow-y: auto;
             padding-right: 0.25rem;
-            scrollbar-color: #dfcfb5 #111;
-            scrollbar-width: thin;
+            scrollbar-width: none;
           }
-          .blog-welcome-copy::-webkit-scrollbar { width: 10px; }
-          .blog-welcome-copy::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
+          .blog-welcome-copy::-webkit-scrollbar { display: none; width: 0; }
+          .blog-media-card {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(223, 207, 181, 0.4);
+            background: transparent;
+          }
+          .blog-media-fill {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            background: transparent;
+          }
+            .copy-with-arrows {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+          }
+          .copy-with-arrows .pinned-copy-scroll,
+          .copy-with-arrows .studio-copy-scroll {
+            flex: 1;
+            min-width: 0;
+            margin-bottom: 0;
+          }
           .pinned-copy-scroll {
             max-height: 12.5rem;
             overflow-x: hidden;
-            overflow-y: auto;
-            padding-right: 0.45rem;
-            margin-bottom: 0.75rem;
-            overscroll-behavior: contain;
-            scrollbar-color: #dfcfb5 #111;
-            scrollbar-width: thin;
+            overflow-y: hidden;
+            padding-right: 0.2rem;
+            overscroll-behavior: auto;
+            scrollbar-width: none;
           }
-          .pinned-copy-scroll::-webkit-scrollbar { width: 10px; }
-          .pinned-copy-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
+          .pinned-copy-scroll::-webkit-scrollbar { display: none; width: 0; }
           .studio-copy-scroll {
             max-height: 18.5rem;
             overflow-x: hidden;
-            overflow-y: auto;
-            padding-right: 0.45rem;
-            margin-bottom: 0.75rem;
-            overscroll-behavior: contain;
-            scrollbar-color: #dfcfb5 #111;
-            scrollbar-width: thin;
+            overflow-y: hidden;
+            padding-right: 0.2rem;
+            overscroll-behavior: auto;
+            scrollbar-width: none;
           }
-          .studio-copy-scroll::-webkit-scrollbar { width: 10px; }
-          .studio-copy-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
+          .studio-copy-scroll::-webkit-scrollbar { display: none; width: 0; }
           @media (min-width: 768px) {
             .page-frame {
               height: calc(100vh - var(--header-h) - var(--footer-h));
@@ -506,23 +590,19 @@ export default function Blog() {
               overflow: hidden;
               align-items: stretch;
             }
+            .blog-feed-wrap {
+              height: 100%;
+              min-height: 0;
+            }
             .blog-feed {
               height: 100%;
               overflow-x: hidden;
               overflow-y: auto;
               padding-right: 0.35rem;
               overscroll-behavior: contain;
-              scrollbar-gutter: stable;
-              scrollbar-width: auto;
-              scrollbar-color: #dfcfb5 #111111;
+              scrollbar-width: none;
             }
-            .blog-feed::-webkit-scrollbar { width: 22px; }
-            .blog-feed::-webkit-scrollbar-track { background: #111111; }
-            .blog-feed::-webkit-scrollbar-thumb {
-              background: #dfcfb5;
-              border-radius: 12px;
-              border: 3px solid #111111;
-            }
+            .blog-feed::-webkit-scrollbar { display: none; width: 0; }
             .blog-welcome-pane {
               height: 100%;
               overflow: hidden;
@@ -551,7 +631,9 @@ export default function Blog() {
               overflow-y: auto;
               padding-right: 0.25rem;
               overscroll-behavior: contain;
+              scrollbar-width: none;
             }
+            .blog-welcome-copy::-webkit-scrollbar { display: none; width: 0; }
           }
 
           /* Thunder chip */
@@ -610,7 +692,8 @@ export default function Blog() {
         <div className="relative z-[1] max-w-7xl mx-auto px-6 md:px-8 pt-4 md:pt-6 pb-4 md:pb-6 flex-1 min-h-0 w-full">
           <div className="blog-split">
             {/* LEFT: logo + blog cards (scrolls on desktop) */}
-            <section className="blog-feed space-y-4 order-2 md:order-1">
+            <div className="blog-feed-wrap order-2 md:order-1">
+            <section ref={blogFeedRef} className="blog-feed space-y-4">
               <div className="bg-black/85 rounded-2xl border border-[#dfcfb5]/55 shadow-[0_18px_48px_rgba(0,0,0,0.6)] p-3 backdrop-blur-[2px]">
                 <div className="bg-black/80 rounded-xl p-3">
                   <img
@@ -623,10 +706,21 @@ export default function Blog() {
                 </div>
               </div>
 
-              {/* Newest → oldest. Oldest announcement always at the bottom. */}
+              {/* Newest date in the corner → oldest */}
 
-              {/* Studio posts from Admin (newest first) */}
-              {studioPosts.map((p) => {
+              {feedItems.map((item) => {
+                if (item.kind === "pinned") {
+                  return (
+                    <PinnedBlogCard
+                      key={item.id}
+                      post={item.p}
+                      onLaunchList={() => setShowList(true)}
+                      onArc={() => setShowArc(true)}
+                      onPress={() => setShowPress(true)}
+                    />
+                  );
+                }
+                const p = item.p;
                 const when = p.createdAt ? new Date(p.createdAt) : null;
                 const dateLabel =
                   when && !Number.isNaN(when.getTime())
@@ -639,7 +733,7 @@ export default function Blog() {
                 const dateAttr = when && !Number.isNaN(when.getTime()) ? when.toISOString().slice(0, 10) : undefined;
                 return (
                   <article
-                    key={p.id}
+                    key={item.id}
                     className="rounded-xl bg-black/75 border border-[#dfcfb5]/55 p-5 hover:border-[#dfcfb5] transition backdrop-blur-[1px]"
                   >
                     <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
@@ -650,12 +744,12 @@ export default function Blog() {
                       {p.title}
                     </h3>
                     {p.mediaType === "image" && p.mediaUrl ? (
-                      <figure className="mb-4 overflow-hidden rounded-xl border border-[#dfcfb5]/40 bg-black flex flex-col items-center">
+                      <figure className="blog-media-card mb-4">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={p.mediaUrl}
                           alt={p.mediaCaption || p.title}
-                          className="w-full max-w-[420px] h-auto max-h-[min(72vh,720px)] object-contain block mx-auto"
+                          className="blog-media-fill"
                         />
                         {p.mediaCaption ? (
                           <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
@@ -683,27 +777,20 @@ export default function Blog() {
                       />
                     ) : null}
                     {p.about || p.body ? (
-                      <div className="studio-copy-scroll">
+                      <CopyScrollBox className="studio-copy-scroll">
                         {p.about ? <BlogRichBody body={p.about} className="text-gray-200 text-base" /> : null}
                         {p.body ? <BlogRichBody body={p.body} className="text-gray-200 text-base" /> : null}
-                      </div>
+                      </CopyScrollBox>
                     ) : null}
                     <p className="text-gray-400 text-xs mt-4 italic">Happy Sleuthing.</p>
                   </article>
                 );
               })}
-
-              {/* Pinned announcements (editable in Admin → Blog) */}
-              {pinnedPosts.map((p) => (
-                <PinnedBlogCard
-                  key={p.id}
-                  post={p}
-                  onLaunchList={() => setShowList(true)}
-                  onArc={() => setShowArc(true)}
-                  onPress={() => setShowPress(true)}
-                />
-              ))}
             </section>
+            <div className="blog-master-rail">
+              <HoldScrollArrows targetRef={blogFeedRef} variant="master" label="Move between posts" />
+            </div>
+            </div>
 
             {/* RIGHT: Welcome stays fixed on desktop while blog scrolls */}
             <section className="blog-welcome-pane order-1 md:order-2">

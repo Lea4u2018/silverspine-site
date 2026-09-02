@@ -48,7 +48,11 @@ function formatWhen(iso) {
 function formatDisplayDate(iso) {
   try {
     if (!iso) return "—";
-    const d = new Date(iso);
+    const raw = String(iso).trim();
+    const ymd = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const d = ymd
+      ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
+      : new Date(raw);
     if (Number.isNaN(d.getTime())) return iso;
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   } catch {

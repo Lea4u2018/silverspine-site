@@ -77,9 +77,14 @@ export default function HoldScrollArrows({
 
 export function CopyScrollBox({ className, children }) {
   const ref = useRef(null);
+  const passWheelToList = (e) => {
+    const feed = e.currentTarget.closest(".blog-feed");
+    if (!feed) return;
+    feed.scrollBy({ top: e.deltaY, left: e.deltaX, behavior: "auto" });
+  };
   return (
     <div className="copy-with-arrows">
-      <div ref={ref} className={className}>
+      <div ref={ref} className={className} onWheel={passWheelToList}>
         {children}
       </div>
       <HoldScrollArrows targetRef={ref} variant="card" label="Scroll this post" />

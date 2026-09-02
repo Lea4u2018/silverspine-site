@@ -12,11 +12,15 @@ const REQUEST_EMAIL = "contact@silverspinestudio.com";
 
 function formatDate(iso) {
   try {
-    const d = new Date(iso);
+    const raw = String(iso || "").trim();
+    const ymd = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const d = ymd
+      ? new Date(Number(ymd[1]), Number(ymd[2]) - 1, Number(ymd[3]))
+      : new Date(raw);
     if (Number.isNaN(d.getTime())) return { label: iso, attr: iso };
     return {
       label: d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }),
-      attr: iso.slice(0, 10),
+      attr: ymd ? `${ymd[1]}-${ymd[2]}-${ymd[3]}` : raw.slice(0, 10),
     };
   } catch {
     return { label: iso, attr: iso };
