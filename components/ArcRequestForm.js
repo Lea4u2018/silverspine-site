@@ -163,7 +163,7 @@ export default function ArcRequestForm({ onSuccess, onCancel }) {
       </div>
       <p className="text-xs text-gray-400 mt-2">
         You’ll get an email confirmation right away. We select 25 sleuths for early access.
-        Selection notices go out Aug 17, 2026. If selected, ARC files deliver Sep 21–23, 2026.
+        Selection notices go out Aug 17, 2026. If selected, ARC files deliver Oct 1–3, 2026.
       </p>
     </form>
   );

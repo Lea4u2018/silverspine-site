@@ -13,6 +13,7 @@ export default function Document() {
         />
         <meta name="theme-color" content="#000000" />
         <meta name="msvalidate.01" content="48B013F26A102482A50819DF2467BA5D" />
+        <meta name="p:domain_verify" content="ceb17d7fd65f938f3187d8c5397c1f91" />
         <meta name="author" content="Leameso James" />
         <meta property="og:site_name" content="Silver Spine Studio™" />
         <meta property="og:type" content="website" />

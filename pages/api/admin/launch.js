@@ -20,6 +20,7 @@ import {
   saveDistributionUpload,
   saveEmailTemplates,
   saveTrackingNote,
+  markPersonEmailed,
   updateContact,
   updateDiscountCode,
   updateRecipient,
@@ -105,6 +106,13 @@ export default async function handler(req, res) {
         return res.status(200).json({ ok: true, note: saved });
       }
 
+      if (action === "mark-emailed") {
+        const email = String(body.email || "").trim();
+        if (!email) return res.status(400).json({ ok: false, error: "Email is required." });
+        await markPersonEmailed({ email, name: body.name });
+        return res.status(200).json({ ok: true });
+      }
+
       if (action === "add-contact") {
         const row = await addContact(body);
         return res.status(200).json({ ok: true, contact: row });
@@ -169,6 +177,23 @@ export default async function handler(req, res) {
         const ids = Array.isArray(body.ids) ? body.ids : [];
         for (const id of ids) {
           await updateRecipient(String(id).trim(), { role: "arc-selected" });
+        }
+        return res.status(200).json({ ok: true, count: ids.length });
+      }
+
+      if (action === "mark-copy-sent") {
+        const copyType = ["sneakPeek", "fullDigital", "arc"].includes(body.copyType) ? body.copyType : "sneakPeek";
+        const ids = Array.isArray(body.ids) ? body.ids.map(String).filter(Boolean) : [];
+        if (!ids.length) return res.status(400).json({ ok: false, error: "Select at least one person." });
+        const now = new Date().toISOString();
+        const label =
+          copyType === "sneakPeek"
+            ? "Sneak Peek marked sent (outside Admin)"
+            : copyType === "fullDigital"
+              ? "Full digital marked sent (outside Admin)"
+              : "ARC marked sent (outside Admin)";
+        for (const id of ids) {
+          await markRecipientSent(id, copyType, { sentAt: now, subject: label });
         }
         return res.status(200).json({ ok: true, count: ids.length });
       }

@@ -17,6 +17,7 @@ const ROLE_LABELS = {
   "arc-selected": "ARC selected",
   "launch-list": "Launch list",
   giveaway: "Giveaway winner",
+  "sneak-peek": "Sneak Peek",
   manual: "Manual",
 };
 
@@ -181,6 +182,9 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
     if (filter === "arc-selected") return rows.filter((r) => r.role === "arc-selected");
     if (filter === "launch-list") return rows.filter((r) => r.role === "launch-list");
     if (filter === "giveaway") return rows.filter((r) => r.role === "giveaway");
+    if (filter === "sneak-peek") {
+      return rows.filter((r) => r.role === "sneak-peek" || r.sends?.sneakPeek?.sentAt);
+    }
     return rows;
   }, [store, filter]);
 
@@ -218,11 +222,26 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
     const entry = activeLetter;
     const rows = [];
     const seenEmails = new Set();
+    const notes = store?.trackingNotes || {};
+
+    const hubSentFor = (email) => {
+      const n = notes[String(email || "").trim().toLowerCase()];
+      if (!n?.emailedAt) return null;
+      return { sentAt: n.emailedAt, subject: n.emailedSubject || "Marked emailed (outside Admin)" };
+    };
 
     for (const r of allRecipients) {
       const suggested = personMatchesLetter(entry, { role: r.role, kind: "" });
       if (letterSendFilter === "suggested" && !suggested) continue;
       if (letterSendFilter === "inbox") continue;
+      const letterSent =
+        entry.group === "followUp"
+          ? r.sends?.followUps?.[entry.key]
+          : entry.group === "selection"
+            ? r.sends?.[entry.selectionType === "giveawayWinner" ? "selectionGiveaway" : "selectionArc"]
+            : r.sends?.[entry.copyType];
+      const sent = letterSent?.sentAt ? letterSent : hubSentFor(r.email);
+      if (letterSendFilter === "sent" && !sent?.sentAt) continue;
       const rowId = `r_${r.id}`;
       rows.push({
         rowId,
@@ -232,12 +251,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         email: r.email,
         detail: ROLE_LABELS[r.role] || r.role,
         suggested,
-        sent:
-          entry.group === "followUp"
-            ? r.sends?.followUps?.[entry.key]
-            : entry.group === "selection"
-              ? r.sends?.[entry.selectionType === "giveawayWinner" ? "selectionGiveaway" : "selectionArc"]
-              : r.sends?.[entry.copyType],
+        sent,
       });
       seenEmails.add(r.email);
     }
@@ -247,6 +261,9 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         if (!s.email || seenEmails.has(s.email)) continue;
         const suggested = personMatchesLetter(entry, { role: "", kind: s.kind });
         if (letterSendFilter === "suggested" && !suggested) continue;
+        const letterSent = s.followUpsSent?.[entry.key];
+        const sent = letterSent?.sentAt ? letterSent : hubSentFor(s.email);
+        if (letterSendFilter === "sent" && !sent?.sentAt) continue;
         const rowId = `s_${s.id}`;
         rows.push({
           rowId,
@@ -256,13 +273,13 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
           email: s.email,
           detail: `${SUBMISSION_KIND_LABELS[s.kind] || s.kind}${s.status !== "new" ? ` · ${s.status}` : " · inbox"}`,
           suggested,
-          sent: s.followUpsSent?.[entry.key],
+          sent,
         });
       }
     }
 
     return rows;
-  }, [activeLetter, allRecipients, allSubmissions, letterSendFilter]);
+  }, [activeLetter, allRecipients, allSubmissions, letterSendFilter, store]);
 
   const letterSendChecked = useMemo(
     () => Object.keys(letterSendSelected).filter((k) => letterSendSelected[k]),
@@ -306,6 +323,8 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         setMsg(`Done — ${data.count} updated.`);
       } else if (data.sent != null) {
         setMsg(`Emailed ${data.sent} recipient${data.sent === 1 ? "" : "s"}.`);
+      } else if (payload.action === "mark-emailed") {
+        setMsg("Marked emailed.");
       } else {
         setMsg("Saved.");
       }
@@ -519,6 +538,15 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
     setSelected({});
   };
 
+  const markSneakPeekSent = async () => {
+    if (!selectedIds.length) {
+      setMsg("Select people first.");
+      return;
+    }
+    await post({ action: "mark-copy-sent", copyType: "sneakPeek", ids: selectedIds });
+    setSelected({});
+  };
+
   const sendCopies = async () => {
     if (!selectedIds.length) {
       setMsg("Select at least one person to email.");
@@ -612,6 +640,14 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
     await post({ action: "save-tracking-note", email: profile.email, note });
   };
 
+  const markProfileEmailed = async (profile) => {
+    if (!profile.email) {
+      setMsg("Need an email to mark as emailed.");
+      return;
+    }
+    await post({ action: "mark-emailed", email: profile.email, name: profile.name });
+  };
+
   const clearContactForm = () => {
     setEditingContactId("");
     setContactName("");
@@ -678,7 +714,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
       {msg ? <p className="text-sm text-gray-300 rounded-lg border border-white/10 bg-black/40 px-4 py-3">{msg}</p> : null}
 
       <section className="rounded-2xl border border-emerald-400/35 bg-gray-950/90 p-5 md:p-6">
-        <h2 className="text-xl font-extrabold mb-1 text-emerald-300">Contact hub — tracking, replies &amp; rolodex</h2>
+        <h2 className="text-xl font-extrabold mb-1 text-emerald-300">1. Contact hub — tracking, replies &amp; rolodex</h2>
         <p className="text-sm text-gray-400 mb-4">
           Search anyone by name, email, phone, or subject. See when they wrote in, when you emailed them, jot call
           notes, send a studio letter, or pull them up later from your contact book.
@@ -782,12 +818,12 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                       key={profile.email}
                       className="rounded-xl border border-white/10 bg-black/45 overflow-hidden"
                     >
-                      <button
-                        type="button"
-                        onClick={() => setExpandedProfile(open ? "" : profile.email)}
-                        className="w-full text-left px-4 py-3 flex flex-wrap items-start gap-3 hover:bg-white/5"
-                      >
-                        <div className="flex-1 min-w-[200px]">
+                      <div className="flex flex-wrap items-start gap-2 px-4 py-3 hover:bg-white/5">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedProfile(open ? "" : profile.email)}
+                          className="flex-1 min-w-[200px] text-left"
+                        >
                           <p className="font-semibold text-gray-100">
                             {profile.name}{" "}
                             <StatusChip status={profile.status} />
@@ -798,14 +834,22 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                               {[profile.businessName, profile.outlet].filter(Boolean).join(" · ")}
                             </p>
                           ) : null}
-                        </div>
-                        <div className="text-xs text-gray-500 shrink-0">
+                        </button>
+                        <div className="text-xs text-gray-500 shrink-0 flex flex-col items-end gap-2">
                           {profile.lastRequestAt ? (
                             <p>Requested {formatWhen(profile.lastRequestAt)}</p>
                           ) : null}
                           {profile.lastSentAt ? <p>Last sent {formatWhen(profile.lastSentAt)}</p> : null}
+                          <button
+                            type="button"
+                            disabled={busy}
+                            onClick={() => markProfileEmailed(profile)}
+                            className="text-xs px-3 py-1.5 rounded-lg border border-emerald-400/50 text-emerald-200 hover:bg-emerald-500/10 disabled:opacity-50"
+                          >
+                            Mark emailed
+                          </button>
                         </div>
-                      </button>
+                      </div>
                       {open ? (
                         <div className="px-4 pb-4 pt-0 border-t border-white/10 space-y-3">
                           <div className="flex flex-wrap gap-2 pt-3">
@@ -1094,6 +1138,16 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                                   Send letter
                                 </button>
                               ) : null}
+                              {c.email ? (
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => markProfileEmailed(prof.email ? prof : { email: c.email, name: c.name })}
+                                  className="text-xs px-2 py-1 rounded border border-emerald-400/40 text-emerald-200 disabled:opacity-50"
+                                >
+                                  Mark emailed
+                                </button>
+                              ) : null}
                               {c.manual ? (
                                 <>
                                   <button
@@ -1138,7 +1192,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
       <>
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <h2 className="text-xl font-extrabold mb-1" style={{ color: GOLD }}>
-          Launch countdown matrix
+          2. Launch countdown matrix
         </h2>
         <p className="text-sm text-gray-400 mb-4">
           Edits here update the public homepage countdown and milestone table after save. Live preview:{" "}
@@ -1177,7 +1231,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                         next[i] = { ...next[i], when: e.target.value };
                         setMatrix(next);
                       }}
-                      className="w-full min-w-[120px] rounded bg-black border border-gray-700 px-2 py-1"
+                      className="w-full min-w-[13rem] rounded bg-black border border-gray-700 px-2 py-1 text-sm"
                     />
                   </td>
                   <td className="px-2 py-1">
@@ -1230,7 +1284,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                   setTargets(next);
                 }}
                 placeholder="ISO date (2026-09-30T06:00:00.000Z)"
-                className="rounded bg-black border border-gray-700 px-3 py-2 text-sm font-mono"
+                className="w-full min-w-0 rounded bg-black border border-gray-700 px-3 py-2 text-sm font-mono"
               />
               <input
                 value={row.detail}
@@ -1257,7 +1311,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
 
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <h2 className="text-xl font-extrabold mb-1" style={{ color: GOLD }}>
-          Distribution files
+          3. Distribution files
         </h2>
         <p className="text-sm text-gray-400 mb-4">
           Attach these when you mass-email selected people. Large files: put in{" "}
@@ -1331,7 +1385,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
 
       <section className="rounded-2xl border border-[#a77a23]/35 bg-gray-950/90 p-5 md:p-6">
         <h2 className="text-xl font-extrabold mb-1" style={{ color: GOLD }}>
-          Email letters (edit &amp; send)
+          4. Email letters (edit &amp; send)
         </h2>
         <p className="text-sm text-gray-400 mb-4">
           Auto-generated letters for every site subject — edit wording, check who receives each one, then send.
@@ -1434,8 +1488,8 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                     <textarea
                       value={tpl.body || ""}
                       onChange={(e) => setTpl({ body: e.target.value })}
-                      rows={14}
-                      className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm font-mono leading-relaxed"
+                      rows={18}
+                      className="w-full rounded bg-black border border-gray-700 px-3 py-2 text-sm font-mono leading-relaxed whitespace-pre-wrap break-words"
                     />
                   </div>
                 </div>
@@ -1453,6 +1507,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                   { id: "all", label: "All on list + inbox" },
                   { id: "list", label: "Send list only" },
                   { id: "inbox", label: "Inbox only" },
+                  { id: "sent", label: "Already sent" },
                 ].map((tab) => (
                   <button
                     key={tab.id}
@@ -1511,7 +1566,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
               </div>
               {letterSendRows.length === 0 ? (
                 <p className="text-sm text-gray-500 italic">
-                  No one matches this filter. Try “All on list + inbox” or add people manually.
+                  No one matches this filter. Try “All on list + inbox”, “Already sent”, or add people manually.
                 </p>
               ) : (
                 <div className="space-y-2 max-h-[min(40vh,360px)] overflow-y-auto pr-1">
@@ -1591,7 +1646,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
           <div>
             <h2 className="text-xl font-extrabold" style={{ color: GOLD }}>
-              ARC &amp; launch list
+              5. ARC &amp; launch list
             </h2>
             <p className="text-sm text-gray-400 mt-1">
               New ARC and launch-list signups land here automatically. ARC selected:{" "}
@@ -1601,7 +1656,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         </div>
 
         <div className="mb-8 rounded-xl border border-[#a77a23]/40 bg-[#a77a23]/10 p-4 md:p-5">
-          <h3 className="text-base font-bold text-[#f5edd7] mb-1">Add people manually</h3>
+          <h3 className="text-base font-bold text-[#f5edd7] mb-1">5.1 Add people manually</h3>
           <p className="text-sm text-gray-400 mb-4">
             From Gumroad, mail, or your own notes — one at a time or paste a list. No form submission required.
           </p>
@@ -1638,6 +1693,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                   <option value="arc-applicant">ARC applicant</option>
                   <option value="launch-list">Launch list</option>
                   <option value="giveaway">Giveaway winner (3)</option>
+                  <option value="sneak-peek">Sneak Peek</option>
                   <option value="manual">Manual</option>
                 </select>
               </div>
@@ -1674,6 +1730,20 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                 className="px-4 py-2 rounded-lg bg-[#a77a23] text-black text-sm font-semibold disabled:opacity-50"
               >
                 Add one person
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAddName("");
+                  setAddEmail("");
+                  setAddFormat("");
+                  setAddReviewSpot("");
+                  setAddNotes("");
+                  setBulkText("");
+                }}
+                className="px-4 py-2 rounded-lg border border-white/20 text-sm"
+              >
+                Clear
               </button>
               {isOwner ? (
               <button
@@ -1713,6 +1783,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
                     <option value="arc-applicant">ARC applicant</option>
                     <option value="launch-list">Launch list</option>
                     <option value="giveaway">Giveaway winner</option>
+                    <option value="sneak-peek">Sneak Peek</option>
                   </select>
                 </div>
                 <button
@@ -1728,7 +1799,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
         </div>
 
         <div className="mb-8 rounded-xl border border-[#a77a23]/35 bg-gray-950/80 p-4 md:p-5">
-          <h3 className="text-base font-bold text-emerald-300 mb-1">Site submissions inbox</h3>
+          <h3 className="text-base font-bold text-emerald-300 mb-1">5.2 Site submissions inbox</h3>
           <p className="text-sm text-gray-400 mb-4">
             Names pulled straight from your site forms — no digging through mail. ARC, launch list, contact,
             media, and community requests appear here when someone submits. Check the ones you want, then import
@@ -1833,6 +1904,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
           )}
         </div>
 
+        <h3 className="text-base font-bold text-[#f5edd7] mb-3">5.3 Send list</h3>
         <div className="flex flex-wrap gap-2 mb-4">
           {[
             { id: "all", label: "All" },
@@ -1840,6 +1912,7 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
             { id: "arc-selected", label: "ARC selected" },
             { id: "launch-list", label: "Launch list" },
             { id: "giveaway", label: "Giveaway winners" },
+            { id: "sneak-peek", label: "Sneak Peek" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -1895,6 +1968,14 @@ export default function AdminLaunchPanel({ adminRole = "owner" }) {
             className="px-3 py-2 rounded-lg border border-[#a77a23]/50 text-sm text-[#f5edd7]"
           >
             Mark as ARC selected
+          </button>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={markSneakPeekSent}
+            className="px-3 py-2 rounded-lg border border-emerald-400/50 text-sm text-emerald-200"
+          >
+            Mark Sneak Peek sent
           </button>
           <button
             type="button"

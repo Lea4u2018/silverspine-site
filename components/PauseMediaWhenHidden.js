@@ -16,6 +16,17 @@ export default function PauseMediaWhenHidden() {
           /* ignore */
         }
       });
+      if (hidden) {
+        document.querySelectorAll("audio[data-wheel-score]").forEach((el) => {
+          try {
+            el.pause();
+            el.muted = true;
+            el.volume = 0;
+          } catch {
+            /* ignore */
+          }
+        });
+      }
     };
 
     document.addEventListener("visibilitychange", sync);

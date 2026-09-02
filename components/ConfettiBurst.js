@@ -270,38 +270,30 @@ export default function ConfettiBurst({
       const r = el.getBoundingClientRect();
       if (feed) {
         const f = feed.getBoundingClientRect();
-        return r.bottom > f.top + 40 && r.top < f.bottom - 40;
+        return r.bottom > f.top + 8 && r.top < f.bottom - 8;
       }
-      return r.top < 0.9 * window.innerHeight && r.bottom > 40;
+      return r.top < window.innerHeight && r.bottom > 0;
     };
 
     if (whenVisible && sectionEl) {
       observer = new IntersectionObserver(
         (entries) => {
-          const visible = entries.some((e) => e.isIntersecting && e.intersectionRatio >= 0.08);
-          if (visible) {
-            if (!startedRef.current) schedule();
-            return;
-          }
-          stopBurst();
+          const visible = entries.some((e) => e.isIntersecting);
+          if (visible && !startedRef.current) schedule();
         },
-        { root: feed, threshold: [0, 0.08, 0.2, 0.4], rootMargin: "0px" }
+        { root: feed || null, threshold: [0, 0.01, 0.08], rootMargin: "80px 0px" }
       );
       observer.observe(sectionEl);
       if (inView()) schedule();
-      else stopBurst();
       const onScroll = () => {
-        if (inView()) {
-          if (!startedRef.current) schedule();
-          return;
-        }
-        stopBurst();
+        if (inView() && !startedRef.current) schedule();
       };
       feed?.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("scroll", onScroll, { passive: true });
       return () => {
-        stopBurst();
         observer?.disconnect();
         feed?.removeEventListener("scroll", onScroll);
+        window.removeEventListener("scroll", onScroll);
       };
     }
 

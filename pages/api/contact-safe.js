@@ -242,7 +242,7 @@ export default async function handler(req, res) {
         "WHAT HAPPENS NEXT",
         "1) ARC sign-up window: August 7–14, 2026",
         "2) Selection emails go out: August 17, 2026 (25 sleuths)",
-        "3) If selected, ARC delivery window: September 21–23, 2026",
+        "3) If selected, ARC delivery window: October 1–3, 2026",
         "4) Official release day: November 1, 2026",
         "",
         "Applying does not guarantee a spot. If you’re selected, you’ll get a separate email with download details.",

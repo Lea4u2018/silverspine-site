@@ -236,7 +236,7 @@ const SECTIONS = [
       },
       {
         q: "What is an ARC request?",
-        a: "ARC means Advanced Review Copy / early-release review access. We select 25 sleuths from applications (Aug 7–14, 2026; selection emails Aug 17). Delivery is Sep 21–23, 2026. Separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
+        a: "ARC means Advanced Review Copy / early-release review access. We select 25 sleuths from applications (Aug 7–14, 2026; selection emails Aug 17). Delivery is Oct 1–3, 2026. Separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
       },
       {
         q: "How do I contact Silver Spine Studio?",

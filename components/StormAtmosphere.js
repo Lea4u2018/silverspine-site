@@ -154,12 +154,9 @@ export default function StormAtmosphere({ mood = "highway" }) {
 
     sync();
     window.addEventListener("sss-piano-mute", sync);
-    // Re-try after gesture / route (browsers block autoplay until then)
-    window.addEventListener("pointerdown", sync);
 
     return () => {
       window.removeEventListener("sss-piano-mute", sync);
-      window.removeEventListener("pointerdown", sync);
       try {
         delete document.documentElement.dataset.sssSoftThunder;
       } catch {

@@ -6,6 +6,7 @@ import CharacterWheel from "@/components/CharacterWheel";
 import ConfettiBurst from "@/components/ConfettiBurst";
 import { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { BLOG_IMG } from "@/lib/blogImages";
+import { mediaCardClass, frameForPost } from "@/lib/blogMedia";
 
 const GOLD = "#dfcfb5";
 const REQUEST_EMAIL = "contact@silverspinestudio.com";
@@ -92,6 +93,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
   const date = formatDate(post.dateISO);
   const actions = Array.isArray(post.actions) ? post.actions : [];
   const figure = post.figureKey && BLOG_IMG[post.figureKey] ? BLOG_IMG[post.figureKey] : null;
+  const frame = frameForPost(post);
 
   const actionButtons = [];
 
@@ -175,7 +177,10 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
 
   const hasTimelineToggle = actions.includes("timeline-toggle");
   const hasBrandToggle = actions.includes("brand-notes-toggle");
-  const showConfetti = post.id === "pinned-arc-lucky-sleuthers" || post.confetti === true;
+  const showConfetti =
+    post.id === "pinned-arc-lucky-sleuthers" ||
+    post.id === "pinned-site-live" ||
+    post.confetti === true;
 
   const bodyBlock = (
     <>
@@ -237,19 +242,22 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
           poster={post.mediaPoster}
           caption={post.mediaCaption}
           label={post.title}
+          frame={frame}
         />
       ) : null}
 
-      {post.mediaType === "figure" && figure ? <BlogFigures images={[figure]} /> : null}
+      {post.mediaType === "figure" && figure ? <BlogFigures images={[figure]} frame={frame} /> : null}
 
       {post.mediaType === "image" && post.mediaUrl ? (
-        <figure className="blog-media-card my-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={post.mediaUrl}
-            alt={post.mediaCaption || post.title}
-            className="blog-media-fill"
-          />
+        <figure className={mediaCardClass(frame, "my-4")}>
+          <div className="blog-media-stage">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.mediaUrl}
+              alt={post.mediaCaption || post.title}
+              className="blog-media-fill"
+            />
+          </div>
           {post.mediaCaption ? (
             <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
               {post.mediaCaption}

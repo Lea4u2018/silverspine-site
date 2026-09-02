@@ -6,6 +6,7 @@ import {
   playAllAmbient,
   readPianoMuted,
   stopAllAmbient,
+  killAllSiteSound,
   writePianoMuted,
 } from "@/lib/cinematicAudio";
 
@@ -34,45 +35,22 @@ export function CinematicAudioProvider({ children }) {
     return () => window.removeEventListener("sss-piano-mute", onPref);
   }, []);
 
-  // Keep the piano alive across page changes once the reader has invited sound in
+  // Do not restart music on clicks. Closing or hiding the tab must kill every player.
   useEffect(() => {
-    const resume = (e) => {
-      if (typeof document !== "undefined" && document.hidden) return;
-      if (e?.type === "keydown") {
-        const t = e.target;
-        const tag = t?.tagName?.toLowerCase?.();
-        if (tag === "input" || tag === "textarea" || tag === "select" || t?.isContentEditable) return;
-        if (e.metaKey || e.ctrlKey || e.altKey) return;
-        const k = e.key;
-        if (k === "Tab" || k === "Escape" || k === "F5" || k?.startsWith?.("F")) return;
-      }
-      if (!readPianoMuted()) playAllAmbient();
-    };
-
+    const halt = () => killAllSiteSound();
     const onVisibility = () => {
-      // Hard-stop when the tab is hidden / closed so rumble can’t keep playing “nowhere”
-      if (document.hidden) stopAllAmbient();
-      else resume();
+      if (document.hidden) halt();
     };
-
-    resume();
-    router.events.on("routeChangeComplete", resume);
-
-    // Any click can re-unlock after browser pause / tab switch
-    window.addEventListener("pointerdown", resume);
-    window.addEventListener("keydown", resume);
     document.addEventListener("visibilitychange", onVisibility);
-    window.addEventListener("pagehide", stopAllAmbient);
-
+    window.addEventListener("pagehide", halt);
+    window.addEventListener("beforeunload", halt);
     return () => {
-      router.events.off("routeChangeComplete", resume);
-      window.removeEventListener("pointerdown", resume);
-      window.removeEventListener("keydown", resume);
       document.removeEventListener("visibilitychange", onVisibility);
-      window.removeEventListener("pagehide", stopAllAmbient);
-      stopAllAmbient();
+      window.removeEventListener("pagehide", halt);
+      window.removeEventListener("beforeunload", halt);
+      halt();
     };
-  }, [router.events]);
+  }, []);
 
   const ensurePlaying = useCallback(() => {
     if (readPianoMuted()) return false;
@@ -89,7 +67,7 @@ export function CinematicAudioProvider({ children }) {
     setMuted(nextMuted);
 
     if (nextMuted) {
-      stopAllAmbient();
+      killAllSiteSound();
       setError("");
       return;
     }

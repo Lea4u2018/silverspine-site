@@ -8,20 +8,35 @@ const CARD_W = 312;
 const CARD_H = 330;
 /** Only these cards exist in 3D. The full Book One list (38) rotates through them, one face-on at a time. */
 const SLOTS = 4;
+const SECONDS_PER_FACE = 7;
+const WHEEL_VOL_KEY = "sss-wheel-score-volume";
+
+function readWheelVolume() {
+  if (typeof window === "undefined") return 0.55;
+  try {
+    const n = parseFloat(window.localStorage.getItem(WHEEL_VOL_KEY) || "");
+    if (Number.isFinite(n) && n >= 0 && n <= 1) return n;
+  } catch {
+    /* ignore */
+  }
+  return 0.55;
+}
 
 export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const list = Array.isArray(faces) ? faces : [];
   const n = list.length || 1;
   const step = 360 / SLOTS;
   const radius = Math.round((CARD_H * 0.58) / Math.tan(Math.PI / SLOTS));
-  const [origin, setOrigin] = useState(0);
   const [musicOn, setMusicOn] = useState(false);
   const [musicError, setMusicError] = useState("");
   const [spinning, setSpinning] = useState(true);
+  const [scoreVol, setScoreVol] = useState(0.55);
+  const scoreVolRef = useRef(0.55);
   const audioRef = useRef(null);
   const boxRef = useRef(null);
   const inViewRef = useRef(false);
   const userMutedRef = useRef(false);
+  const slotEls = useRef([]);
   const ringRef = useRef(null);
   const nameRef = useRef(null);
   const lineRef = useRef(null);
@@ -60,6 +75,38 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     return ((originRef.current + slotOffset(slot)) % count + count) % count;
   };
 
+  const paintSlot = (slot) => {
+    const el = slotEls.current[slot];
+    if (!el) return;
+    const face = listRef.current[faceIndex(slot)];
+    const img = el.querySelector("[data-wheel-img]");
+    const mystery = el.querySelector("[data-wheel-mystery]");
+    const plate = el.querySelector("[data-wheel-plate]");
+    const plateName = el.querySelector("[data-wheel-plate-name]");
+    if (!face) return;
+    if (face.mystery) {
+      if (img) img.hidden = true;
+      if (mystery) mystery.hidden = false;
+      if (plate) plate.hidden = false;
+      if (plateName) plateName.textContent = "Guess Who";
+      return;
+    }
+    if (mystery) mystery.hidden = true;
+    if (img) {
+      img.hidden = false;
+      if (face.src && img.getAttribute("src") !== face.src) {
+        img.setAttribute("src", face.src);
+      }
+      img.alt = face.name || "";
+    }
+    if (face.nameplate) {
+      if (plate) plate.hidden = false;
+      if (plateName) plateName.textContent = face.name || "";
+    } else if (plate) {
+      plate.hidden = true;
+    }
+  };
+
   const applyAngle = (a) => {
     const count = nRef.current;
     const deg = stepRef.current;
@@ -79,10 +126,13 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     }
     angleRef.current = next;
     originRef.current = origin;
-    if (shifted) setOrigin(origin);
+    if (shifted) paintSlot(0);
     const ring = ringRef.current;
     if (ring) {
       ring.style.transform = `rotateX(${next}deg)`;
+    }
+    if (shifted) {
+      for (let i = 1; i < SLOTS; i += 1) paintSlot(i);
     }
     const faceUp = Math.abs(next) < deg * 0.12;
     if (faceUp) {
@@ -95,10 +145,36 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   };
 
   useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+    let el = document.getElementById("sss-wheel-score");
+    if (!el) {
+      el = document.createElement("audio");
+      el.id = "sss-wheel-score";
+      el.setAttribute("data-wheel-score", "true");
+      el.src = WHEEL_MUSIC.src;
+      el.loop = true;
+      el.preload = "auto";
+      el.setAttribute("playsinline", "true");
+      document.body.appendChild(el);
+    }
+    audioRef.current = el;
+    const vol = readWheelVolume();
+    scoreVolRef.current = vol;
+    setScoreVol(vol);
+    el.volume = vol;
+    listRef.current.forEach((face) => {
+      if (!face?.src) return;
+      const img = new Image();
+      img.src = face.src;
+    });
     reduceRef.current =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     applyAngle(0);
+    for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
+    return () => {
+      silenceWheelMusic();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -110,7 +186,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       const dt = Math.min(32, now - last);
       last = now;
       if (!pausedRef.current && !heldRef.current) {
-        applyAngle(angleRef.current + dt * 0.0055);
+        applyAngle(angleRef.current + dt * ((stepRef.current * 0.9) / (SECONDS_PER_FACE * 1000)));
       }
       raf = requestAnimationFrame(tick);
     };
@@ -120,16 +196,21 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   }, []);
 
   const silenceWheelMusic = () => {
-    const el = audioRef.current;
-    if (el) {
-      el.pause();
+    const kill = (el) => {
+      if (!el) return;
       try {
+        el.pause();
+        el.muted = true;
+        el.volume = 0;
         el.currentTime = 0;
       } catch {
         /* ignore */
       }
+    };
+    kill(audioRef.current);
+    if (typeof document !== "undefined") {
+      document.querySelectorAll("audio[data-wheel-score], audio#sss-wheel-score").forEach(kill);
     }
-    restoreAmbientAfterNarration();
     setMusicOn(false);
     setMusicError("");
   };
@@ -140,7 +221,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (!el) return false;
     el.loop = true;
     el.muted = false;
-    el.volume = 0.9;
+    el.volume = scoreVolRef.current;
     try {
       duckAmbientForNarration();
       await el.play();
@@ -160,50 +241,71 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
 
   useEffect(() => {
     const box = boxRef.current;
-    if (!box || typeof IntersectionObserver === "undefined") return undefined;
-
-    const setVisible = (visible) => {
-      inViewRef.current = visible;
-      if (visible) startWheelMusic();
-      else silenceWheelMusic();
-    };
-
-    const onEntry = (entries) => {
-      const hit = entries[0];
-      const ratio = hit?.intersectionRatio || 0;
-      setVisible(!!(hit?.isIntersecting && ratio >= 0.2));
-    };
-
-    const opts = { threshold: [0, 0.12, 0.2, 0.35, 0.5, 0.75, 1] };
+    if (!box) return undefined;
     const feed = box.closest(".blog-feed");
-    const watchers = [new IntersectionObserver(onEntry, opts)];
-    if (feed) watchers.push(new IntersectionObserver(onEntry, { ...opts, root: feed }));
-    watchers.forEach((io) => io.observe(box));
 
-    const onScrollAway = () => {
-      const feedBox = feed?.getBoundingClientRect();
+    const cardIsOn = () => {
       const r = box.getBoundingClientRect();
+      if (r.height < 8) return false;
       const vh = window.innerHeight || 0;
-      const inWindow = r.bottom > 80 && r.top < vh - 80;
-      const inFeed = feedBox
-        ? r.bottom > feedBox.top + 24 && r.top < feedBox.bottom - 24
-        : true;
-      if (!inWindow || !inFeed) setVisible(false);
+      const windowHit = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      if (windowHit / r.height < 0.45) return false;
+      if (!feed) return true;
+      const f = feed.getBoundingClientRect();
+      const feedHit = Math.min(r.bottom, f.bottom) - Math.max(r.top, f.top);
+      return feedHit / r.height >= 0.45;
     };
-    feed?.addEventListener("scroll", onScrollAway, { passive: true });
-    window.addEventListener("scroll", onScrollAway, { passive: true });
 
-    const onGesture = () => {
-      if (inViewRef.current && !userMutedRef.current) startWheelMusic();
+    const sync = () => {
+      const on = cardIsOn();
+      const was = inViewRef.current;
+      inViewRef.current = on;
+      if (!on) {
+        silenceWheelMusic();
+        return;
+      }
+      if (!was && on && !userMutedRef.current) startWheelMusic();
     };
-    window.addEventListener("pointerdown", onGesture, { capture: true });
+
+    let raf = 0;
+    const onMove = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        sync();
+      });
+    };
+
+    feed?.addEventListener("scroll", onMove, { passive: true });
+    window.addEventListener("scroll", onMove, { passive: true, capture: true });
+    window.addEventListener("resize", onMove);
+    const onHidden = () => {
+      if (document.hidden) {
+        inViewRef.current = false;
+        silenceWheelMusic();
+      } else {
+        sync();
+      }
+    };
+    document.addEventListener("visibilitychange", onHidden);
+
+    let io;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(onMove, {
+        threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.8, 1],
+        root: feed || null,
+      });
+      io.observe(box);
+    }
+    sync();
 
     return () => {
-      watchers.forEach((io) => io.disconnect());
-      feed?.removeEventListener("scroll", onScrollAway);
-      window.removeEventListener("scroll", onScrollAway);
-      window.removeEventListener("pointerdown", onGesture, { capture: true });
-      if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+      if (raf) cancelAnimationFrame(raf);
+      io?.disconnect();
+      feed?.removeEventListener("scroll", onMove);
+      window.removeEventListener("scroll", onMove, { capture: true });
+      window.removeEventListener("resize", onMove);
+      document.removeEventListener("visibilitychange", onHidden);
       inViewRef.current = false;
       silenceWheelMusic();
     };
@@ -269,7 +371,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       setMusicError("Player missing");
       return;
     }
-    if (musicOn && !el.paused) {
+    if (!el.paused || musicOn) {
       userMutedRef.current = true;
       silenceWheelMusic();
       return;
@@ -284,6 +386,27 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     e?.stopPropagation();
     pauseThenResume(900);
     applyAngle(angleRef.current + dir * stepRef.current);
+  };
+
+  const onScoreVolume = (e) => {
+    e.stopPropagation();
+    const next = Math.min(1, Math.max(0, Number(e.target.value) / 100));
+    scoreVolRef.current = next;
+    setScoreVol(next);
+    try {
+      window.localStorage.setItem(WHEEL_VOL_KEY, String(next));
+    } catch {
+      /* ignore */
+    }
+    const el = audioRef.current;
+    if (el && !userMutedRef.current) {
+      el.volume = next;
+      if (next <= 0) {
+        el.muted = true;
+      } else if (musicOn) {
+        el.muted = false;
+      }
+    }
   };
 
   const guardControlPointer = (e) => {
@@ -336,6 +459,19 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           <button type="button" onClick={(e) => spinBy(-1, e)} aria-label="Next face">
             ▼
           </button>
+          <label className="character-wheel-vol">
+            <span>Vol</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value={Math.round(scoreVol * 100)}
+              onChange={onScoreVolume}
+              onPointerDown={guardControlPointer}
+              aria-label="Carousel score volume"
+            />
+          </label>
         </div>
         {musicError ? <p className="character-wheel-error">{musicError}</p> : null}
         <div
@@ -347,39 +483,30 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         >
           <div className="character-wheel-scene">
             <div ref={ringRef} className="character-wheel-ring">
-              {Array.from({ length: SLOTS }, (_, i) => {
-                const face = list[faceIndex(i)] || list[0];
-                if (!face) return null;
-                return (
+              {Array.from({ length: SLOTS }, (_, i) => (
                 <div
                   key={`slot-${i}`}
+                  ref={(el) => {
+                    slotEls.current[i] = el;
+                  }}
                   className="character-wheel-slot"
                   style={{
                     transform: `rotateX(${i * step}deg) translateZ(${radius}px)`,
                   }}
                 >
-                  {face.mystery ? (
-                    <div className="character-wheel-mystery" aria-hidden="true">
-                      ?
-                    </div>
-                  ) : (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={face.src} alt={face.name || ""} draggable="false" decoding="async" />
-                  )}
+                  <img data-wheel-img alt="" draggable="false" decoding="async" />
+                  <div className="character-wheel-mystery" data-wheel-mystery hidden aria-hidden="true">
+                    ?
+                  </div>
+                  <div className="character-wheel-oncard" data-wheel-plate hidden>
+                    <span className="character-wheel-oncard-name" data-wheel-plate-name />
+                  </div>
                 </div>
-                );
-              })}
+              ))}
             </div>
           </div>
         </div>
         <p className="character-wheel-credit">{WHEEL_MUSIC.credit}</p>
-        <audio
-          ref={audioRef}
-          src={WHEEL_MUSIC.src}
-          preload="auto"
-          loop
-          playsInline
-        />
       </div>
       <style>{`
         .character-wheel-card {
@@ -445,6 +572,23 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           border-color: ${GOLD};
           color: ${GOLD};
         }
+        .character-wheel-vol {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          height: 2.2rem;
+          padding: 0 0.7rem 0 0.75rem;
+          border-radius: 999px;
+          border: 1px solid rgba(201, 206, 214, 0.45);
+          background: rgba(0, 0, 0, 0.65);
+          color: ${PLAT};
+          font-size: 0.75rem;
+        }
+        .character-wheel-vol input[type="range"] {
+          width: 5.5rem;
+          accent-color: ${GOLD};
+          cursor: pointer;
+        }
         .character-wheel-error {
           position: relative;
           z-index: 6;
@@ -496,6 +640,11 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           -webkit-backface-visibility: hidden;
           pointer-events: none;
         }
+        .character-wheel-slot img[hidden],
+        .character-wheel-mystery[hidden],
+        .character-wheel-oncard[hidden] {
+          display: none !important;
+        }
         .character-wheel-slot img {
           display: block;
           width: 100%;
@@ -503,6 +652,28 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           object-fit: cover;
           object-position: 50% 50%;
           pointer-events: none;
+          background: #07080c;
+        }
+        .character-wheel-oncard {
+          position: absolute;
+          left: 9px;
+          right: 9px;
+          bottom: 9px;
+          z-index: 3;
+          padding: 0.48rem 0.4rem 0.45rem;
+          border-radius: 0.35rem;
+          background: linear-gradient(to top, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.62));
+          text-align: center;
+          pointer-events: none;
+        }
+        .character-wheel-oncard-name {
+          display: block;
+          color: ${GOLD};
+          font-weight: 700;
+          letter-spacing: 0.07em;
+          font-size: 0.82rem;
+          line-height: 1.25;
+          text-transform: uppercase;
         }
         .character-wheel-mystery {
           width: 100%;
@@ -510,7 +681,8 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 6.4rem;
+          padding-bottom: 2.4rem;
+          font-size: 5.2rem;
           font-weight: 700;
           color: ${PLAT};
           background: radial-gradient(circle at 50% 40%, #1a1e28, #05060a 72%);

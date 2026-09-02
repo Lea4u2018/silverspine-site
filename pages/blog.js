@@ -12,6 +12,7 @@ import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/For
 import StormAtmosphere from "@/components/StormAtmosphere";
 import HoldScrollArrows, { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { readPreferredLang } from "@/lib/i18n";
+import { mediaCardClass, frameForPost } from "@/lib/blogMedia";
 
 export default function Blog() {
 
@@ -27,6 +28,7 @@ export default function Blog() {
   const [studioPosts, setStudioPosts] = useState([]);
   const [pinnedPosts, setPinnedPosts] = useState([]);
   const blogFeedRef = useRef(null);
+  const welcomeCopyRef = useRef(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,6 +46,17 @@ export default function Blog() {
     })();
     return () => {
       cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    html.classList.add("sss-blog-lock");
+    body.classList.add("sss-blog-lock");
+    return () => {
+      html.classList.remove("sss-blog-lock");
+      body.classList.remove("sss-blog-lock");
     };
   }, []);
 
@@ -186,7 +199,7 @@ export default function Blog() {
   ].sort((a, b) => b.t - a.t);
 
   return (
-    <div className="blog-page text-gray-100 min-h-screen flex flex-col relative z-10">
+    <div className="blog-page text-gray-100 flex flex-col relative z-10">
       {/* Soft storm around the room — cliffside panel still owns the main visual */}
       <StormAtmosphere mood="ridge" />
       <Head>
@@ -198,13 +211,51 @@ export default function Blog() {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <style>{`
           :root {
-            --header-h: 56px;
-            --footer-h: 136px;
             --gold: ${GOLD};
           }
 
-          html, body { margin: 0; background:#000; min-height: 100%; }
+          html.sss-blog-lock,
+          html.sss-blog-lock body,
+          html.sss-blog-lock #__next {
+            height: 100%;
+            max-height: 100dvh;
+            overflow: hidden;
+          }
+          html.sss-blog-lock #__next > div {
+            height: 100%;
+            max-height: 100dvh;
+            overflow: hidden;
+          }
+          html.sss-blog-lock #__next > div > .relative.z-10.flex-1 {
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+          }
+
+          html, body { margin: 0; background:#000; }
           #__next { height:auto; overflow:visible; }
+          html.sss-blog-lock #__next { height: 100%; overflow: hidden; }
+
+          .blog-page {
+            flex: 1 1 auto;
+            min-height: 0;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+          }
+          .blog-split-host {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            height: 100%;
+            overflow: hidden;
+          }
+          .blog-split-host .blog-split {
+            flex: 1 1 auto;
+            min-height: 0;
+            height: 100%;
+          }
 
           .nav-wrap { max-width: 1400px; }
           .nav-link { color: #e5e7eb; }
@@ -219,7 +270,8 @@ export default function Blog() {
             flex-direction: column;
             flex: 1 1 auto;
             min-height: 0;
-            overflow: visible !important;
+            height: 100%;
+            overflow: hidden;
           }
           .page-frame > *:last-child { margin-bottom: 0 !important; }
 
@@ -523,27 +575,89 @@ export default function Blog() {
             flex-direction: column;
             min-height: 0;
           }
+          .blog-welcome-copy-wrap {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+            flex: 1 1 auto;
+            min-height: 0;
+          }
+          .blog-welcome-copy-wrap .blog-welcome-copy {
+            flex: 1 1 auto;
+            min-width: 0;
+          }
+          .blog-welcome-copy-wrap .blog-hold-scroll {
+            align-self: center;
+            padding-top: 0;
+          }
           .blog-welcome-copy {
             overflow-x: hidden;
             overflow-y: auto;
             padding-right: 0.25rem;
+            padding-bottom: 1.5rem;
             scrollbar-width: none;
           }
           .blog-welcome-copy::-webkit-scrollbar { display: none; width: 0; }
           .blog-media-card {
             width: 100%;
             max-width: 100%;
+            box-sizing: border-box;
             overflow: hidden;
             border-radius: 0.75rem;
-            border: 1px solid rgba(223, 207, 181, 0.4);
+            border: 1px solid rgba(223, 207, 181, 0.45);
+            background: #07080c;
+          }
+          .character-wheel-card.blog-media-card {
             background: transparent;
+          }
+          .blog-media-stage {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            background: #07080c;
           }
           .blog-media-fill {
             display: block;
             width: 100%;
             height: auto;
             max-width: 100%;
-            background: transparent;
+            background: #07080c;
+          }
+          .blog-media-card[class*="blog-media-frame-"] .blog-media-fill {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 50% 20%;
+          }
+          /* Book covers: whole jacket — title, road, name. A hair under full column height. */
+          .blog-media-frame-cover .blog-media-stage,
+          .blog-media-frame-coverTight .blog-media-stage,
+          .blog-media-frame-podcast .blog-media-stage {
+            height: auto;
+            max-height: 38rem;
+            background: #07080c;
+          }
+          .blog-media-frame-cover .blog-media-fill,
+          .blog-media-frame-coverTight .blog-media-fill,
+          .blog-media-frame-podcast .blog-media-fill {
+            width: 100%;
+            height: auto !important;
+            max-height: 38rem;
+            object-fit: contain;
+            object-position: center;
+          }
+          .blog-media-frame-reel .blog-media-stage { height: 38rem; }
+          .blog-media-frame-reelLite .blog-media-stage { height: 44rem; }
+          .blog-media-frame-window .blog-media-stage { height: 32rem; }
+          .blog-media-frame-quote .blog-media-stage { height: 30rem; }
+          .blog-media-frame-scenic .blog-media-stage { height: 30rem; }
+          .blog-media-frame-reelLite .blog-media-fill { object-position: 50% 100%; }
+          .blog-media-frame-window .blog-media-fill { object-position: 50% 88%; }
+          .blog-media-frame-quote .blog-media-fill { object-position: 50% 72%; }
+          .blog-media-frame-scenic .blog-media-fill { object-position: 50% 58%; }
+          html.sss-blog-lock .sss-storm-snow {
+            -webkit-mask-image: linear-gradient(to left, #000 0%, #000 36%, transparent 58%);
+                    mask-image: linear-gradient(to left, #000 0%, #000 36%, transparent 58%);
           }
             .copy-with-arrows {
             display: flex;
@@ -577,8 +691,9 @@ export default function Blog() {
           .studio-copy-scroll::-webkit-scrollbar { display: none; width: 0; }
           @media (min-width: 768px) {
             .page-frame {
-              height: calc(100vh - var(--header-h) - var(--footer-h));
-              max-height: calc(100vh - var(--header-h) - var(--footer-h));
+              height: 100%;
+              max-height: 100%;
+              overflow: hidden;
             }
             .blog-split {
               grid-template-columns: 1fr 1fr;
@@ -630,6 +745,7 @@ export default function Blog() {
               overflow-x: hidden;
               overflow-y: auto;
               padding-right: 0.25rem;
+              padding-bottom: 1.75rem;
               overscroll-behavior: contain;
               scrollbar-width: none;
             }
@@ -689,7 +805,7 @@ export default function Blog() {
           <div className="blog-atmosphere-veil" />
         </div>
 
-        <div className="relative z-[1] max-w-7xl mx-auto px-6 md:px-8 pt-4 md:pt-6 pb-4 md:pb-6 flex-1 min-h-0 w-full">
+        <div className="blog-split-host relative z-[1] max-w-7xl mx-auto px-6 md:px-8 pt-4 md:pt-6 pb-2 md:pb-3 flex-1 min-h-0 w-full">
           <div className="blog-split">
             {/* LEFT: logo + blog cards (scrolls on desktop) */}
             <div className="blog-feed-wrap order-2 md:order-1">
@@ -721,6 +837,7 @@ export default function Blog() {
                   );
                 }
                 const p = item.p;
+                const mediaFrame = frameForPost(p);
                 const when = p.createdAt ? new Date(p.createdAt) : null;
                 const dateLabel =
                   when && !Number.isNaN(when.getTime())
@@ -737,20 +854,28 @@ export default function Blog() {
                     className="rounded-xl bg-black/75 border border-[#dfcfb5]/55 p-5 hover:border-[#dfcfb5] transition backdrop-blur-[1px]"
                   >
                     <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
-                      <span className="uppercase tracking-wide">Studio update</span>
+                      <span className="uppercase tracking-wide">
+                        {(() => {
+                          if (!p.audioUrl) return "Studio update";
+                          const n = (String(p.title).match(/episode\s+(\d+)/i) || [])[1];
+                          return n ? `Podcast · Episode ${n}` : "Podcast";
+                        })()}
+                      </span>
                       {dateLabel ? <time dateTime={dateAttr}>{dateLabel}</time> : null}
                     </div>
                     <h3 className="text-2xl font-semibold mb-3 leading-snug" style={{ color: GOLD }}>
                       {p.title}
                     </h3>
                     {p.mediaType === "image" && p.mediaUrl ? (
-                      <figure className="blog-media-card mb-4">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={p.mediaUrl}
-                          alt={p.mediaCaption || p.title}
-                          className="blog-media-fill"
-                        />
+                      <figure className={mediaCardClass(mediaFrame, "mb-4")}>
+                        <div className="blog-media-stage">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={p.mediaUrl}
+                            alt={p.mediaCaption || p.title}
+                            className="blog-media-fill"
+                          />
+                        </div>
                         {p.mediaCaption ? (
                           <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
                             {p.mediaCaption}
@@ -764,6 +889,7 @@ export default function Blog() {
                         poster={p.mediaPoster}
                         caption={p.mediaCaption}
                         label={p.title}
+                        frame={mediaFrame}
                       />
                     ) : null}
                     {p.audioUrl ? (
@@ -842,12 +968,18 @@ export default function Blog() {
                     Welcome to Silver Spine Studio<span className="align-super text-xl">™</span>
                   </h1>
 
-                  <div className="blog-welcome-copy max-w-3xl mx-auto space-y-3 md:space-y-4 text-[0.98rem] md:text-[1.05rem] lg:text-lg leading-relaxed">
+                  <div className="blog-welcome-copy-wrap">
+                  <div
+                    ref={welcomeCopyRef}
+                    className="blog-welcome-copy max-w-3xl mx-auto space-y-3 md:space-y-4 text-[0.98rem] md:text-[1.05rem] lg:text-lg leading-relaxed"
+                  >
                     <p>Every story has a shadow. Some you see coming, some you only notice when it’s already moved past you. Silver Spine Studio was born from chasing those shadows — the storm-soaked ones that linger on the highway, the whispered ones that follow families, and the quiet ones that live inside us all.</p>
                     <p>I didn’t want a place of polished perfection. I wanted a place that felt alive, scarred, and a little dangerous. A studio where the stories aren’t afraid to bleed, where the rain smears the glass, and where light fights to cut through the dark.</p>
                     <p>The first book to come from this vision, <span className="font-semibold" style={{ color: GOLD }}>The Beautiful Beast</span>, began on a cold mountain road and has taken years of grit to bring into the light. It’s a thriller, yes, but more than that, it’s a reminder of what storms expose: secrets, loyalties, betrayals — the kind of truths that don’t wash away with the rain.</p>
                     <p>Here on the blog, expect craft notes, behind-the-scenes, and progress on releases. If you like grit with a little glow, you’ll feel at home.</p>
                     <p className="font-semibold">— Leameso James</p>
+                  </div>
+                  <HoldScrollArrows targetRef={welcomeCopyRef} variant="card" label="Scroll Welcome" />
                   </div>
                 </div>
               </div>
