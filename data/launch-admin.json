@@ -107,7 +107,7 @@
       "role": "launch-list",
       "format": "",
       "reviewSpot": "",
-      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 ",
+      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026",
       "removed": false,
       "sends": {
         "sneakPeek": null,
@@ -730,7 +730,10 @@
   "trackingNotes": {
     "wbjnet@yahoo.com": {
       "note": "",
-      "updatedAt": "2026-09-01T23:55:40.881Z"
+      "updatedAt": "2026-09-02T00:13:32.416Z",
+      "name": "William Jones",
+      "emailedAt": "2026-09-02T00:13:32.416Z",
+      "emailedSubject": "Marked emailed (outside Admin)"
     }
   },
   "contacts": [
