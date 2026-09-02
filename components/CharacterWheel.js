@@ -4,7 +4,7 @@ import { duckAmbientForNarration, restoreAmbientAfterNarration } from "@/lib/cin
 
 const PLAT = "#c9ced6";
 const GOLD = "#dfcfb5";
-const CARD_W = 248;
+const CARD_W = 312;
 const CARD_H = 330;
 /** Only these cards exist in 3D. The full Book One list (38) rotates through them, one face-on at a time. */
 const SLOTS = 4;
@@ -39,7 +39,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   listRef.current = list;
   nRef.current = n;
   stepRef.current = step;
-  originRef.current = origin;
 
   const writeCaption = (idx) => {
     const face = listRef.current[idx];
@@ -48,25 +47,34 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (lineRef.current) lineRef.current.textContent = face.line || "";
   };
 
+  const slotOffset = (slot) => {
+    if (slot === 0) return 0;
+    const half = SLOTS / 2;
+    if (slot < half) return slot;
+    if (slot === half && SLOTS % 2 === 0) return slot;
+    return slot - SLOTS;
+  };
+
   const faceIndex = (slot) => {
     const count = nRef.current;
-    return ((originRef.current + slot) % count + count) % count;
+    return ((originRef.current + slotOffset(slot)) % count + count) % count;
   };
 
   const applyAngle = (a) => {
     const count = nRef.current;
     const deg = stepRef.current;
+    const wrapAt = deg * 0.9;
     let next = a;
     let origin = originRef.current;
     let shifted = false;
-    while (next >= deg) {
+    while (next >= wrapAt) {
       next -= deg;
-      origin = (origin + 1) % count;
+      origin = (origin - 1 + count) % count;
       shifted = true;
     }
-    while (next < 0) {
+    while (next < -wrapAt) {
       next += deg;
-      origin = (origin - 1 + count) % count;
+      origin = (origin + 1) % count;
       shifted = true;
     }
     angleRef.current = next;
@@ -76,12 +84,13 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (ring) {
       ring.style.transform = `rotateX(${next}deg)`;
     }
-    const slot = Math.round((-next / deg) % SLOTS);
-    const s = ((slot % SLOTS) + SLOTS) % SLOTS;
-    const idx = faceIndex(s);
-    if (idx !== frontRef.current) {
-      frontRef.current = idx;
-      writeCaption(idx);
+    const faceUp = Math.abs(next) < deg * 0.12;
+    if (faceUp) {
+      const front = faceIndex(0);
+      if (front !== frontRef.current) {
+        frontRef.current = front;
+        writeCaption(front);
+      }
     }
   };
 
@@ -101,7 +110,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       const dt = Math.min(32, now - last);
       last = now;
       if (!pausedRef.current && !heldRef.current) {
-        applyAngle(angleRef.current + dt * 0.012);
+        applyAngle(angleRef.current + dt * 0.0055);
       }
       raf = requestAnimationFrame(tick);
     };
@@ -343,7 +352,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
                 if (!face) return null;
                 return (
                 <div
-                  key={`slot-${i}-${face.id}`}
+                  key={`slot-${i}`}
                   className="character-wheel-slot"
                   style={{
                     transform: `rotateX(${i * step}deg) translateZ(${radius}px)`,
