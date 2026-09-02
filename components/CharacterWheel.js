@@ -474,6 +474,11 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           height: ${CARD_H}px;
           margin-left: -${CARD_W / 2}px;
           margin-top: -${CARD_H / 2}px;
+          box-sizing: border-box;
+          padding: 9px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           border-radius: 0.75rem;
           overflow: hidden;
           border: 1px solid rgba(201, 206, 214, 0.4);
@@ -487,7 +492,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: 50% 28%;
+          object-position: 50% 50%;
           pointer-events: none;
         }
         .character-wheel-mystery {
