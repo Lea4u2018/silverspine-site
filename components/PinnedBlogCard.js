@@ -2,7 +2,9 @@ import Link from "next/link";
 import { useState } from "react";
 import BlogFigures from "@/components/BlogFigures";
 import BlogVideo from "@/components/BlogVideo";
+import CharacterWheel from "@/components/CharacterWheel";
 import ConfettiBurst from "@/components/ConfettiBurst";
+import { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { BLOG_IMG } from "@/lib/blogImages";
 
 const GOLD = "#dfcfb5";
@@ -213,7 +215,7 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
 
   return (
     <article className="relative overflow-visible rounded-xl bg-black/75 border border-[#dfcfb5]/55 p-5 hover:border-[#dfcfb5] transition backdrop-blur-[1px]">
-      {showConfetti ? <ConfettiBurst whenVisible delayMs={350} durationMs={11000} /> : null}
+      {showConfetti ? <ConfettiBurst whenVisible delayMs={200} durationMs={12000} /> : null}
       <div className="relative z-[1]">
       <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
         <span className="uppercase tracking-wide">{post.category || "Announcement"}</span>
@@ -222,6 +224,8 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
       <h3 className="text-2xl font-semibold mb-3 leading-snug" style={{ color: GOLD }}>
         {post.title}
       </h3>
+
+      {post.mediaType === "character-wheel" ? <CharacterWheel /> : null}
 
       {post.mediaType === "video" && post.mediaUrl ? (
         <BlogVideo
@@ -235,12 +239,12 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
       {post.mediaType === "figure" && figure ? <BlogFigures images={[figure]} /> : null}
 
       {post.mediaType === "image" && post.mediaUrl ? (
-        <figure className="my-4 overflow-hidden rounded-xl border border-[#dfcfb5]/40 bg-black flex flex-col items-center">
+        <figure className="blog-media-card my-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={post.mediaUrl}
             alt={post.mediaCaption || post.title}
-            className="w-full max-w-[420px] h-auto max-h-[min(72vh,720px)] object-contain block mx-auto"
+            className="blog-media-fill"
           />
           {post.mediaCaption ? (
             <figcaption className="text-center text-[11px] uppercase tracking-[0.16em] text-gray-400 py-2.5 px-3">
@@ -250,7 +254,9 @@ export default function PinnedBlogCard({ post, onLaunchList, onArc, onPress }) {
         </figure>
       ) : null}
 
-      {post.body || post.bullets?.length ? <div className="pinned-copy-scroll">{bodyBlock}</div> : null}
+      {post.body || post.bullets?.length ? (
+        <CopyScrollBox className="pinned-copy-scroll">{bodyBlock}</CopyScrollBox>
+      ) : null}
 
       <div className="flex flex-wrap gap-3 mt-4">
         {hasTimelineToggle && post.expandBody ? (
