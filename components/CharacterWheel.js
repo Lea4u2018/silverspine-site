@@ -4,15 +4,16 @@ import { duckAmbientForNarration, restoreAmbientAfterNarration } from "@/lib/cin
 
 const PLAT = "#c9ced6";
 const GOLD = "#dfcfb5";
-const CARD_W = 236;
-const CARD_H = 314;
-const SLOTS = 6;
+const CARD_W = 248;
+const CARD_H = 330;
+/** Only these cards exist in 3D. The full Book One list (38) rotates through them, one face-on at a time. */
+const SLOTS = 4;
 
 export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const list = Array.isArray(faces) ? faces : [];
   const n = list.length || 1;
   const step = 360 / SLOTS;
-  const radius = Math.round((CARD_H * 0.52) / Math.tan(Math.PI / SLOTS));
+  const radius = Math.round((CARD_H * 0.58) / Math.tan(Math.PI / SLOTS));
   const [origin, setOrigin] = useState(0);
   const [musicOn, setMusicOn] = useState(false);
   const [musicError, setMusicError] = useState("");
@@ -342,7 +343,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
                 if (!face) return null;
                 return (
                 <div
-                  key={`slot-${i}`}
+                  key={`slot-${i}-${face.id}`}
                   className="character-wheel-slot"
                   style={{
                     transform: `rotateX(${i * step}deg) translateZ(${radius}px)`,
