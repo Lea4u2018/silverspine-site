@@ -80,13 +80,11 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (!el) return;
     const face = listRef.current[faceIndex(slot)];
     const img = el.querySelector("[data-wheel-img]");
-    const mystery = el.querySelector("[data-wheel-mystery]");
     const plate = el.querySelector("[data-wheel-plate]");
     const plateName = el.querySelector("[data-wheel-plate-name]");
     if (!face) return;
     if (face.mystery) {
       const chair = face.src || MYSTERY_CHAIR_SRC;
-      if (mystery) mystery.hidden = true;
       if (img) {
         img.hidden = false;
         img.setAttribute("data-mystery-chair", "true");
@@ -96,7 +94,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       if (plate) plate.hidden = true;
       return;
     }
-    if (mystery) mystery.hidden = true;
     if (img) {
       img.hidden = false;
       img.removeAttribute("data-mystery-chair");
@@ -499,9 +496,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
                   }}
                 >
                   <img data-wheel-img alt="" draggable="false" decoding="async" />
-                  <div className="character-wheel-mystery" data-wheel-mystery hidden aria-hidden="true">
-                    ?
-                  </div>
                   <div className="character-wheel-oncard" data-wheel-plate hidden>
                     <span className="character-wheel-oncard-name" data-wheel-plate-name />
                   </div>
@@ -655,7 +649,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           pointer-events: none;
         }
         .character-wheel-slot img[hidden],
-        .character-wheel-mystery[hidden],
         .character-wheel-oncard[hidden] {
           display: none !important;
         }
@@ -669,8 +662,8 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           background: #07080c;
         }
         .character-wheel-slot img[data-mystery-chair="true"] {
-          object-fit: contain;
-          object-position: 50% 50%;
+          object-fit: cover;
+          object-position: 50% 42%;
           background: #07080c;
         }
         .character-wheel-oncard {
@@ -693,18 +686,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.82rem;
           line-height: 1.25;
           text-transform: uppercase;
-        }
-        .character-wheel-mystery {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-bottom: 2.4rem;
-          font-size: 5.2rem;
-          font-weight: 700;
-          color: ${PLAT};
-          background: radial-gradient(circle at 50% 40%, #1a1e28, #05060a 72%);
         }
         .character-wheel-credit {
           position: relative;
