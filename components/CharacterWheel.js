@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { CHAPTER_ONE_WHEEL, WHEEL_MUSIC } from "@/lib/chapterOneWheel";
+import { BOOK_TWO_TABLE, CHAPTER_ONE_WHEEL, MYSTERY_CHAIR_SRC, WHEEL_MUSIC } from "@/lib/chapterOneWheel";
 import { duckAmbientForNarration, restoreAmbientAfterNarration } from "@/lib/cinematicAudio";
 
 const PLAT = "#c9ced6";
@@ -85,15 +85,21 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     const plateName = el.querySelector("[data-wheel-plate-name]");
     if (!face) return;
     if (face.mystery) {
-      if (img) img.hidden = true;
-      if (mystery) mystery.hidden = false;
-      if (plate) plate.hidden = false;
-      if (plateName) plateName.textContent = "Guess Who";
+      const chair = face.src || MYSTERY_CHAIR_SRC;
+      if (mystery) mystery.hidden = true;
+      if (img) {
+        img.hidden = false;
+        img.setAttribute("data-mystery-chair", "true");
+        if (img.getAttribute("src") !== chair) img.setAttribute("src", chair);
+        img.alt = face.name || "Guess Who";
+      }
+      if (plate) plate.hidden = true;
       return;
     }
     if (mystery) mystery.hidden = true;
     if (img) {
       img.hidden = false;
+      img.removeAttribute("data-mystery-chair");
       if (face.src && img.getAttribute("src") !== face.src) {
         img.setAttribute("src", face.src);
       }
@@ -110,29 +116,27 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const applyAngle = (a) => {
     const count = nRef.current;
     const deg = stepRef.current;
-    const wrapAt = deg * 0.9;
     let next = a;
     let origin = originRef.current;
     let shifted = false;
-    while (next >= wrapAt) {
+    while (next >= deg) {
       next -= deg;
       origin = (origin - 1 + count) % count;
       shifted = true;
     }
-    while (next < -wrapAt) {
+    while (next <= -deg) {
       next += deg;
       origin = (origin + 1) % count;
       shifted = true;
     }
     angleRef.current = next;
     originRef.current = origin;
-    if (shifted) paintSlot(0);
+    if (shifted) {
+      for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
+    }
     const ring = ringRef.current;
     if (ring) {
       ring.style.transform = `rotateX(${next}deg)`;
-    }
-    if (shifted) {
-      for (let i = 1; i < SLOTS; i += 1) paintSlot(i);
     }
     const faceUp = Math.abs(next) < deg * 0.12;
     if (faceUp) {
@@ -507,6 +511,15 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           </div>
         </div>
         <p className="character-wheel-credit">{WHEEL_MUSIC.credit}</p>
+        <div className="character-wheel-book2">
+          <p className="character-wheel-book2-label">Book Two · Shadows of a Ghost — not on this wheel</p>
+          {BOOK_TWO_TABLE.map((row) => (
+            <p key={row.name} className="character-wheel-book2-row">
+              <strong>{row.name}</strong>
+              {row.line ? ` · ${row.line}` : ""}
+            </p>
+          ))}
+        </div>
       </div>
       <style>{`
         .character-wheel-card {
@@ -618,6 +631,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           transform-style: preserve-3d;
           -webkit-transform-style: preserve-3d;
           transform: rotateX(0deg);
+          will-change: transform;
         }
         .character-wheel-slot {
           position: absolute;
@@ -652,6 +666,11 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           object-fit: cover;
           object-position: 50% 50%;
           pointer-events: none;
+          background: #07080c;
+        }
+        .character-wheel-slot img[data-mystery-chair="true"] {
+          object-fit: contain;
+          object-position: 50% 50%;
           background: #07080c;
         }
         .character-wheel-oncard {
@@ -695,6 +714,30 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.68rem;
           letter-spacing: 0.04em;
           margin: 0.35rem 0 0.25rem;
+        }
+        .character-wheel-book2 {
+          position: relative;
+          z-index: 5;
+          text-align: center;
+          margin: 0.15rem 0 0.45rem;
+          padding: 0.45rem 0.6rem 0.5rem;
+          border-top: 1px solid rgba(201, 206, 214, 0.18);
+        }
+        .character-wheel-book2-label {
+          margin: 0;
+          color: ${GOLD};
+          font-size: 0.72rem;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+        .character-wheel-book2-row {
+          margin: 0.28rem 0 0;
+          color: ${PLAT};
+          font-size: 0.88rem;
+        }
+        .character-wheel-book2-row strong {
+          color: ${GOLD};
+          font-weight: 700;
         }
       `}</style>
     </figure>
