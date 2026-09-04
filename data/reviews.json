@@ -5,9 +5,10 @@
       "name": "Mardenia",
       "text": "Love it \nCan’t wait to see the next part 👀",
       "rating": 5,
-      "approved": false,
+      "approved": true,
       "rejected": false,
-      "createdAt": "2026-09-04T07:03:53.017Z"
+      "createdAt": "2026-09-04T07:03:53.017Z",
+      "approvedAt": "2026-09-04T09:26:25.085Z"
     },
     {
       "id": "a796bc0d455a86c7",
