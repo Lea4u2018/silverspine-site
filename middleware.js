@@ -82,7 +82,7 @@ function applySecurityHeaders(res) {
       "img-src 'self' data: blob: https:",
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.firebase.com wss://*.firebaseio.com https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://gumroad.com https://*.gumroad.com https://translate.googleapis.com https://translate.google.com https://api.mymemory.translated.net https://api-free.deepl.com https://api.deepl.com",
-      "frame-src 'self' https://gumroad.com https://*.gumroad.com https://js.stripe.com https://translate.google.com https://www.google.com",
+      "frame-src 'self' https://gumroad.com https://*.gumroad.com https://js.stripe.com https://translate.google.com https://www.google.com https://open.spotify.com https://embed.spotify.com",
       "media-src 'self' blob: data:",
       "upgrade-insecure-requests",
     ].join("; ")
