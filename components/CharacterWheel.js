@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { BOOK_TWO_TABLE, CHAPTER_ONE_WHEEL, MYSTERY_CHAIR_SRC, WHEEL_MUSIC } from "@/lib/chapterOneWheel";
-import { duckAmbientForNarration, restoreAmbientAfterNarration } from "@/lib/cinematicAudio";
+import { duckAmbientForNarration, restoreAmbientAfterNarration, markHtmlAudioUnlocked, primeAudioElement } from "@/lib/cinematicAudio";
 
 const PLAT = "#c9ced6";
 const GOLD = "#dfcfb5";
@@ -145,24 +145,39 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     }
   };
 
-  useEffect(() => {
-    if (typeof document === "undefined") return undefined;
-    let el = document.getElementById("sss-wheel-score");
+  const ensureWheelAudio = () => {
+    if (typeof document === "undefined") return null;
+    let el = audioRef.current;
+    if (!el || !el.isConnected) {
+      el = document.getElementById("sss-wheel-score");
+    }
     if (!el) {
       el = document.createElement("audio");
       el.id = "sss-wheel-score";
       el.setAttribute("data-wheel-score", "true");
-      el.src = WHEEL_MUSIC.src;
       el.loop = true;
       el.preload = "auto";
       el.setAttribute("playsinline", "true");
+      el.src = WHEEL_MUSIC.src;
+      document.body.appendChild(el);
+    } else if (!el.isConnected) {
       document.body.appendChild(el);
     }
+    if (!String(el.currentSrc || el.src || "").includes("behind-the-shadow")) {
+      el.src = WHEEL_MUSIC.src;
+    }
+    el.loop = true;
     audioRef.current = el;
+    return el;
+  };
+
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+    const el = ensureWheelAudio();
     const vol = readWheelVolume();
     scoreVolRef.current = vol;
     setScoreVol(vol);
-    el.volume = vol;
+    if (el) el.volume = vol;
     listRef.current.forEach((face) => {
       if (!face?.src) return;
       const img = new Image();
@@ -216,17 +231,27 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     setMusicError("");
   };
 
-  const startWheelMusic = async () => {
-    if (userMutedRef.current || !inViewRef.current) return false;
-    const el = audioRef.current;
+  const startWheelMusic = async ({ fromUser = false } = {}) => {
+    if (userMutedRef.current && !fromUser) return false;
+    if (!fromUser && !inViewRef.current) return false;
+    const el = ensureWheelAudio();
     if (!el) return false;
     el.loop = true;
     el.muted = false;
     el.volume = scoreVolRef.current;
+    if (!el.paused && !el.muted) {
+      setMusicOn(true);
+      setMusicError("");
+      return true;
+    }
     try {
       duckAmbientForNarration();
       await el.play();
-      if (!inViewRef.current || userMutedRef.current) {
+      if (userMutedRef.current) {
+        silenceWheelMusic();
+        return false;
+      }
+      if (!fromUser && !inViewRef.current) {
         silenceWheelMusic();
         return false;
       }
@@ -246,26 +271,24 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     const feed = box.closest(".blog-feed");
 
     const cardIsOn = () => {
-      const r = box.getBoundingClientRect();
+      const target = box.querySelector(".character-wheel-stage") || box;
+      const r = target.getBoundingClientRect();
       if (r.height < 8) return false;
       const vh = window.innerHeight || 0;
-      const windowHit = Math.min(r.bottom, vh) - Math.max(r.top, 0);
-      if (windowHit / r.height < 0.45) return false;
-      if (!feed) return true;
-      const f = feed.getBoundingClientRect();
-      const feedHit = Math.min(r.bottom, f.bottom) - Math.max(r.top, f.top);
-      return feedHit / r.height >= 0.45;
+      const visible = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      const ratio = visible / r.height;
+      if (inViewRef.current) return ratio >= 0.08;
+      return ratio >= 0.2;
     };
 
     const sync = () => {
       const on = cardIsOn();
-      const was = inViewRef.current;
       inViewRef.current = on;
       if (!on) {
         silenceWheelMusic();
         return;
       }
-      if (!was && on && !userMutedRef.current) startWheelMusic();
+      if (!userMutedRef.current) startWheelMusic();
     };
 
     let raf = 0;
@@ -277,9 +300,32 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       });
     };
 
+    const onGesture = (e) => {
+      if (e?.type === "sss-piano-mute" && e.detail?.muted) return;
+      const hit = e?.target;
+      if (hit && typeof hit.closest === "function" && hit.closest(".character-wheel-controls")) {
+        return;
+      }
+      markHtmlAudioUnlocked();
+      const el = ensureWheelAudio();
+      if (e?.type === "pointerdown" || e?.type === "keydown") {
+        if (inViewRef.current && !userMutedRef.current) {
+          startWheelMusic({ fromUser: true });
+        } else {
+          primeAudioElement(el);
+        }
+        return;
+      }
+      if (inViewRef.current && !userMutedRef.current) startWheelMusic();
+    };
+
     feed?.addEventListener("scroll", onMove, { passive: true });
     window.addEventListener("scroll", onMove, { passive: true, capture: true });
     window.addEventListener("resize", onMove);
+    window.addEventListener("pointerdown", onGesture, { capture: true });
+    window.addEventListener("keydown", onGesture, { capture: true });
+    window.addEventListener("sss-piano-mute", onGesture);
+    window.addEventListener("sss-audio-unlocked", onGesture);
     const onHidden = () => {
       if (document.hidden) {
         inViewRef.current = false;
@@ -292,11 +338,12 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
 
     let io;
     if (typeof IntersectionObserver !== "undefined") {
+      const stage = box.querySelector(".character-wheel-stage") || box;
       io = new IntersectionObserver(onMove, {
         threshold: [0, 0.15, 0.3, 0.45, 0.6, 0.8, 1],
-        root: feed || null,
+        root: null,
       });
-      io.observe(box);
+      io.observe(stage);
     }
     sync();
 
@@ -306,6 +353,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       feed?.removeEventListener("scroll", onMove);
       window.removeEventListener("scroll", onMove, { capture: true });
       window.removeEventListener("resize", onMove);
+      window.removeEventListener("pointerdown", onGesture, { capture: true });
+      window.removeEventListener("keydown", onGesture, { capture: true });
+      window.removeEventListener("sss-piano-mute", onGesture);
+      window.removeEventListener("sss-audio-unlocked", onGesture);
       document.removeEventListener("visibilitychange", onHidden);
       inViewRef.current = false;
       silenceWheelMusic();
@@ -318,6 +369,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     pausedRef.current = true;
     drag.current = { active: true, startY: e.clientY, startAngle: angleRef.current };
     e.currentTarget.setPointerCapture?.(e.pointerId);
+    if (!userMutedRef.current) {
+      inViewRef.current = true;
+      startWheelMusic({ fromUser: true });
+    }
   };
 
   const onStagePointerMove = (e) => {
@@ -367,18 +422,19 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     e.preventDefault();
     e.stopPropagation();
     setMusicError("");
-    const el = audioRef.current;
+    const el = ensureWheelAudio();
     if (!el) {
       setMusicError("Player missing");
       return;
     }
-    if (!el.paused || musicOn) {
+    if (musicOn || (!el.paused && !el.muted && el.volume > 0)) {
       userMutedRef.current = true;
       silenceWheelMusic();
       return;
     }
     userMutedRef.current = false;
-    const ok = await startWheelMusic();
+    inViewRef.current = true;
+    const ok = await startWheelMusic({ fromUser: true });
     if (!ok) setMusicError("Tap Play score again");
   };
 

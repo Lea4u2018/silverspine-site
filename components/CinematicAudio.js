@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import {
   PIANO_AUDIO_ID,
   PIANO_SRC,
+  getPianoEl,
   playAllAmbient,
+  primeAudioElement,
+  markHtmlAudioUnlocked,
   readPianoMuted,
   stopAllAmbient,
   killAllSiteSound,
@@ -52,6 +55,19 @@ export function CinematicAudioProvider({ children }) {
     };
   }, []);
 
+  useEffect(() => {
+    const onPrime = () => {
+      markHtmlAudioUnlocked();
+      primeAudioElement(getPianoEl());
+    };
+    window.addEventListener("pointerdown", onPrime, { capture: true, once: true });
+    window.addEventListener("keydown", onPrime, { capture: true, once: true });
+    return () => {
+      window.removeEventListener("pointerdown", onPrime, { capture: true });
+      window.removeEventListener("keydown", onPrime, { capture: true });
+    };
+  }, []);
+
   const ensurePlaying = useCallback(() => {
     if (readPianoMuted()) return false;
     const ok = playAllAmbient();
@@ -73,6 +89,7 @@ export function CinematicAudioProvider({ children }) {
     }
 
     const ok = playAllAmbient();
+    if (ok) markHtmlAudioUnlocked();
     if (!ok) setError("Could not start audio — tap Music once more.");
     else setError("");
   }, []);

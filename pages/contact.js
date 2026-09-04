@@ -153,6 +153,9 @@ function ContactFormEngine() {
         ? "Interview format (podcast / written Q&A / live), what you need (press kit, cover art, bio), and any timing notes…"
         : "Write your message here...";
 
+  const fieldClass =
+    "w-full p-3 rounded-lg bg-black/55 border border-gray-700 text-white transition-colors duration-200 hover:border-[#dfcfb5] focus:outline-none focus:border-[#dfcfb5] focus:ring-1 focus:ring-[#dfcfb5]/40";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-5 text-left">
       <FormRequiredNote className="text-xs text-gray-500 mb-1" />
@@ -169,7 +172,7 @@ function ContactFormEngine() {
           id="contact-topic"
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
-          className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white"
+          className={fieldClass}
         >
           <option value="contact">Book launch &amp; general</option>
           <option value="media">Media request &amp; interviews</option>
@@ -218,13 +221,13 @@ function ContactFormEngine() {
         <FormFieldLabel className="block mb-2 text-gray-300" required>
           Name
         </FormFieldLabel>
-        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white" placeholder="Your name" />
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className={fieldClass} placeholder="Your name" />
       </div>
       <div>
         <FormFieldLabel className="block mb-2 text-gray-300" required>
           Email
         </FormFieldLabel>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white" placeholder="you@example.com" />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={fieldClass} placeholder="you@example.com" />
       </div>
 
       {topic === "media" && (
@@ -238,7 +241,7 @@ function ContactFormEngine() {
               value={outlet}
               onChange={(e) => setOutlet(e.target.value)}
               required
-              className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white"
+              className={fieldClass}
               placeholder="Podcast, blog, magazine…"
             />
           </div>
@@ -250,7 +253,7 @@ function ContactFormEngine() {
               type="text"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white"
+              className={fieldClass}
               placeholder="e.g., Oct 20, 2026"
             />
           </div>
@@ -261,7 +264,7 @@ function ContactFormEngine() {
         <FormFieldLabel className="block mb-2 text-gray-300" required>
           Message
         </FormFieldLabel>
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className="w-full p-3 rounded-lg bg-black/55 border border-gray-700 focus:outline-none focus:border-[#dfcfb5] transition-colors duration-300 text-white" placeholder={messagePlaceholder} />
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows="5" required className={fieldClass} placeholder={messagePlaceholder} />
       </div>
 
       {status.msg && (
@@ -270,7 +273,11 @@ function ContactFormEngine() {
         </p>
       )}
 
-      <button type="submit" disabled={status.state === "sending"} className="w-full py-3 rounded-lg bg-[#dfcfb5] text-black font-semibold hover:opacity-90 disabled:opacity-50 transition">
+      <button
+        type="submit"
+        disabled={status.state === "sending"}
+        className="w-full py-3 rounded-lg font-semibold tracking-wide cursor-pointer text-[#dfcfb5] border border-[#dfcfb5]/60 bg-transparent hover:bg-[#dfcfb5] hover:text-black hover:border-[#dfcfb5] disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#dfcfb5] disabled:cursor-not-allowed transition-all duration-200"
+      >
         {status.state === "sending" ? "Sending Securely..." : "Send Message"}
       </button>
     </form>

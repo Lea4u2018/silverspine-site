@@ -101,48 +101,6 @@
   },
   "recipients": [
     {
-      "id": "fdf71e00e7074c5e",
-      "name": "Michael Harkless",
-      "email": "mharkless203@gmail.com",
-      "role": "launch-list",
-      "format": "",
-      "reviewSpot": "",
-      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026",
-      "removed": false,
-      "sends": {
-        "sneakPeek": null,
-        "fullDigital": null,
-        "arc": null,
-        "selectionArc": null,
-        "selectionGiveaway": null,
-        "followUps": {}
-      },
-      "createdAt": "2026-09-02T01:04:07.696Z",
-      "updatedAt": "2026-09-02T01:04:07.696Z",
-      "appliedAt": "2026-08-31T20:46:46.775Z"
-    },
-    {
-      "id": "5cc28edf38ddeb4f",
-      "name": "Yusuf",
-      "email": "yukentho@yahoo.com",
-      "role": "launch-list",
-      "format": "",
-      "reviewSpot": "",
-      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026",
-      "removed": false,
-      "sends": {
-        "sneakPeek": null,
-        "fullDigital": null,
-        "arc": null,
-        "selectionArc": null,
-        "selectionGiveaway": null,
-        "followUps": {}
-      },
-      "createdAt": "2026-09-02T00:03:05.937Z",
-      "updatedAt": "2026-09-02T00:03:05.937Z",
-      "appliedAt": "2026-09-01T04:33:54.715Z"
-    },
-    {
       "id": "6fc0b7e084307c23",
       "name": "William Jones",
       "email": "wbjnet@yahoo.com",
@@ -602,23 +560,6 @@
   ],
   "submissions": [
     {
-      "id": "7fcd7e397138d5aa",
-      "kind": "list",
-      "name": "Jeremiah Worsley",
-      "email": "jjworsley22@gmail.com",
-      "format": "",
-      "reviewSpot": "",
-      "outlet": "",
-      "deadline": "",
-      "businessName": "",
-      "category": "",
-      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
-      "receivedAt": "2026-09-02T02:17:04.416Z",
-      "status": "new",
-      "importedRecipientId": "",
-      "followUpsSent": {}
-    },
-    {
       "id": "bf176afa9b99c1ab",
       "kind": "list",
       "name": "Yusuf",
@@ -631,14 +572,9 @@
       "category": "",
       "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
       "receivedAt": "2026-09-01T04:33:54.715Z",
-      "status": "imported",
-      "importedRecipientId": "5cc28edf38ddeb4f",
-      "followUpsSent": {
-        "launchListWelcome": {
-          "sentAt": "2026-09-01T23:56:03.396Z",
-          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
-        }
-      }
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
     },
     {
       "id": "3e561294f69ffe75",
@@ -653,14 +589,9 @@
       "category": "",
       "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
       "receivedAt": "2026-08-31T20:46:46.775Z",
-      "status": "imported",
-      "importedRecipientId": "fdf71e00e7074c5e",
-      "followUpsSent": {
-        "launchListWelcome": {
-          "sentAt": "2026-09-01T23:56:32.408Z",
-          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
-        }
-      }
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
     },
     {
       "id": "4d620cc00e756459",
@@ -703,7 +634,7 @@
     "selection": {
       "arcSelected": {
         "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You are on the early-access team for this digital ARC\n• ARC delivery window: Oct 1–3, 2026\n• Official release day: November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You are on the early-access team for this digital ARC\n• ARC delivery window: September 21–23, 2026\n• Official release day: November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "giveawayWinner": {
         "subject": "[WINNER] You won a full digital copy — The Beautiful Beast — Silver Spine Studio™",
@@ -713,7 +644,7 @@
     "followUp": {
       "arcApplicationReceived": {
         "subject": "[ARC FOLLOW-UP] We received your early-release request — Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nThank you for requesting an ARC of The Beautiful Beast. This follow-up confirms we received your application.\n\nWHAT HAPPENS NEXT\n1) ARC sign-up window: Aug 7 – Aug 14, 2026\n2) Selection emails: Aug 17, 2026 ({{arcTeamSize}} sleuths)\n3) If selected, ARC delivery: Oct 1–3, 2026\n4) Official release day: Nov 1, 2026\n\nApplying does not guarantee a spot. If you are chosen, you will hear from us separately.\n\nREMINDER — ARC files are for personal review only. Please do not share files or substantial excerpts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+        "body": "Hi {{firstName}},\n\nThank you for requesting an ARC of The Beautiful Beast. This follow-up confirms we received your application.\n\nTIMELINE\n• Sign-up window: Aug 7 – Aug 14, 2026\n• Selection emails: Aug 17, 2026\n• If selected, delivery: Sep 21–23, 2026\n\nApplying does not guarantee a spot. If you are chosen, you will hear from us separately.\n\nREMINDER — ARC files are for personal review only. Please do not share files or substantial excerpts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "arcNotSelected": {
         "subject": "[ARC FOLLOW-UP] Thank you for applying — Silver Spine Studio™",
@@ -765,12 +696,7 @@
       }
     }
   },
-  "trackingNotes": {
-    "wbjnet@yahoo.com": {
-      "note": "",
-      "updatedAt": "2026-09-02T00:13:32.416Z"
-    }
-  },
+  "trackingNotes": {},
   "contacts": [
     {
       "id": "65d3fea70af9a375",
