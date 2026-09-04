@@ -697,10 +697,15 @@ export default function Blog() {
             .blog-media-card.blog-media-frame-coverTight,
             .blog-media-card.blog-media-frame-podcast,
             .blog-media-card.blog-media-frame-reelLite {
-              width: fit-content;
+              width: 100%;
               max-width: 100%;
-              margin-inline: auto;
+              margin-inline: 0;
               background: transparent;
+              border: 0;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              overflow: visible;
             }
             .blog-media-frame-cover .blog-media-stage,
             .blog-media-frame-coverTight .blog-media-stage,
@@ -708,9 +713,12 @@ export default function Blog() {
             .blog-media-frame-reelLite .blog-media-stage {
               height: auto !important;
               max-height: none;
+              width: max-content;
+              max-width: 100%;
               background: transparent;
-              display: flex;
-              justify-content: center;
+              border: 1px solid rgba(223, 207, 181, 0.45);
+              border-radius: 0.75rem;
+              overflow: hidden;
             }
             .blog-media-card.blog-media-frame-cover .blog-media-fill,
             .blog-media-card.blog-media-frame-coverTight .blog-media-fill,
@@ -719,10 +727,17 @@ export default function Blog() {
               width: auto !important;
               max-width: 100%;
               height: auto !important;
-              max-height: 16.5rem;
-              margin-inline: auto;
+              max-height: 15rem;
+              margin: 0;
               object-fit: contain;
               object-position: center;
+            }
+            .blog-media-card.blog-media-frame-cover > figcaption,
+            .blog-media-card.blog-media-frame-coverTight > figcaption,
+            .blog-media-card.blog-media-frame-podcast > figcaption,
+            .blog-media-card.blog-media-frame-reelLite > figcaption {
+              width: 100%;
+              border: 0;
             }
           }
           html.sss-blog-lock .sss-storm-snow {
