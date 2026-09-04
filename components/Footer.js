@@ -101,6 +101,10 @@ export default function Footer({ note, className = "", ...props }) {
           </nav>
         </div>
 
+        <p className="sss-footer-flash w-full text-right text-[9px] sm:text-[10px] leading-snug text-gray-500 px-2 max-sm:text-center">
+          This site uses lightning and storm flashes. If you are sensitive to flashing light, turn on Reduce Motion or skip the storm.
+        </p>
+
         {note ? (
           <div className="text-center text-[10px] leading-snug text-gray-400 px-2">
             {note}
