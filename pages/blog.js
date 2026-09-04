@@ -14,6 +14,11 @@ import HoldScrollArrows, { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { readPreferredLang } from "@/lib/i18n";
 import { mediaCardClass, frameForPost } from "@/lib/blogMedia";
 
+function spotifyEmbedSrc(url) {
+  const m = String(url || "").match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/i);
+  return m ? `https://open.spotify.com/embed/episode/${m[1]}?theme=0` : "";
+}
+
 export default function Blog() {
 
   // ---- brand / assets ----
@@ -637,9 +642,9 @@ export default function Blog() {
             max-height: 38rem;
             background: #07080c;
           }
-          .blog-media-frame-cover .blog-media-fill,
-          .blog-media-frame-coverTight .blog-media-fill,
-          .blog-media-frame-podcast .blog-media-fill {
+          .blog-media-card.blog-media-frame-cover .blog-media-fill,
+          .blog-media-card.blog-media-frame-coverTight .blog-media-fill,
+          .blog-media-card.blog-media-frame-podcast .blog-media-fill {
             width: 100%;
             height: auto !important;
             max-height: 38rem;
@@ -856,9 +861,11 @@ export default function Blog() {
                     <div className="flex items-center justify-between text-[11px] text-gray-400 mb-2">
                       <span className="uppercase tracking-wide">
                         {(() => {
-                          if (!p.audioUrl) return "Studio update";
                           const n = (String(p.title).match(/episode\s+(\d+)/i) || [])[1];
-                          return n ? `Podcast · Episode ${n}` : "Podcast";
+                          if (p.audioUrl || p.spotifyUrl || n) {
+                            return n ? `Podcast · Episode ${n}` : "Podcast";
+                          }
+                          return "Studio update";
                         })()}
                       </span>
                       {dateLabel ? <time dateTime={dateAttr}>{dateLabel}</time> : null}
@@ -900,6 +907,16 @@ export default function Blog() {
                         preload="metadata"
                         controlsList="nodownload"
                         aria-label={`${p.title} audio`}
+                      />
+                    ) : null}
+                    {spotifyEmbedSrc(p.spotifyUrl) ? (
+                      <iframe
+                        className="w-full my-3 rounded-xl"
+                        style={{ border: 0, minHeight: 152 }}
+                        src={spotifyEmbedSrc(p.spotifyUrl)}
+                        title={`${p.title} on Spotify`}
+                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                        loading="lazy"
                       />
                     ) : null}
                     {p.about || p.body ? (
