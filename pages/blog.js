@@ -683,6 +683,21 @@ export default function Blog() {
             object-fit: contain;
             object-position: center;
           }
+          @media (max-width: 767px) {
+            .blog-media-frame-cover .blog-media-stage,
+            .blog-media-frame-coverTight .blog-media-stage,
+            .blog-media-frame-podcast .blog-media-stage {
+              max-height: 16.5rem;
+            }
+            .blog-media-card.blog-media-frame-cover .blog-media-fill,
+            .blog-media-card.blog-media-frame-coverTight .blog-media-fill,
+            .blog-media-card.blog-media-frame-podcast .blog-media-fill {
+              width: auto;
+              max-width: 100%;
+              max-height: 16.5rem;
+              margin-inline: auto;
+            }
+          }
           .blog-media-frame-reel .blog-media-stage { height: 38rem; }
           .blog-media-frame-reelLite .blog-media-stage { height: 44rem; }
           .blog-media-frame-window .blog-media-stage { height: 32rem; }
@@ -692,6 +707,15 @@ export default function Blog() {
           .blog-media-frame-window .blog-media-fill { object-position: 50% 88%; }
           .blog-media-frame-quote .blog-media-fill { object-position: 50% 72%; }
           .blog-media-frame-scenic .blog-media-fill { object-position: 50% 58%; }
+          @media (max-width: 767px) {
+            .blog-media-frame-reelLite .blog-media-stage {
+              height: 16.5rem;
+            }
+            .blog-media-card.blog-media-frame-reelLite .blog-media-fill {
+              object-fit: contain;
+              object-position: center;
+            }
+          }
           html.sss-blog-lock .sss-storm-snow {
             -webkit-mask-image: linear-gradient(to left, #000 0%, #000 36%, transparent 58%);
                     mask-image: linear-gradient(to left, #000 0%, #000 36%, transparent 58%);
