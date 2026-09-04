@@ -569,7 +569,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         </div>
         <p className="character-wheel-credit">{WHEEL_MUSIC.credit}</p>
         <div className="character-wheel-book2">
-          <p className="character-wheel-book2-label">Book Two · Shadows of a Ghost — not on this wheel</p>
+          <p className="character-wheel-book2-label">Book Two — not on this wheel</p>
           {BOOK_TWO_TABLE.map((row) => (
             <p key={row.name} className="character-wheel-book2-row">
               <strong>{row.name}</strong>
