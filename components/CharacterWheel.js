@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BOOK_TWO_TABLE, CHAPTER_ONE_WHEEL, MYSTERY_CHAIR_SRC, WHEEL_MUSIC } from "@/lib/chapterOneWheel";
+import { CHAPTER_ONE_WHEEL, MYSTERY_CHAIR_SRC, WHEEL_MUSIC } from "@/lib/chapterOneWheel";
 import { duckAmbientForNarration, restoreAmbientAfterNarration, markHtmlAudioUnlocked, primeAudioElement } from "@/lib/cinematicAudio";
 
 const PLAT = "#c9ced6";
@@ -568,15 +568,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           </div>
         </div>
         <p className="character-wheel-credit">{WHEEL_MUSIC.credit}</p>
-        <div className="character-wheel-book2">
-          <p className="character-wheel-book2-label">Book Two — not on this wheel</p>
-          {BOOK_TWO_TABLE.map((row) => (
-            <p key={row.name} className="character-wheel-book2-row">
-              <strong>{row.name}</strong>
-              {row.line ? ` · ${row.line}` : ""}
-            </p>
-          ))}
-        </div>
       </div>
       <style>{`
         .character-wheel-card {
@@ -758,30 +749,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.68rem;
           letter-spacing: 0.04em;
           margin: 0.35rem 0 0.25rem;
-        }
-        .character-wheel-book2 {
-          position: relative;
-          z-index: 5;
-          text-align: center;
-          margin: 0.15rem 0 0.45rem;
-          padding: 0.45rem 0.6rem 0.5rem;
-          border-top: 1px solid rgba(201, 206, 214, 0.18);
-        }
-        .character-wheel-book2-label {
-          margin: 0;
-          color: ${GOLD};
-          font-size: 0.72rem;
-          letter-spacing: 0.06em;
-          text-transform: uppercase;
-        }
-        .character-wheel-book2-row {
-          margin: 0.28rem 0 0;
-          color: ${PLAT};
-          font-size: 0.88rem;
-        }
-        .character-wheel-book2-row strong {
-          color: ${GOLD};
-          font-weight: 700;
         }
       `}</style>
     </figure>
