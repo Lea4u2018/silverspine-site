@@ -43,8 +43,9 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const angleRef = useRef(0);
   const pausedRef = useRef(false);
   const heldRef = useRef(false);
-  const originRef = useRef(0);
   const frontRef = useRef(0);
+  const slotFaceRef = useRef([0, 1, 2, -1]);
+  const wasBackRef = useRef([false, false, true, false]);
   const drag = useRef({ active: false, startY: 0, startAngle: 0 });
   const reduceRef = useRef(false);
   const resumeTimer = useRef(null);
@@ -62,23 +63,22 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (lineRef.current) lineRef.current.textContent = face.line || "";
   };
 
-  const slotOffset = (slot) => {
-    if (slot === 0) return 0;
-    const half = SLOTS / 2;
-    if (slot < half) return slot;
-    if (slot === half && SLOTS % 2 === 0) return slot;
-    return slot - SLOTS;
-  };
-
-  const faceIndex = (slot) => {
+  const wrapFace = (i) => {
     const count = nRef.current;
-    return ((originRef.current + slotOffset(slot)) % count + count) % count;
+    return ((i % count) + count) % count;
   };
 
-  const paintSlot = (slot) => {
+  const world180 = (ring, slot) => {
+    const deg = stepRef.current;
+    let w = ((ring + slot * deg) % 360 + 360) % 360;
+    if (w > 180) w -= 360;
+    return w;
+  };
+
+  const paintSlot = (slot, faceIdx) => {
     const el = slotEls.current[slot];
     if (!el) return;
-    const face = listRef.current[faceIndex(slot)];
+    const face = listRef.current[wrapFace(faceIdx)];
     const img = el.querySelector("[data-wheel-img]");
     const plate = el.querySelector("[data-wheel-plate]");
     const plateName = el.querySelector("[data-wheel-plate-name]");
@@ -92,6 +92,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         img.alt = face.name || "Guess Who";
       }
       if (plate) plate.hidden = true;
+      if (plateName) plateName.textContent = "";
       return;
     }
     if (img) {
@@ -105,39 +106,43 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (face.nameplate) {
       if (plate) plate.hidden = false;
       if (plateName) plateName.textContent = face.name || "";
-    } else if (plate) {
-      plate.hidden = true;
+    } else {
+      if (plate) plate.hidden = true;
+      if (plateName) plateName.textContent = "";
     }
   };
 
   const applyAngle = (a) => {
-    const count = nRef.current;
     const deg = stepRef.current;
-    let next = a;
-    let origin = originRef.current;
-    let shifted = false;
-    while (next >= deg) {
-      next -= deg;
-      origin = (origin - 1 + count) % count;
-      shifted = true;
-    }
-    while (next <= -deg) {
-      next += deg;
-      origin = (origin + 1) % count;
-      shifted = true;
-    }
-    angleRef.current = next;
-    originRef.current = origin;
-    if (shifted) {
-      for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
-    }
+    const prev = angleRef.current;
+    let recycle = 0;
+    if (a > prev + 0.0001) recycle = -SLOTS;
+    else if (a < prev - 0.0001) recycle = SLOTS;
+    angleRef.current = a;
     const ring = ringRef.current;
-    if (ring) {
-      ring.style.transform = `rotateX(${next}deg)`;
+    if (ring) ring.style.transform = `rotateX(${a}deg)`;
+
+    const faces = slotFaceRef.current;
+    for (let i = 0; i < SLOTS; i += 1) {
+      const back = Math.abs(world180(a, i)) >= 135;
+      if (back && !wasBackRef.current[i] && recycle !== 0) {
+        faces[i] = wrapFace(faces[i] + recycle);
+        paintSlot(i, faces[i]);
+      }
+      wasBackRef.current[i] = back;
     }
-    const faceUp = Math.abs(next) < deg * 0.12;
-    if (faceUp) {
-      const front = faceIndex(0);
+
+    let best = 0;
+    let bestAbs = 999;
+    for (let i = 0; i < SLOTS; i += 1) {
+      const abs = Math.abs(world180(a, i));
+      if (abs < bestAbs) {
+        bestAbs = abs;
+        best = i;
+      }
+    }
+    if (bestAbs < deg * 0.12) {
+      const front = faces[best];
       if (front !== frontRef.current) {
         frontRef.current = front;
         writeCaption(front);
@@ -186,8 +191,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     reduceRef.current =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    slotFaceRef.current = [0, 1, 2, wrapFace(-1)];
+    wasBackRef.current = [false, false, true, false];
     applyAngle(0);
-    for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
+    for (let i = 0; i < SLOTS; i += 1) paintSlot(i, slotFaceRef.current[i]);
     return () => {
       silenceWheelMusic();
     };
