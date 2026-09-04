@@ -43,8 +43,8 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const angleRef = useRef(0);
   const pausedRef = useRef(false);
   const heldRef = useRef(false);
-  const originRef = useRef(0);
   const frontRef = useRef(0);
+  const paintedRef = useRef(Array(SLOTS).fill(-1));
   const drag = useRef({ active: false, startY: 0, startAngle: 0 });
   const reduceRef = useRef(false);
   const resumeTimer = useRef(null);
@@ -62,23 +62,18 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (lineRef.current) lineRef.current.textContent = face.line || "";
   };
 
-  const slotOffset = (slot) => {
-    if (slot === 0) return 0;
-    const half = SLOTS / 2;
-    if (slot < half) return slot;
-    if (slot === half && SLOTS % 2 === 0) return slot;
-    return slot - SLOTS;
-  };
-
-  const faceIndex = (slot) => {
+  const faceOnSlot = (slot, ring) => {
     const count = nRef.current;
-    return ((originRef.current + slotOffset(slot)) % count + count) % count;
+    const deg = stepRef.current;
+    const k = Math.floor((ring + slot * deg + 180) / 360);
+    const idx = slot - k * SLOTS;
+    return ((idx % count) + count) % count;
   };
 
-  const paintSlot = (slot) => {
+  const paintSlot = (slot, faceIdx) => {
     const el = slotEls.current[slot];
     if (!el) return;
-    const face = listRef.current[faceIndex(slot)];
+    const face = listRef.current[faceIdx];
     const img = el.querySelector("[data-wheel-img]");
     const plate = el.querySelector("[data-wheel-plate]");
     const plateName = el.querySelector("[data-wheel-plate-name]");
@@ -92,6 +87,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         img.alt = face.name || "Guess Who";
       }
       if (plate) plate.hidden = true;
+      if (plateName) plateName.textContent = "";
       return;
     }
     if (img) {
@@ -105,39 +101,37 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (face.nameplate) {
       if (plate) plate.hidden = false;
       if (plateName) plateName.textContent = face.name || "";
-    } else if (plate) {
-      plate.hidden = true;
+    } else {
+      if (plate) plate.hidden = true;
+      if (plateName) plateName.textContent = "";
     }
   };
 
   const applyAngle = (a) => {
-    const count = nRef.current;
     const deg = stepRef.current;
-    let next = a;
-    let origin = originRef.current;
-    let shifted = false;
-    while (next >= deg) {
-      next -= deg;
-      origin = (origin - 1 + count) % count;
-      shifted = true;
-    }
-    while (next <= -deg) {
-      next += deg;
-      origin = (origin + 1) % count;
-      shifted = true;
-    }
-    angleRef.current = next;
-    originRef.current = origin;
-    if (shifted) {
-      for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
-    }
+    angleRef.current = a;
     const ring = ringRef.current;
-    if (ring) {
-      ring.style.transform = `rotateX(${next}deg)`;
+    if (ring) ring.style.transform = `rotateX(${a}deg)`;
+    for (let i = 0; i < SLOTS; i += 1) {
+      const fi = faceOnSlot(i, a);
+      if (paintedRef.current[i] !== fi) {
+        paintedRef.current[i] = fi;
+        paintSlot(i, fi);
+      }
     }
-    const faceUp = Math.abs(next) < deg * 0.12;
-    if (faceUp) {
-      const front = faceIndex(0);
+    let best = 0;
+    let bestAbs = 9999;
+    for (let i = 0; i < SLOTS; i += 1) {
+      let w = ((a + i * deg) % 360 + 360) % 360;
+      if (w > 180) w -= 360;
+      const abs = Math.abs(w);
+      if (abs < bestAbs) {
+        bestAbs = abs;
+        best = i;
+      }
+    }
+    if (bestAbs < deg * 0.12) {
+      const front = faceOnSlot(best, a);
       if (front !== frontRef.current) {
         frontRef.current = front;
         writeCaption(front);
@@ -187,7 +181,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     applyAngle(0);
-    for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
     return () => {
       silenceWheelMusic();
     };
@@ -757,20 +750,25 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           z-index: 5;
           text-align: center;
           margin: 0.15rem 0 0.45rem;
-          padding: 0.45rem 0.6rem 0.5rem;
+          padding: 0.55rem 0.6rem 0.55rem;
           border-top: 1px solid rgba(201, 206, 214, 0.18);
+          line-height: 1.35;
         }
         .character-wheel-book2-label {
+          display: block;
           margin: 0;
           color: ${GOLD};
           font-size: 0.72rem;
           letter-spacing: 0.06em;
+          line-height: 1.4;
           text-transform: uppercase;
         }
         .character-wheel-book2-row {
-          margin: 0.28rem 0 0;
+          display: block;
+          margin: 0.5rem 0 0;
           color: ${PLAT};
           font-size: 0.88rem;
+          line-height: 1.35;
         }
         .character-wheel-book2-row strong {
           color: ${GOLD};
