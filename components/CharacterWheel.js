@@ -4,6 +4,10 @@ import { duckAmbientForNarration, restoreAmbientAfterNarration, markHtmlAudioUnl
 
 const PLAT = "#c9ced6";
 const GOLD = "#dfcfb5";
+const CARD_W = 312;
+const CARD_H = 330;
+/** Only these cards exist in 3D. The full Book One list (38) rotates through them, one face-on at a time. */
+const SLOTS = 4;
 const SECONDS_PER_FACE = 7;
 const WHEEL_VOL_KEY = "sss-wheel-score-volume";
 
@@ -18,59 +22,127 @@ function readWheelVolume() {
   return 0.55;
 }
 
-function wrapIndex(i, n) {
-  if (!n) return 0;
-  return ((i % n) + n) % n;
-}
-
 export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   const list = Array.isArray(faces) ? faces : [];
   const n = list.length || 1;
+  const step = 360 / SLOTS;
+  const radius = Math.round((CARD_H * 0.58) / Math.tan(Math.PI / SLOTS));
   const [musicOn, setMusicOn] = useState(false);
   const [musicError, setMusicError] = useState("");
   const [spinning, setSpinning] = useState(true);
   const [scoreVol, setScoreVol] = useState(0.55);
-  const [idx, setIdx] = useState(0);
-  const [showA, setShowA] = useState(true);
-  const [slotA, setSlotA] = useState(0);
-  const [slotB, setSlotB] = useState(0);
   const scoreVolRef = useRef(0.55);
   const audioRef = useRef(null);
   const boxRef = useRef(null);
   const inViewRef = useRef(false);
   const userMutedRef = useRef(false);
-  const idxRef = useRef(0);
-  const showARef = useRef(true);
-  const spinningRef = useRef(true);
+  const slotEls = useRef([]);
+  const ringRef = useRef(null);
+  const nameRef = useRef(null);
+  const lineRef = useRef(null);
+  const angleRef = useRef(0);
+  const pausedRef = useRef(false);
+  const heldRef = useRef(false);
+  const originRef = useRef(0);
+  const frontRef = useRef(0);
+  const drag = useRef({ active: false, startY: 0, startAngle: 0 });
+  const reduceRef = useRef(false);
+  const resumeTimer = useRef(null);
   const listRef = useRef(list);
   const nRef = useRef(n);
-  const resumeTimer = useRef(null);
-  const drag = useRef({ active: false, startY: 0, done: false });
+  const stepRef = useRef(step);
   listRef.current = list;
   nRef.current = n;
-  spinningRef.current = spinning;
+  stepRef.current = step;
 
-  const faceAt = (i) => listRef.current[wrapIndex(i, nRef.current)];
-
-  const writeCaption = (i) => {
-    const face = faceAt(i);
-    const nameEl = boxRef.current?.querySelector("[data-wheel-name]");
-    const lineEl = boxRef.current?.querySelector("[data-wheel-line]");
-    if (nameEl) nameEl.textContent = face?.name || "";
-    if (lineEl) lineEl.textContent = face?.line || "";
+  const writeCaption = (idx) => {
+    const face = listRef.current[idx];
+    if (!face) return;
+    if (nameRef.current) nameRef.current.textContent = face.name || "";
+    if (lineRef.current) lineRef.current.textContent = face.line || "";
   };
 
-  const goTo = (next) => {
-    const wrapped = wrapIndex(next, nRef.current);
-    if (wrapped === idxRef.current) return;
-    const useA = !showARef.current;
-    showARef.current = useA;
-    idxRef.current = wrapped;
-    setIdx(wrapped);
-    setShowA(useA);
-    if (useA) setSlotA(wrapped);
-    else setSlotB(wrapped);
-    writeCaption(wrapped);
+  const slotOffset = (slot) => {
+    if (slot === 0) return 0;
+    const half = SLOTS / 2;
+    if (slot < half) return slot;
+    if (slot === half && SLOTS % 2 === 0) return slot;
+    return slot - SLOTS;
+  };
+
+  const faceIndex = (slot) => {
+    const count = nRef.current;
+    return ((originRef.current + slotOffset(slot)) % count + count) % count;
+  };
+
+  const paintSlot = (slot) => {
+    const el = slotEls.current[slot];
+    if (!el) return;
+    const face = listRef.current[faceIndex(slot)];
+    const img = el.querySelector("[data-wheel-img]");
+    const plate = el.querySelector("[data-wheel-plate]");
+    const plateName = el.querySelector("[data-wheel-plate-name]");
+    if (!face) return;
+    if (face.mystery) {
+      const chair = face.src || MYSTERY_CHAIR_SRC;
+      if (img) {
+        img.hidden = false;
+        img.setAttribute("data-mystery-chair", "true");
+        if (img.getAttribute("src") !== chair) img.setAttribute("src", chair);
+        img.alt = face.name || "Guess Who";
+      }
+      if (plate) plate.hidden = true;
+      return;
+    }
+    if (img) {
+      img.hidden = false;
+      img.removeAttribute("data-mystery-chair");
+      if (face.src && img.getAttribute("src") !== face.src) {
+        img.setAttribute("src", face.src);
+      }
+      img.alt = face.name || "";
+    }
+    if (face.nameplate) {
+      if (plate) plate.hidden = false;
+      if (plateName) plateName.textContent = face.name || "";
+    } else if (plate) {
+      plate.hidden = true;
+    }
+  };
+
+  const applyAngle = (a) => {
+    const count = nRef.current;
+    const deg = stepRef.current;
+    let next = a;
+    let origin = originRef.current;
+    let shifted = false;
+    while (next >= deg) {
+      next -= deg;
+      origin = (origin - 1 + count) % count;
+      shifted = true;
+    }
+    while (next <= -deg) {
+      next += deg;
+      origin = (origin + 1) % count;
+      shifted = true;
+    }
+    angleRef.current = next;
+    originRef.current = origin;
+    if (shifted) {
+      for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
+    }
+    const ring = ringRef.current;
+    if (ring) {
+      ring.style.transform = `rotateX(${next}deg)`;
+    }
+    const faceUp = Math.abs(next) < deg * 0.12;
+    if (faceUp) {
+      const front = faceIndex(0);
+      if (front !== frontRef.current) {
+        frontRef.current = front;
+        writeCaption(front);
+      }
+    }
   };
 
   const ensureWheelAudio = () => {
@@ -98,6 +170,46 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     audioRef.current = el;
     return el;
   };
+
+  useEffect(() => {
+    if (typeof document === "undefined") return undefined;
+    const el = ensureWheelAudio();
+    const vol = readWheelVolume();
+    scoreVolRef.current = vol;
+    setScoreVol(vol);
+    if (el) el.volume = vol;
+    listRef.current.forEach((face) => {
+      if (!face?.src) return;
+      const img = new Image();
+      img.src = face.src;
+    });
+    reduceRef.current =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    applyAngle(0);
+    for (let i = 0; i < SLOTS; i += 1) paintSlot(i);
+    return () => {
+      silenceWheelMusic();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (reduceRef.current) return undefined;
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now) => {
+      const dt = Math.min(32, now - last);
+      last = now;
+      if (!pausedRef.current && !heldRef.current) {
+        applyAngle(angleRef.current + dt * ((stepRef.current * 0.9) / (SECONDS_PER_FACE * 1000)));
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const silenceWheelMusic = () => {
     const kill = (el) => {
@@ -154,34 +266,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   };
 
   useEffect(() => {
-    if (typeof document === "undefined") return undefined;
-    const el = ensureWheelAudio();
-    const vol = readWheelVolume();
-    scoreVolRef.current = vol;
-    setScoreVol(vol);
-    if (el) el.volume = vol;
-    listRef.current.forEach((face) => {
-      if (!face?.src) return;
-      const img = new Image();
-      img.src = face.src;
-    });
-    writeCaption(0);
-    return () => {
-      silenceWheelMusic();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      if (!spinningRef.current) return;
-      goTo(idxRef.current + 1);
-    }, SECONDS_PER_FACE * 1000);
-    return () => window.clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
     const box = boxRef.current;
     if (!box) return undefined;
     const feed = box.closest(".blog-feed");
@@ -223,12 +307,12 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         return;
       }
       markHtmlAudioUnlocked();
-      const audioEl = ensureWheelAudio();
+      const el = ensureWheelAudio();
       if (e?.type === "pointerdown" || e?.type === "keydown") {
         if (inViewRef.current && !userMutedRef.current) {
           startWheelMusic({ fromUser: true });
         } else {
-          primeAudioElement(audioEl);
+          primeAudioElement(el);
         }
         return;
       }
@@ -280,51 +364,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const pauseThenResume = (ms = 900) => {
-    spinningRef.current = false;
-    setSpinning(false);
-    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
-    resumeTimer.current = window.setTimeout(() => {
-      spinningRef.current = true;
-      setSpinning(true);
-    }, ms);
-  };
-
-  const toggleSpin = (e) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
-    const next = !spinningRef.current;
-    spinningRef.current = next;
-    setSpinning(next);
-  };
-
-  const toggleMusic = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setMusicError("");
-    const el = ensureWheelAudio();
-    if (!el) return;
-    if (musicOn || (!el.paused && !el.muted && el.volume > 0)) {
-      userMutedRef.current = true;
-      silenceWheelMusic();
-      return;
-    }
-    userMutedRef.current = false;
-    inViewRef.current = true;
-    await startWheelMusic({ fromUser: true });
-  };
-
-  const spinBy = (dir, e) => {
-    e?.preventDefault();
-    e?.stopPropagation();
-    pauseThenResume(900);
-    goTo(idxRef.current + dir);
-  };
-
   const onStagePointerDown = (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    drag.current = { active: true, startY: e.clientY, done: false };
+    pausedRef.current = true;
+    drag.current = { active: true, startY: e.clientY, startAngle: angleRef.current };
     e.currentTarget.setPointerCapture?.(e.pointerId);
     if (!userMutedRef.current) {
       inViewRef.current = true;
@@ -333,16 +376,73 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   };
 
   const onStagePointerMove = (e) => {
-    if (!drag.current.active || drag.current.done) return;
-    const dy = e.clientY - drag.current.startY;
-    if (Math.abs(dy) < 48) return;
-    drag.current.done = true;
-    pauseThenResume(900);
-    goTo(idxRef.current + (dy > 0 ? 1 : -1));
+    if (!drag.current.active) return;
+    applyAngle(drag.current.startAngle + (e.clientY - drag.current.startY) * 0.38);
   };
 
   const onStagePointerUp = () => {
     drag.current.active = false;
+    pausedRef.current = false;
+  };
+
+  const snapToNearestFace = () => {
+    const deg = stepRef.current;
+    applyAngle(Math.round(angleRef.current / deg) * deg);
+  };
+
+  const pauseThenResume = (ms = 900) => {
+    pausedRef.current = true;
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    if (heldRef.current) {
+      pausedRef.current = false;
+      return;
+    }
+    resumeTimer.current = window.setTimeout(() => {
+      pausedRef.current = false;
+    }, ms);
+  };
+
+  const toggleSpin = (e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
+    if (heldRef.current) {
+      heldRef.current = false;
+      pausedRef.current = false;
+      setSpinning(true);
+      return;
+    }
+    heldRef.current = true;
+    pausedRef.current = false;
+    snapToNearestFace();
+    setSpinning(false);
+  };
+
+  const toggleMusic = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMusicError("");
+    const el = ensureWheelAudio();
+    if (!el) {
+      setMusicError("Player missing");
+      return;
+    }
+    if (musicOn || (!el.paused && !el.muted && el.volume > 0)) {
+      userMutedRef.current = true;
+      silenceWheelMusic();
+      return;
+    }
+    userMutedRef.current = false;
+    inViewRef.current = true;
+    const ok = await startWheelMusic({ fromUser: true });
+    if (!ok) setMusicError("Tap Play score again");
+  };
+
+  const spinBy = (dir, e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    pauseThenResume(900);
+    applyAngle(angleRef.current + dir * stepRef.current);
   };
 
   const onScoreVolume = (e) => {
@@ -358,8 +458,11 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     const el = audioRef.current;
     if (el && !userMutedRef.current) {
       el.volume = next;
-      if (next <= 0) el.muted = true;
-      else if (musicOn) el.muted = false;
+      if (next <= 0) {
+        el.muted = true;
+      } else if (musicOn) {
+        el.muted = false;
+      }
     }
   };
 
@@ -370,40 +473,16 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
   if (!list.length) return null;
 
   const first = list[0];
-  const faceA = faceAt(slotA);
-  const faceB = faceAt(slotB);
-  const front = faceAt(idx);
-
-  const renderFace = (face, on) => {
-    if (!face) return null;
-    const src = face.mystery ? face.src || MYSTERY_CHAIR_SRC : face.src;
-    return (
-      <div className={`character-wheel-shot${on ? " is-on" : ""}`}>
-        <img
-          src={src}
-          alt={face.name || ""}
-          draggable="false"
-          decoding="async"
-          data-mystery-chair={face.mystery ? "true" : undefined}
-        />
-        {face.nameplate ? (
-          <div className="character-wheel-oncard">
-            <span className="character-wheel-oncard-name">{face.name}</span>
-          </div>
-        ) : null}
-      </div>
-    );
-  };
 
   return (
     <figure ref={boxRef} className="blog-media-card character-wheel-card mb-4">
       <div className="character-wheel" role="region" aria-roledescription="carousel" aria-label="Book One faces">
         <div className="character-wheel-caption">
-          <span className="character-wheel-name" data-wheel-name>
-            {front?.name || first?.name}
+          <span ref={nameRef} className="character-wheel-name">
+            {first?.name}
           </span>
-          <span className="character-wheel-line" data-wheel-line>
-            {front?.line || first?.line || ""}
+          <span ref={lineRef} className="character-wheel-line">
+            {first?.line || ""}
           </span>
         </div>
         <div
@@ -412,7 +491,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           onPointerUp={guardControlPointer}
           onClick={guardControlPointer}
         >
-          <button type="button" onClick={(e) => spinBy(-1, e)} aria-label="Previous face">
+          <button type="button" onClick={(e) => spinBy(1, e)} aria-label="Previous face">
             ▲
           </button>
           <button
@@ -434,7 +513,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           >
             {musicOn ? "Mute score" : "Play score"}
           </button>
-          <button type="button" onClick={(e) => spinBy(1, e)} aria-label="Next face">
+          <button type="button" onClick={(e) => spinBy(-1, e)} aria-label="Next face">
             ▼
           </button>
           <label className="character-wheel-vol">
@@ -459,8 +538,27 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           onPointerUp={onStagePointerUp}
           onPointerCancel={onStagePointerUp}
         >
-          {renderFace(faceA, showA)}
-          {renderFace(faceB, !showA)}
+          <div className="character-wheel-scene">
+            <div ref={ringRef} className="character-wheel-ring">
+              {Array.from({ length: SLOTS }, (_, i) => (
+                <div
+                  key={`slot-${i}`}
+                  ref={(el) => {
+                    slotEls.current[i] = el;
+                  }}
+                  className="character-wheel-slot"
+                  style={{
+                    transform: `rotateX(${i * step}deg) translateZ(${radius}px)`,
+                  }}
+                >
+                  <img data-wheel-img alt="" draggable="false" decoding="async" />
+                  <div className="character-wheel-oncard" data-wheel-plate hidden>
+                    <span className="character-wheel-oncard-name" data-wheel-plate-name />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
         <p className="character-wheel-credit">{WHEEL_MUSIC.credit}</p>
         <div className="character-wheel-book2">
@@ -490,7 +588,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           text-align: center;
           padding: 0.15rem 0.5rem 0.35rem;
           min-height: 3.2rem;
-          line-height: 1.3;
         }
         .character-wheel-name {
           display: block;
@@ -498,7 +595,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-weight: 700;
           letter-spacing: 0.04em;
           font-size: 1.2rem;
-          line-height: 1.3;
         }
         .character-wheel-line {
           display: block;
@@ -506,7 +602,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.9rem;
           margin-top: 0.15rem;
           min-height: 1.2em;
-          line-height: 1.3;
         }
         .character-wheel-controls {
           position: relative;
@@ -568,34 +663,64 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
         .character-wheel-stage {
           position: relative;
           z-index: 1;
-          height: 420px;
+          height: 520px;
           overflow: hidden;
           cursor: ns-resize;
           touch-action: none;
-          background: #07080c;
-          border-radius: 0.75rem;
-          border: 1px solid rgba(201, 206, 214, 0.4);
         }
-        .character-wheel-shot {
+        .character-wheel-scene {
+          width: 100%;
+          height: 100%;
+          perspective: 1600px;
+          perspective-origin: 50% 50%;
+        }
+        .character-wheel-ring {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          -webkit-transform-style: preserve-3d;
+          transform: rotateX(0deg);
+          will-change: transform;
+        }
+        .character-wheel-slot {
           position: absolute;
-          inset: 0;
-          opacity: 0;
-          transition: opacity 0.45s ease;
+          left: 50%;
+          top: 50%;
+          width: ${CARD_W}px;
+          height: ${CARD_H}px;
+          margin-left: -${CARD_W / 2}px;
+          margin-top: -${CARD_H / 2}px;
+          box-sizing: border-box;
+          padding: 9px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          border: 1px solid rgba(201, 206, 214, 0.4);
+          background: #07080c;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
           pointer-events: none;
         }
-        .character-wheel-shot.is-on {
-          opacity: 1;
+        .character-wheel-slot img[hidden],
+        .character-wheel-oncard[hidden] {
+          display: none !important;
         }
-        .character-wheel-shot img {
+        .character-wheel-slot img {
           display: block;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: 50% 28%;
+          object-position: 50% 50%;
+          pointer-events: none;
           background: #07080c;
         }
-        .character-wheel-shot img[data-mystery-chair="true"] {
+        .character-wheel-slot img[data-mystery-chair="true"] {
+          object-fit: cover;
           object-position: 50% 42%;
+          background: #07080c;
         }
         .character-wheel-oncard {
           position: absolute;
@@ -607,6 +732,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           border-radius: 0.35rem;
           background: linear-gradient(to top, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.62));
           text-align: center;
+          pointer-events: none;
         }
         .character-wheel-oncard-name {
           display: block;
@@ -631,25 +757,20 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           z-index: 5;
           text-align: center;
           margin: 0.15rem 0 0.45rem;
-          padding: 0.55rem 0.6rem 0.55rem;
+          padding: 0.45rem 0.6rem 0.5rem;
           border-top: 1px solid rgba(201, 206, 214, 0.18);
-          line-height: 1.35;
         }
         .character-wheel-book2-label {
-          display: block;
           margin: 0;
           color: ${GOLD};
           font-size: 0.72rem;
           letter-spacing: 0.06em;
-          line-height: 1.4;
           text-transform: uppercase;
         }
         .character-wheel-book2-row {
-          display: block;
-          margin: 0.5rem 0 0;
+          margin: 0.28rem 0 0;
           color: ${PLAT};
           font-size: 0.88rem;
-          line-height: 1.35;
         }
         .character-wheel-book2-row strong {
           color: ${GOLD};

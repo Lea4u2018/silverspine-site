@@ -7,17 +7,13 @@ import LaunchListForm from "@/components/LaunchListForm";
 import ArcRequestForm from "@/components/ArcRequestForm";
 import PinnedBlogCard from "@/components/PinnedBlogCard";
 import BlogVideo from "@/components/BlogVideo";
+import BlogCardPlayers from "@/components/BlogCardPlayers";
 import BlogRichBody from "@/components/BlogRichBody";
 import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import HoldScrollArrows, { CopyScrollBox } from "@/components/HoldScrollArrows";
 import { readPreferredLang } from "@/lib/i18n";
 import { mediaCardClass, frameForPost } from "@/lib/blogMedia";
-
-function spotifyEmbedSrc(url) {
-  const m = String(url || "").match(/open\.spotify\.com\/episode\/([a-zA-Z0-9]+)/i);
-  return m ? `https://open.spotify.com/embed/episode/${m[1]}?theme=0` : "";
-}
 
 export default function Blog() {
 
@@ -899,26 +895,7 @@ export default function Blog() {
                         frame={mediaFrame}
                       />
                     ) : null}
-                    {p.audioUrl ? (
-                      <audio
-                        className="w-full my-3"
-                        src={p.audioUrl}
-                        controls
-                        preload="metadata"
-                        controlsList="nodownload"
-                        aria-label={`${p.title} audio`}
-                      />
-                    ) : null}
-                    {spotifyEmbedSrc(p.spotifyUrl) ? (
-                      <iframe
-                        className="w-full my-3 rounded-xl"
-                        style={{ border: 0, minHeight: 152 }}
-                        src={spotifyEmbedSrc(p.spotifyUrl)}
-                        title={`${p.title} on Spotify`}
-                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                        loading="lazy"
-                      />
-                    ) : null}
+                    <BlogCardPlayers audioUrl={p.audioUrl} spotifyUrl={p.spotifyUrl} title={p.title} />
                     {p.about || p.body ? (
                       <CopyScrollBox className="studio-copy-scroll">
                         {p.about ? <BlogRichBody body={p.about} className="text-gray-200 text-base" /> : null}
