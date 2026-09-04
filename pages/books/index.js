@@ -195,7 +195,13 @@ export default function Books() {
           .book-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.75rem; justify-items: center; align-items: start; max-width: 96%; margin: 0.45rem auto 1.1rem; padding: 0.15rem 0.5rem 2.5rem; position: relative; z-index: 40; scroll-margin-top: calc(var(--header-h) + 12px); }
           @media (max-width: 1600px) { .book-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.65rem; } }
           @media (max-width: 1100px) { .book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; } }
-          @media (max-width: 768px) { .heading { font-size: 1.7rem; } .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 96%; gap: 0.85rem; } }
+          @media (max-width: 768px) {
+            .page-frame { margin-top: 0; }
+            .heading { font-size: 1.2rem; line-height: 1.25; padding: 0.35rem 0.75rem 0; }
+            .featured-copy, .featured-copy h3, .featured-copy p { text-align: center; }
+            .shop-hub-link { align-self: center; }
+            .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 96%; gap: 0.85rem; }
+          }
           @media (max-width: 480px) { .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; } }
           .book-card { position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 168px; background: rgba(12,12,12,0.55); border: 1px solid #dfcfb5; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; z-index: 2; }
           .book-card:hover, .book-card.selected { transform: translateY(-2px) scale(1.012); box-shadow: 0 0 36px var(--glow), 0 0 60px var(--glow); border-color: var(--glow); }
@@ -427,20 +433,20 @@ export default function Books() {
               </div>
 
               {/* CENTER — book info + two-column store doors */}
-              <div className="featured-copy lg:col-span-4 flex flex-col justify-center space-y-4">
+              <div className="featured-copy lg:col-span-4 flex flex-col justify-center items-center lg:items-stretch space-y-4">
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white text-left" style={{ textShadow: "0 0 10px rgba(201,206,214,0.22), 0 2px 10px rgba(0,0,0,0.82)" }}>
+                  <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white text-center lg:text-left" style={{ textShadow: "0 0 10px rgba(201,206,214,0.22), 0 2px 10px rgba(0,0,0,0.82)" }}>
                     The Beautiful Beast
                   </h3>
-                  <p className="text-[#dfcfb5] text-xs md:text-sm font-bold uppercase tracking-widest mt-1 mb-3">
+                  <p className="text-[#dfcfb5] text-xs md:text-sm font-bold uppercase tracking-widest mt-1 mb-3 text-center lg:text-left">
                     Crime Thriller • Psychological • Rural Noir
                   </p>
-                  <p id="featured-blurb-text" className="text-sm md:text-base text-gray-300 leading-relaxed text-left" style={{ textShadow: "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)" }}>
+                  <p id="featured-blurb-text" className="text-sm md:text-base text-gray-300 leading-relaxed text-center lg:text-left" style={{ textShadow: "0 0 8px rgba(201,206,214,0.10), 0 2px 8px rgba(0,0,0,0.75)" }}>
                     A year after a Thanksgiving-night crash on Colorado’s Million-Dollar Highway—and the cover-up that followed—the first debt comes due. When new headlights carve through the canyon, old secrets scrape to the surface—and someone is shaping grief into a weapon.
                   </p>
                 </div>
 
-                <div className="bg-[#dfcfb5]/10 border border-[#dfcfb5]/20 p-3.5 rounded-xl space-y-2.5">
+                <div className="bg-[#dfcfb5]/10 border border-[#dfcfb5]/20 p-3.5 rounded-xl space-y-2.5 text-center lg:text-left">
                   <p className="text-sm text-gray-300 leading-relaxed">
                     The{" "}
                     <span className="text-white font-semibold">Extended Sneak Peek</span> (Prologue &amp; Chapters 1–2) is{" "}

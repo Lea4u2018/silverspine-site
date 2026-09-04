@@ -79,15 +79,17 @@ export default function Footer({ note, className = "", ...props }) {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 px-2 text-[11px] sm:text-xs leading-tight text-gray-200">
-          <p className="sss-footer-credits text-center max-w-full sm:whitespace-nowrap">
+          <p className="sss-footer-credits text-center max-w-full">
             © {COPYRIGHT_YEAR} <span style={{ color: GOLD }}>Silver Spine Studio™</span>. All rights reserved.
             <span className="text-gray-600"> · </span>
             Hand-built with <span style={{ color: GOLD }}>PyCharm</span>
             {" / "}
             <span style={{ color: GOLD }}>VS&nbsp;Code</span>,{" "}
-            <span style={{ color: GOLD }}>Next.js</span>,{" "}
-            <span style={{ color: GOLD }}>React</span>,{" "}
-            <span style={{ color: GOLD }}>Tailwind CSS</span>.
+            <span className="whitespace-nowrap">
+              <span style={{ color: GOLD }}>Next.js</span>,{" "}
+              <span style={{ color: GOLD }}>React</span>,{" "}
+              <span style={{ color: GOLD }}>Tailwind&nbsp;CSS</span>.
+            </span>
           </p>
           <nav aria-label="Legal" className="inline-flex flex-wrap items-center justify-center gap-x-2 text-gray-300">
             {LEGAL_LINKS.map((item, i) => (
@@ -101,7 +103,7 @@ export default function Footer({ note, className = "", ...props }) {
           </nav>
         </div>
 
-        <p className="sss-footer-flash w-full text-right text-[9px] sm:text-[10px] leading-snug text-gray-500 px-2 max-sm:text-center">
+        <p className="sss-footer-flash w-full text-center text-[9px] sm:text-[10px] leading-snug text-white px-2">
           This site uses lightning and storm flashes. If you are sensitive to flashing light, turn on Reduce Motion or skip the storm.
         </p>
 

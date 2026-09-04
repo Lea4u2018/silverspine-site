@@ -97,11 +97,43 @@ export default function About() {
             overflow: visible;
           }
           .about-heading {
-            padding-top: 0;
-            margin-top: -4.25rem;
+            padding-top: 0.4rem;
+            margin-top: 0;
+          }
+          @media (min-width: 768px) {
+            .about-heading {
+              padding-top: 0;
+              margin-top: -4.25rem;
+            }
           }
           .heading { text-align:center; color:${GOLD}; font-size:2.15rem; font-weight:800; line-height:1.18; margin:0; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
+          @media (max-width: 767px) {
+            .heading { font-size: 1.45rem; padding: 0 0.5rem; }
+          }
           .subheading { text-align:center; color:#f3e2b8; font-size:.95rem; font-style:italic; margin:.12rem 0 1.35rem; }
+          .about-scroll-cue {
+            display: none;
+          }
+          @media (max-width: 767px) {
+            .about-scroll-cue {
+              display: inline-flex;
+              flex-direction: column;
+              align-items: center;
+              margin: 0 auto 1rem;
+              padding: 0.35rem 1.05rem 0.28rem;
+              font-family: "Cinzel", Palatino, Georgia, serif;
+              font-weight: 700;
+              letter-spacing: 0.12em;
+              text-transform: uppercase;
+              font-size: 0.68rem;
+              color: #111;
+              background: #dfcfb5;
+              border: 1px solid #dfcfb5;
+              border-radius: 999px;
+              text-decoration: none;
+              line-height: 1.1;
+            }
+          }
           .about-bio-scroll {
             height: 40rem;
             max-height: 40rem;
@@ -111,6 +143,14 @@ export default function About() {
             overscroll-behavior: contain;
             scrollbar-width: thin;
             scrollbar-color: #dfcfb5 #111;
+          }
+          @media (max-width: 767px) {
+            .about-bio-scroll {
+              height: auto;
+              max-height: none;
+              overflow: visible;
+              padding-right: 0;
+            }
           }
           .about-bio-scroll::-webkit-scrollbar { width: 10px; }
           .about-bio-scroll::-webkit-scrollbar-thumb { background: #dfcfb5; border-radius: 8px; }
@@ -259,6 +299,10 @@ export default function About() {
           <p className="subheading mx-auto w-full text-center">
             A life built from storms, stories, and staying power.
           </p>
+          <a href="#about-sales" className="about-scroll-cue">
+            Scroll for more
+            <span aria-hidden="true">▾</span>
+          </a>
         </section>
 
        {/* MAIN — bio */}
@@ -337,7 +381,7 @@ export default function About() {
      </div>
 
      {/* THE NEW SALES BOX PLACED EXACTLY ON THE SIDE (Spans 5 Columns) */}
-     <div className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-gray-950 to-black border border-[#dfcfb5]/30 p-6 rounded-2xl shadow-2xl text-left space-y-4">
+     <div id="about-sales" className="lg:col-span-5 lg:sticky lg:top-24 bg-gradient-to-b from-gray-950 to-black border border-[#dfcfb5]/30 p-6 rounded-2xl shadow-2xl text-left space-y-4">
        <div className="text-center space-y-1">
          <span className="text-[#dfcfb5] text-xs font-bold uppercase tracking-widest block">Limited Preview Event</span>
          <h3 className="text-xl font-extrabold text-white tracking-tight">The Beautiful Beast</h3>

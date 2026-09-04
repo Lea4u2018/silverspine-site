@@ -53,9 +53,20 @@ export default function Blog() {
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
-    html.classList.add("sss-blog-lock");
-    body.classList.add("sss-blog-lock");
+    const mq = window.matchMedia("(min-width: 768px)");
+    const apply = () => {
+      if (mq.matches) {
+        html.classList.add("sss-blog-lock");
+        body.classList.add("sss-blog-lock");
+      } else {
+        html.classList.remove("sss-blog-lock");
+        body.classList.remove("sss-blog-lock");
+      }
+    };
+    apply();
+    mq.addEventListener("change", apply);
     return () => {
+      mq.removeEventListener("change", apply);
       html.classList.remove("sss-blog-lock");
       body.classList.remove("sss-blog-lock");
     };
@@ -512,6 +523,31 @@ export default function Blog() {
             gap: 1.5rem;
             align-items: start;
           }
+          @media (max-width: 767px) {
+            .blog-page,
+            .blog-split-host,
+            .blog-split-host .blog-split,
+            .page-frame {
+              height: auto !important;
+              max-height: none !important;
+              overflow: visible !important;
+              flex: none;
+            }
+            .blog-welcome-pane,
+            .blog-feed-wrap,
+            .blog-feed,
+            .blog-welcome-copy,
+            .blog-welcome-card,
+            .blog-welcome-inner {
+              height: auto !important;
+              max-height: none;
+              overflow: visible !important;
+              position: static;
+            }
+            .blog-welcome-copy-wrap {
+              flex: none;
+            }
+          }
             .blog-feed-wrap {
               position: relative;
               min-width: 0;
@@ -809,7 +845,7 @@ export default function Blog() {
         <div className="blog-split-host relative z-[1] max-w-7xl mx-auto px-6 md:px-8 pt-4 md:pt-6 pb-2 md:pb-3 flex-1 min-h-0 w-full">
           <div className="blog-split">
             {/* LEFT: logo + blog cards (scrolls on desktop) */}
-            <div className="blog-feed-wrap order-2 md:order-1">
+            <div className="blog-feed-wrap order-1">
             <section ref={blogFeedRef} className="blog-feed space-y-4">
               <div className="bg-black/85 rounded-2xl border border-[#dfcfb5]/55 shadow-[0_18px_48px_rgba(0,0,0,0.6)] p-3 backdrop-blur-[2px]">
                 <div className="bg-black/80 rounded-xl p-3">
@@ -913,7 +949,7 @@ export default function Blog() {
             </div>
 
             {/* RIGHT: Welcome stays fixed on desktop while blog scrolls */}
-            <section className="blog-welcome-pane order-1 md:order-2">
+            <section className="blog-welcome-pane order-2">
               <div
                 className="blog-welcome-card rounded-2xl p-[10px] shadow-[0_30px_80px_rgba(0,0,0,0.65)] overflow-hidden relative border border-[#dfcfb5]/55"
                 style={{

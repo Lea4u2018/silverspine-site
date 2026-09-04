@@ -57,10 +57,16 @@ export default function SitePageLogo() {
   }, []);
 
   return (
-    <div className={`relative z-10 px-3 sm:px-4 pt-2 pb-1 w-full flex items-center pointer-events-none ${banner ? "min-h-[4.5rem] sm:min-h-[5.5rem] md:min-h-[6.5rem]" : ""}`}>
+    <div
+      className={`relative z-10 px-3 sm:px-4 pt-2 pb-2 w-full flex pointer-events-none ${
+        banner
+          ? "flex-col items-center gap-2 min-[769px]:flex-row min-[769px]:items-center min-[769px]:min-h-[6.5rem] min-[769px]:pb-1"
+          : "items-center"
+      }`}
+    >
       <Link
         href="/"
-        className="pointer-events-auto relative z-10 inline-block shrink-0"
+        className="pointer-events-auto relative z-10 inline-block shrink-0 self-start min-[769px]:self-auto"
         aria-label="Silver Spine Studio — Home"
       >
         {logoSrc && !useTextLogo ? (
@@ -78,10 +84,10 @@ export default function SitePageLogo() {
       </Link>
       {banner ? (
         <p
-          className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none px-14 sm:px-24 md:px-28"
+          className="relative z-[1] w-full flex items-center justify-center pointer-events-none px-1 min-[769px]:absolute min-[769px]:inset-0 min-[769px]:px-28"
         >
           <span
-            className="block text-center font-extrabold leading-[1.2] tracking-[0.02em] text-[1.7rem] min-[769px]:text-[2.8rem]"
+            className="block text-center font-extrabold leading-[1.15] tracking-[0.02em] text-[1.05rem] sm:text-[1.25rem] min-[769px]:text-[2.8rem]"
             style={{ color: PLATINUM, textShadow: "0 2px 12px rgba(0,0,0,.6)" }}
           >
             {banner}

@@ -153,9 +153,9 @@ export default function LaunchMilestoneCountdown({
         {countdownTime}
       </div>
     ) : (
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-1 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-3 md:gap-x-4">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-1 text-center md:flex-row md:flex-wrap md:gap-x-4">
         {nextBadge}
-        <span className="sm:flex-1 sm:min-w-0 sm:text-center">{milestoneLabel}</span>
+        <span className="w-full min-w-0 text-center md:flex-1">{milestoneLabel}</span>
         {countdownTime}
       </div>
     );

@@ -588,6 +588,11 @@ export default function Home() {
             gap: 0;
             bottom: calc(var(--footer-h) + 8rem);
           }
+          @media (max-width: 767px) {
+            .launch-gold-btn.scroll-cue {
+              bottom: calc(var(--footer-h) + 0.65rem);
+            }
+          }
           .launch-gold-btn.scroll-cue .scroll-cue-arrow {
             font-size: 0.7rem;
             line-height: 1;

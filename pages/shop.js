@@ -293,7 +293,7 @@ export default function Shop() {
                 <p>{PREORDER_STATUS.detail}</p>
               </div>
 
-              <div className="rounded-xl border border-[#dfcfb5]/35 bg-[#dfcfb5]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed">
+              <div className="rounded-xl border border-[#dfcfb5]/35 bg-[#dfcfb5]/10 px-4 py-3 text-sm text-gray-200 leading-relaxed text-center">
                 <p className="font-semibold text-white mb-1">Full DIGITAL copy pricing · hard cutoff</p>
                 <ul className="space-y-1.5 text-xs md:text-sm">
                   <li>
