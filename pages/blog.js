@@ -683,21 +683,6 @@ export default function Blog() {
             object-fit: contain;
             object-position: center;
           }
-          @media (max-width: 767px) {
-            .blog-media-frame-cover .blog-media-stage,
-            .blog-media-frame-coverTight .blog-media-stage,
-            .blog-media-frame-podcast .blog-media-stage {
-              max-height: 16.5rem;
-            }
-            .blog-media-card.blog-media-frame-cover .blog-media-fill,
-            .blog-media-card.blog-media-frame-coverTight .blog-media-fill,
-            .blog-media-card.blog-media-frame-podcast .blog-media-fill {
-              width: auto;
-              max-width: 100%;
-              max-height: 16.5rem;
-              margin-inline: auto;
-            }
-          }
           .blog-media-frame-reel .blog-media-stage { height: 38rem; }
           .blog-media-frame-reelLite .blog-media-stage { height: 44rem; }
           .blog-media-frame-window .blog-media-stage { height: 32rem; }
@@ -708,10 +693,34 @@ export default function Blog() {
           .blog-media-frame-quote .blog-media-fill { object-position: 50% 72%; }
           .blog-media-frame-scenic .blog-media-fill { object-position: 50% 58%; }
           @media (max-width: 767px) {
-            .blog-media-frame-reelLite .blog-media-stage {
-              height: 16.5rem;
+            .blog-media-card.blog-media-frame-cover,
+            .blog-media-card.blog-media-frame-coverTight,
+            .blog-media-card.blog-media-frame-podcast,
+            .blog-media-card.blog-media-frame-reelLite {
+              width: fit-content;
+              max-width: 100%;
+              margin-inline: auto;
+              background: transparent;
             }
+            .blog-media-frame-cover .blog-media-stage,
+            .blog-media-frame-coverTight .blog-media-stage,
+            .blog-media-frame-podcast .blog-media-stage,
+            .blog-media-frame-reelLite .blog-media-stage {
+              height: auto !important;
+              max-height: none;
+              background: transparent;
+              display: flex;
+              justify-content: center;
+            }
+            .blog-media-card.blog-media-frame-cover .blog-media-fill,
+            .blog-media-card.blog-media-frame-coverTight .blog-media-fill,
+            .blog-media-card.blog-media-frame-podcast .blog-media-fill,
             .blog-media-card.blog-media-frame-reelLite .blog-media-fill {
+              width: auto !important;
+              max-width: 100%;
+              height: auto !important;
+              max-height: 16.5rem;
+              margin-inline: auto;
               object-fit: contain;
               object-position: center;
             }
