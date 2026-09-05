@@ -685,10 +685,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           position: absolute;
           left: 50%;
           top: 50%;
-          width: ${CARD_W}px;
-          height: ${CARD_H}px;
-          margin-left: -${CARD_W / 2}px;
-          margin-top: -${CARD_H / 2}px;
+          width: var(--wheel-card-w, ${CARD_W}px);
+          height: var(--wheel-card-h, ${CARD_H}px);
+          margin-left: calc(var(--wheel-card-w, ${CARD_W}px) / -2);
+          margin-top: calc(var(--wheel-card-h, ${CARD_H}px) / -2);
           box-sizing: border-box;
           padding: 9px;
           display: flex;
@@ -711,7 +711,7 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: 50% 50%;
+          object-position: 50% 100%;
           pointer-events: none;
           background: #07080c;
         }
@@ -754,6 +754,10 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           margin: 0.35rem 0 0.25rem;
         }
         @media (max-width: 767px) {
+          .character-wheel {
+            --wheel-card-w: 230px;
+            --wheel-card-h: 310px;
+          }
           .character-wheel-name {
             font-size: 1.05rem;
             line-height: 1.3;
@@ -762,9 +766,9 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           .character-wheel-stage {
             height: 400px;
           }
-          .character-wheel-scene {
-            transform: scale(0.78);
-            transform-origin: 50% 48%;
+          .character-wheel-slot img {
+            object-fit: contain;
+            object-position: center bottom;
           }
           .character-wheel-oncard {
             left: 6px;
