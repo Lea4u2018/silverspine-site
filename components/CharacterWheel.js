@@ -740,6 +740,9 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.82rem;
           line-height: 1.25;
           text-transform: uppercase;
+          white-space: normal;
+          overflow: visible;
+          overflow-wrap: break-word;
         }
         .character-wheel-credit {
           position: relative;
@@ -749,6 +752,31 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           font-size: 0.68rem;
           letter-spacing: 0.04em;
           margin: 0.35rem 0 0.25rem;
+        }
+        @media (max-width: 767px) {
+          .character-wheel-name {
+            font-size: 1.05rem;
+            line-height: 1.3;
+            padding: 0 0.35rem;
+          }
+          .character-wheel-stage {
+            height: 400px;
+          }
+          .character-wheel-scene {
+            transform: scale(0.78);
+            transform-origin: 50% 48%;
+          }
+          .character-wheel-oncard {
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            padding: 0.42rem 0.3rem 0.38rem;
+          }
+          .character-wheel-oncard-name {
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            line-height: 1.2;
+          }
         }
       `}</style>
     </figure>
