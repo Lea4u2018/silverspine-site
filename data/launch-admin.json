@@ -1,0 +1,1014 @@
+{
+  "countdownMatrix": [
+    {
+      "icon": "🎨",
+      "when": "Aug 3, 2026",
+      "title": "Cover Reveal",
+      "note": "live"
+    },
+    {
+      "icon": "📖",
+      "when": "Aug 4, 2026",
+      "title": "Extended Sneak Peek Release",
+      "note": "Prologue & Chapters 1–2"
+    },
+    {
+      "icon": "📅",
+      "when": "Aug 7 – Aug 14, 2026",
+      "title": "ARC Sign-ups",
+      "note": "List closed · recipients chosen and will be notified"
+    },
+    {
+      "icon": "📩",
+      "when": "Aug 17, 2026",
+      "title": "ARC Selection Emails Sent",
+      "note": ""
+    },
+    {
+      "icon": "🎬",
+      "when": "Aug 21, 2026",
+      "title": "Teaser Trailer 2 Drop",
+      "note": ""
+    },
+    {
+      "icon": "📦",
+      "when": "Oct 1–3, 2026",
+      "title": "Digital copy — ARC Delivery Window",
+      "note": ""
+    },
+    {
+      "icon": "🚀",
+      "when": "Oct 8 – Oct 22, 2026",
+      "title": "Full Digital Insider Deal opens on Gumroad",
+      "note": "$14.99 on Gumroad for whitelisted readers"
+    },
+    {
+      "icon": "⚡",
+      "when": "Oct 21–28, 2026",
+      "title": "Launch Week Events",
+      "note": ""
+    },
+    {
+      "icon": "⚖️",
+      "when": "Nov 1, 2026",
+      "title": "Official Release Day & print orders open",
+      "note": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99"
+    }
+  ],
+  "countdownTargets": [
+    {
+      "key": "arcDelivery",
+      "at": "2026-10-01T06:00:00.000Z",
+      "label": "ARC digital copies deliver",
+      "detail": "Lucky Sleuthers · Oct 1–3 window",
+      "href": "/blog"
+    },
+    {
+      "key": "digitalPreorder",
+      "at": "2026-10-08T06:00:00.000Z",
+      "label": "Full DIGITAL Insider Deal opens (Gumroad)",
+      "detail": "$14.99 on Gumroad for whitelisted readers",
+      "href": "/shop"
+    },
+    {
+      "key": "insiderClose",
+      "at": "2026-10-23T06:00:00.000Z",
+      "label": "Insider Deal window closes (Gumroad)",
+      "detail": "Last chance at $14.99 on Gumroad for the full digital copy",
+      "href": "/shop"
+    },
+    {
+      "key": "hardcoverRelease",
+      "at": "2026-11-01T06:00:00.000Z",
+      "label": "Print orders & official release",
+      "detail": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99",
+      "href": "/shop"
+    }
+  ],
+  "distributionFiles": {
+    "sneakPeek": {
+      "label": "Extended Sneak Peek",
+      "path": "",
+      "filename": "",
+      "updatedAt": ""
+    },
+    "fullDigital": {
+      "label": "Full Digital Copy",
+      "path": "",
+      "filename": "",
+      "updatedAt": ""
+    }
+  },
+  "recipients": [
+    {
+      "id": "fdf71e00e7074c5e",
+      "name": "Michael Harkless",
+      "email": "mharkless203@gmail.com",
+      "role": "launch-list",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-09-02T01:04:07.696Z",
+      "updatedAt": "2026-09-02T01:04:07.696Z",
+      "appliedAt": "2026-08-31T20:46:46.775Z"
+    },
+    {
+      "id": "5cc28edf38ddeb4f",
+      "name": "Yusuf",
+      "email": "yukentho@yahoo.com",
+      "role": "launch-list",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-09-02T00:03:05.937Z",
+      "updatedAt": "2026-09-02T00:03:05.937Z",
+      "appliedAt": "2026-09-01T04:33:54.715Z"
+    },
+    {
+      "id": "6fc0b7e084307c23",
+      "name": "William Jones",
+      "email": "wbjnet@yahoo.com",
+      "role": "arc-selected",
+      "format": "PDF",
+      "reviewSpot": "",
+      "notes": "Sent WBJ a free copy to review: Copy blocked from sharing with PDF notices aabout do not share and copyright information.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": null,
+        "selectionGiveaway": null,
+        "followUps": {}
+      },
+      "createdAt": "2026-08-28T05:24:52.582Z",
+      "updatedAt": "2026-08-28T05:24:52.582Z",
+      "appliedAt": "2026-08-28T05:24:52.582Z"
+    },
+    {
+      "id": "ad745a171deb2781",
+      "name": "Lauren Ferguson",
+      "email": "fergusonlauren0130@gmail.com",
+      "role": "arc-selected",
+      "format": "EPUB",
+      "reviewSpot": "Requested",
+      "notes": "Added visitor to the ARC list. Also sent member a personal  watermarked/non-sharable PDF FREE copy in advance of the Sneak Peek.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-27T16:43:24.857Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:34.141Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-19T22:18:07.449Z",
+      "updatedAt": "2026-08-27T18:45:34.262Z",
+      "appliedAt": "2026-08-19T21:44:41.114Z"
+    },
+    {
+      "id": "9f1e9b054c1d67cb",
+      "name": "Pierre Sears",
+      "email": "poebiggs6866@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:14.918Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:24:10.651Z",
+          "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:36.292Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:50:00.967Z",
+      "updatedAt": "2026-08-27T18:45:36.421Z",
+      "appliedAt": "2026-08-17T17:50:00.967Z"
+    },
+    {
+      "id": "d60fee2560f3e32f",
+      "name": "Leameso James",
+      "email": "leameso.james@icloud.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T17:45:44.981Z",
+          "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:37:54.729Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:40:24.808Z",
+      "updatedAt": "2026-08-27T18:37:54.883Z",
+      "appliedAt": "2026-08-17T17:40:24.808Z"
+    },
+    {
+      "id": "1e7a7915a965f6f0",
+      "name": "Melvin Godfrey",
+      "email": "melving0212@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:20.256Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:38.281Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:42.437Z",
+      "updatedAt": "2026-08-27T18:45:38.414Z",
+      "appliedAt": "2026-08-17T17:34:42.437Z"
+    },
+    {
+      "id": "1315bae281576b07",
+      "name": "Ashley Aaron",
+      "email": "ashleyaaron2378@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:26.803Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:21.044Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:40.520Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:40.740Z",
+      "updatedAt": "2026-08-27T18:45:40.642Z",
+      "appliedAt": "2026-08-17T17:34:40.740Z"
+    },
+    {
+      "id": "503160519165de95",
+      "name": "Faith Aponte",
+      "email": "apontefaith21@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:21.847Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:45.237Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:39.127Z",
+      "updatedAt": "2026-08-27T18:45:45.411Z",
+      "appliedAt": "2026-08-17T17:34:39.127Z"
+    },
+    {
+      "id": "a9f92cdb9f2987c1",
+      "name": "Jose Mendez",
+      "email": "makutimi@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:34.987Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:22.638Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:47.179Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:37.584Z",
+      "updatedAt": "2026-08-27T18:45:47.318Z",
+      "appliedAt": "2026-08-17T17:34:37.584Z"
+    },
+    {
+      "id": "47395eb8310b8160",
+      "name": "Kenji Hundley",
+      "email": "ijnek96@yahoo.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:23.334Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:49.334Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:36.041Z",
+      "updatedAt": "2026-08-27T18:45:49.482Z",
+      "appliedAt": "2026-08-17T17:34:36.041Z"
+    },
+    {
+      "id": "0d8d9fce003bb291",
+      "name": "Airyana Miles,",
+      "email": "airyanahmiles97@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:24.038Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:51.160Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:34.583Z",
+      "updatedAt": "2026-08-27T18:45:51.293Z",
+      "appliedAt": "2026-08-17T17:34:34.583Z"
+    },
+    {
+      "id": "a0c16a1680151453",
+      "name": "Ross Bettis",
+      "email": "ross_bettis@yahoo.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:24.794Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:53.127Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:32.886Z",
+      "updatedAt": "2026-08-27T18:45:53.258Z",
+      "appliedAt": "2026-08-17T17:34:32.886Z"
+    },
+    {
+      "id": "20208eae3e59ed02",
+      "name": "Sharnea Dickenson",
+      "email": "sharnaedickenson@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:30:44.314Z",
+          "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:55.434Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:31.276Z",
+      "updatedAt": "2026-08-27T18:45:55.589Z",
+      "appliedAt": "2026-08-17T17:34:31.276Z"
+    },
+    {
+      "id": "b800f8868669d987",
+      "name": "Xavier Sears",
+      "email": "xsears26@gmail.com",
+      "role": "arc-selected",
+      "format": "",
+      "reviewSpot": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:26.414Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:57.835Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T17:34:29.520Z",
+      "updatedAt": "2026-08-27T18:45:57.971Z",
+      "appliedAt": "2026-08-17T17:34:29.520Z"
+    },
+    {
+      "id": "8ca7d87668518fde",
+      "name": "Eric Upshaw Sr.",
+      "email": "moose662025@outlook.com",
+      "role": "arc-applicant",
+      "format": "EPUB",
+      "reviewSpot": "Requested ARC on Review",
+      "notes": "Signed up for the ARC .",
+      "removed": false,
+      "sends": {
+        "sneakPeek": null,
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:27.168Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:45:59.750Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T10:37:53.412Z",
+      "updatedAt": "2026-08-27T18:45:59.871Z",
+      "appliedAt": "2026-08-17T10:37:53.412Z"
+    },
+    {
+      "id": "edf282f5cd83eeaf",
+      "name": "Martajia Sears",
+      "email": "tajiatoshi25@gmail.com",
+      "role": "arc-selected",
+      "format": "EPUB",
+      "reviewSpot": "Gumroad Purchase",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "removed": false,
+      "sends": {
+        "sneakPeek": {
+          "sentAt": "2026-08-17T18:02:51.913Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "fullDigital": null,
+        "arc": null,
+        "selectionArc": {
+          "sentAt": "2026-08-17T18:13:27.976Z",
+          "subject": "Marked sent in Admin",
+          "filePath": ""
+        },
+        "selectionGiveaway": null,
+        "followUps": {
+          "arcDeliveryDateChange": {
+            "sentAt": "2026-08-27T18:46:01.868Z",
+            "subject": "Timeline update — free digital ARC copies now Oct 1–3 · Silver Spine Studio™"
+          }
+        }
+      },
+      "createdAt": "2026-08-17T10:34:34.213Z",
+      "updatedAt": "2026-08-27T18:46:01.999Z",
+      "appliedAt": "2026-08-17T10:34:34.213Z"
+    }
+  ],
+  "submissions": [
+    {
+      "id": "cfafb014f952e703",
+      "kind": "list",
+      "name": "Mardenia langs",
+      "email": "mardeniabluelangs@icloud.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
+      "receivedAt": "2026-09-04T06:55:58.306Z",
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
+    },
+    {
+      "id": "7fcd7e397138d5aa",
+      "kind": "list",
+      "name": "Jeremiah Worsley",
+      "email": "jjworsley22@gmail.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
+      "receivedAt": "2026-09-02T02:17:04.416Z",
+      "status": "new",
+      "importedRecipientId": "",
+      "followUpsSent": {}
+    },
+    {
+      "id": "bf176afa9b99c1ab",
+      "kind": "list",
+      "name": "Yusuf",
+      "email": "yukentho@yahoo.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
+      "receivedAt": "2026-09-01T04:33:54.715Z",
+      "status": "imported",
+      "importedRecipientId": "5cc28edf38ddeb4f",
+      "followUpsSent": {
+        "launchListWelcome": {
+          "sentAt": "2026-09-01T23:56:03.396Z",
+          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
+        }
+      }
+    },
+    {
+      "id": "3e561294f69ffe75",
+      "kind": "list",
+      "name": "Michael Harkless",
+      "email": "mharkless203@gmail.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 full digital copies drawn in mid-October 2026 from the launch list and left reviews. No purchase necessary.",
+      "receivedAt": "2026-08-31T20:46:46.775Z",
+      "status": "imported",
+      "importedRecipientId": "fdf71e00e7074c5e",
+      "followUpsSent": {
+        "launchListWelcome": {
+          "sentAt": "2026-09-01T23:56:32.408Z",
+          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
+        }
+      }
+    },
+    {
+      "id": "4d620cc00e756459",
+      "kind": "list",
+      "name": "Lauren Ferguson",
+      "email": "fergusonlauren0130@gmail.com",
+      "format": "",
+      "reviewSpot": "",
+      "outlet": "",
+      "deadline": "",
+      "businessName": "",
+      "category": "",
+      "messagePreview": "Please add me to the Silver Spine Studio launch email list for updates on The Beautiful Beast and the seven-fold chronicle. Include me in the drawing — 3 lucky winners will each receive a FULL digital copy (winners announced mid-October 2026).",
+      "receivedAt": "2026-08-19T21:44:41.114Z",
+      "status": "imported",
+      "importedRecipientId": "ad745a171deb2781",
+      "followUpsSent": {
+        "launchListWelcome": {
+          "sentAt": "2026-08-19T22:12:01.498Z",
+          "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™"
+        }
+      }
+    }
+  ],
+  "emailTemplates": {
+    "distribution": {
+      "sneakPeek": {
+        "subject": "[SNEAK PEEK] Congratulations — your Extended Sneak Peek — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — and thank you for reading with Silver Spine Studio™.\n\nAttached is your Extended Sneak Peek of The Beautiful Beast (Prologue & Chapters 1–2). We are glad you are here for the storm.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis Extended Sneak Peek is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "fullDigital": {
+        "subject": "[FULL DIGITAL] Congratulations — your copy of The Beautiful Beast — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — your full digital copy of The Beautiful Beast is attached.\n\nThank you for supporting this studio and this story. We hope the pages stay with you long after the last line.\n\nCOPYRIGHT & LICENSE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis digital edition is licensed for your personal reading only. You may not copy, upload, resell, redistribute, or share the file or substantial excerpts except as allowed by law.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arc": {
+        "subject": "[ARC] Congratulations — you are on the ARC team — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of our ARC sleuths for The Beautiful Beast.\n\nYour early-release digital copy is attached. Please treat it as a private reader copy until release day (November 1, 2026). If you review, thank you — honest words help independent studios more than you know.\n\nCOPYRIGHT & LICENSE — ARC / EARLY RELEASE\n© Leameso James / Silver Spine Studio™. All rights reserved.\nThis ARC / early-release file is licensed for your personal review only. You may share a fair, honest review, but you may not copy, upload, resell, redistribute, or share the file (or substantial excerpts) with others.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    },
+    "selection": {
+      "arcSelected": {
+        "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You are on the early-access team for this digital ARC\n• ARC delivery window: Oct 1–3, 2026\n• Official release day: November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "giveawayWinner": {
+        "subject": "[WINNER] You won a full digital copy — The Beautiful Beast — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — you are one of the {{giveawayWinners}} lucky winners from the Silver Spine Studio™ launch list.\n\nYOUR PRIZE\nOne free full digital copy of The Beautiful Beast, readable on your devices.\n\nYou will receive a separate email with your download when we send winner copies. This message is your winner notice for August 17, 2026.\n\nThank you for joining the launch list and for cheering on this house.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    },
+    "followUp": {
+      "arcApplicationReceived": {
+        "subject": "[ARC FOLLOW-UP] We received your early-release request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for requesting an ARC of The Beautiful Beast. This follow-up confirms we received your application.\n\nWHAT HAPPENS NEXT\n1) ARC sign-up window: Aug 7 – Aug 14, 2026\n2) Selection emails: Aug 17, 2026 ({{arcTeamSize}} sleuths)\n3) If selected, ARC delivery: Oct 1–3, 2026\n4) Official release day: Nov 1, 2026\n\nApplying does not guarantee a spot. If you are chosen, you will hear from us separately.\n\nREMINDER — ARC files are for personal review only. Please do not share files or substantial excerpts.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arcNotSelected": {
+        "subject": "[ARC FOLLOW-UP] Thank you for applying — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for applying for the ARC team on The Beautiful Beast. We appreciate your interest in sleuthing with us.\n\nThis round we selected {{arcTeamSize}} readers for early access. You were not selected this time, but the storm still welcomes you — the Extended Sneak Peek and full novel remain available through the Shop when you are ready.\n\nWe hope you will stay on the launch list for updates and the mid-October drawing ({{giveawayWinners}} winners each receive a full digital copy).\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "arcDeliveryReminder": {
+        "subject": "[ARC FOLLOW-UP] Your ARC file is coming — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nQuick follow-up for our ARC sleuths: your early-release digital copy of The Beautiful Beast will arrive during the delivery window ({{arcDeliveryWindow}}).\n\nWatch this inbox — the download will come in a separate email with copyright terms attached.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "launchListWelcome": {
+        "subject": "[LAUNCH LIST] You are on the list — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for joining the Silver Spine Studio™ launch list. This follow-up confirms you are signed up for updates on The Beautiful Beast and the seven-fold chronicle.\n\nDRAWING\nThree lucky winners will each receive a free full digital copy. Drawing from launch-list signups — winners announced mid-October 2026.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "launchListDrawing": {
+        "subject": "[LAUNCH LIST] Giveaway drawing reminder — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nYou are on the Silver Spine Studio™ launch list. This is a friendly reminder that we will draw {{giveawayWinners}} winners for a free full digital copy of The Beautiful Beast around ${LAUNCH_MILESTONES.digitalGiveawayAnnounce}.\n\nWinners will be notified by email. No purchase necessary — you are already entered.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "contactGeneral": {
+        "subject": "[FOLLOW-UP] We received your message — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for contacting Silver Spine Studio™. This follow-up confirms we received your message and Leameso will reply personally as soon as possible.\n\nFor quick answers on downloads, ARC, and launch dates, the FAQ at silverspinestudio.com/faq may help while you wait.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "mediaPress": {
+        "subject": "[MEDIA FOLLOW-UP] We received your press / interview request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for your media or interview request regarding Silver Spine Studio™ and The Beautiful Beast.\n\nThis follow-up confirms your request is in the studio inbox. We will respond with press materials, availability, or next steps as soon as we can.\n\n{{outletLine}}\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "websiteInquiry": {
+        "subject": "[WEBSITE FOLLOW-UP] Your custom site inquiry — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for asking about a custom website in the Silver Spine Studio™ style.\n\nThis follow-up confirms we received your inquiry. Custom builds are by request only — Leameso will reply with availability and next steps.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborReceived": {
+        "subject": "[COMMUNITY FOLLOW-UP] We received your porch request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for asking to be listed in the Silver Spine Studio™ community (Investing in the Community).\n\nThis follow-up confirms we received your request for {{businessName}}. Nothing goes live until Leameso approves it manually.\n\nPurchase verification is reviewed privately — you will hear back by email.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborApproved": {
+        "subject": "[COMMUNITY] You are live on the porch — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nCongratulations — {{businessName}} is now approved and listed on the Silver Spine Studio™ community wall.\n\nYour card is live at silverspinestudio.com/neighbors. Thank you for investing in this house — we are glad to invest in you.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "neighborDeclined": {
+        "subject": "[COMMUNITY FOLLOW-UP] About your porch request — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThank you for your interest in the Silver Spine Studio™ community wall.\n\nAfter review, we are not able to list this request at this time. If you believe this was an error, reply to this email with any details we should reconsider.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "insiderPreorder": {
+        "subject": "[INSIDER] Full digital preorder opens {{insiderStart}} — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nFollow-up for readers on the Silver Spine Studio™ list: the full digital novel opens for Insider preorder on {{insiderStart}} at {{insiderPrice}} (save {{insiderSave}} vs retail {{retailPrice}}).\n\nHardcover orders open {{hardcoverDate}}.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      },
+      "releaseDay": {
+        "subject": "[RELEASE] The Beautiful Beast — out now — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nThe storm breaks today — The Beautiful Beast is officially released.\n\nHardcover and retail digital are available through the Shop at silverspinestudio.com/shop. Thank you for being part of this launch.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+      }
+    }
+  },
+  "trackingNotes": {
+    "wbjnet@yahoo.com": {
+      "note": "",
+      "updatedAt": "2026-09-02T00:13:32.416Z"
+    },
+    "jjworsley22@gmail.com": {
+      "note": "",
+      "name": "Jeremiah Worsley",
+      "emailedAt": "2026-09-04T06:59:48.106Z",
+      "emailedSubject": "Marked emailed (outside Admin)",
+      "updatedAt": "2026-09-04T06:59:48.106Z"
+    }
+  },
+  "contacts": [
+    {
+      "id": "65d3fea70af9a375",
+      "name": "William Jones",
+      "email": "wbjnet@yahoo.com",
+      "phone": "",
+      "company": "",
+      "notes": "Sent WBJ a free copy to review: Copy blocked from sharing with PDF notices aabout do not share and copyright information.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-28T05:24:53.417Z",
+      "updatedAt": "2026-08-28T05:24:53.417Z"
+    },
+    {
+      "id": "afd242e66ef6fdd2",
+      "name": "Lauren Ferguson",
+      "email": "fergusonlauren0130@gmail.com",
+      "phone": "",
+      "company": "U.S.",
+      "notes": "Launch list request · Late update...added member to the ARC list of winners. Member was not on the list. Was put in as a Launch reminder only.",
+      "tags": [
+        "reader",
+        "Launch list",
+        "ARC"
+      ],
+      "createdAt": "2026-08-19T22:17:20.965Z",
+      "updatedAt": "2026-08-27T16:43:06.984Z"
+    },
+    {
+      "id": "f5815b7b967efa14",
+      "name": "Pierre Sears",
+      "email": "poebiggs6866@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:50:01.737Z",
+      "updatedAt": "2026-08-17T17:50:01.737Z"
+    },
+    {
+      "id": "4cb4394ceb728186",
+      "name": "Leameso James",
+      "email": "leameso.james@icloud.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:40:25.553Z",
+      "updatedAt": "2026-08-17T17:40:25.553Z"
+    },
+    {
+      "id": "3587395ae69e3271",
+      "name": "Melvin Godfrey",
+      "email": "melving0212@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:43.221Z",
+      "updatedAt": "2026-08-17T17:34:43.221Z"
+    },
+    {
+      "id": "27d6dd84a77835ed",
+      "name": "Ashley Aaron",
+      "email": "ashleyaaron2378@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:41.484Z",
+      "updatedAt": "2026-08-17T17:34:41.484Z"
+    },
+    {
+      "id": "d0bad732eeff7c8e",
+      "name": "Faith Aponte",
+      "email": "apontefaith21@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:39.853Z",
+      "updatedAt": "2026-08-17T17:34:39.853Z"
+    },
+    {
+      "id": "0cf72220dc90e7a9",
+      "name": "Jose Mendez",
+      "email": "makutimi@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:38.296Z",
+      "updatedAt": "2026-08-17T17:34:38.296Z"
+    },
+    {
+      "id": "163fe131b92682eb",
+      "name": "Kenji Hundley",
+      "email": "ijnek96@yahoo.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:36.813Z",
+      "updatedAt": "2026-08-17T17:34:36.813Z"
+    },
+    {
+      "id": "df2017ee44966578",
+      "name": "Airyana Miles,",
+      "email": "airyanahmiles97@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:35.265Z",
+      "updatedAt": "2026-08-17T17:34:35.265Z"
+    },
+    {
+      "id": "e3a407bf54954ce0",
+      "name": "Ross Bettis",
+      "email": "ross_bettis@yahoo.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:33.729Z",
+      "updatedAt": "2026-08-17T17:34:33.729Z"
+    },
+    {
+      "id": "bc917348b061bbaa",
+      "name": "Sharnea Dickenson",
+      "email": "sharneadickenson@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:32.056Z",
+      "updatedAt": "2026-08-17T17:34:32.056Z"
+    },
+    {
+      "id": "60bba837cdda787b",
+      "name": "Xavier Sears",
+      "email": "xsears26@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T17:34:30.261Z",
+      "updatedAt": "2026-08-17T17:34:30.261Z"
+    },
+    {
+      "id": "495e700eb3200571",
+      "name": "Martajia Sears",
+      "email": "tajiatoshi25@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested ARC · Requested free ARC during Aug 7–14, 2026 window. List closed.",
+      "tags": [
+        "ARC applicant",
+        "Needs reply",
+        "ARC"
+      ],
+      "createdAt": "2026-08-17T12:18:03.415Z",
+      "updatedAt": "2026-08-17T17:34:28.634Z"
+    },
+    {
+      "id": "da9789de8222da3c",
+      "name": "Eric Upshaw Sr.",
+      "email": "moose662025@outlook.com",
+      "phone": "",
+      "company": "",
+      "notes": "Signed up for the ARC .",
+      "tags": [
+        "ARC applicant",
+        "Needs reply"
+      ],
+      "createdAt": "2026-08-17T12:17:27.972Z",
+      "updatedAt": "2026-08-17T12:17:27.972Z"
+    },
+    {
+      "id": "2e32d1a80190ead6",
+      "name": "Ms. Leameso Sears",
+      "email": "1leameso6043@gmail.com",
+      "phone": "",
+      "company": "",
+      "notes": "Requested Early Release Copy  & get discount at purchase",
+      "tags": [
+        "reader"
+      ],
+      "createdAt": "2026-08-17T10:46:23.714Z",
+      "updatedAt": "2026-08-17T10:46:23.714Z"
+    }
+  ],
+  "discountCodes": []
+}
