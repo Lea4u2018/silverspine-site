@@ -1,23 +1,11 @@
-// pages/_app.js
+// /pages/_app.js
 import "@/styles/globals.css";
-import { Inter, Oswald } from "next/font/google";
+import Layout from "@/components/Layout";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const oswald = Oswald({
-  subsets: ["latin"],
-  variable: "--font-oswald",
-  display: "swap",
-});
-
-export default function App({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
   return (
-    <div className={`${inter.variable} ${oswald.variable} font-sans`}>
+    <Layout>
       <Component {...pageProps} />
-    </div>
+    </Layout>
   );
 }

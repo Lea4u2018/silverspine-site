@@ -39,3 +39,26 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Leameso OLD backups — stay on disk, not Git “new file” red
+/OLD *
+OLD *
+
+# local tooling / scratch
+.cursor/
+.venv-audio/
+.tmp-amazon-video/
+
+# PyCharm chat DBs rewrite every second and paint the tree red
+.idea/firebender/
+.idea/workspace.xml
+
+# Next.js agent stubs (recreated locally)
+AGENTS.md
+CLAUDE.md
+
+# local drafts / not site source
+printables/EMAIL_ARCHIVE/
+printables/SEND_*
+SILVERSPINE_FULL_WEBSITE_CODING.html
+SILVERSPINE_THUMBDRIVE_READ_ME.txt
