@@ -173,7 +173,11 @@
       "notes": "Added visitor to the ARC list. Also sent member a personal  watermarked/non-sharable PDF FREE copy in advance of the Sneak Peek.",
       "removed": false,
       "sends": {
-        "sneakPeek": null,
+        "sneakPeek": {
+          "sentAt": "2026-09-06T04:13:01.578Z",
+          "subject": "Sneak Peek marked sent (outside Admin)",
+          "filePath": ""
+        },
         "fullDigital": null,
         "arc": null,
         "selectionArc": {
@@ -190,7 +194,7 @@
         }
       },
       "createdAt": "2026-08-19T22:18:07.449Z",
-      "updatedAt": "2026-08-27T18:45:34.262Z",
+      "updatedAt": "2026-09-06T04:13:01.729Z",
       "appliedAt": "2026-08-19T21:44:41.114Z"
     },
     {
@@ -789,9 +793,6 @@
     },
     "jjworsley22@gmail.com": {
       "note": "",
-      "name": "Jeremiah Worsley",
-      "emailedAt": "2026-09-04T06:59:48.106Z",
-      "emailedSubject": "Marked emailed (outside Admin)",
       "updatedAt": "2026-09-04T06:59:48.106Z"
     }
   },
