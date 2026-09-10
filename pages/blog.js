@@ -7,7 +7,7 @@ import LaunchListForm from "@/components/LaunchListForm";
 import ArcRequestForm from "@/components/ArcRequestForm";
 import PinnedBlogCard from "@/components/PinnedBlogCard";
 import BlogVideo from "@/components/BlogVideo";
-import BlogCardPlayers from "@/components/BlogCardPlayers";
+import BlogCardPlayers, { useBlogFeedSoloMedia } from "@/components/BlogCardPlayers";
 import BlogRichBody from "@/components/BlogRichBody";
 import FormFieldLabel, { FormRequiredNote, RequiredMark } from "@/components/FormFieldLabel";
 import StormAtmosphere from "@/components/StormAtmosphere";
@@ -30,6 +30,7 @@ export default function Blog() {
   const [pinnedPosts, setPinnedPosts] = useState([]);
   const blogFeedRef = useRef(null);
   const welcomeCopyRef = useRef(null);
+  useBlogFeedSoloMedia(blogFeedRef, `${pinnedPosts.length}-${studioPosts.length}`);
 
   useEffect(() => {
     let cancelled = false;
