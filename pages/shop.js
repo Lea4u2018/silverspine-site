@@ -6,6 +6,7 @@ import LaunchListForm from "@/components/LaunchListForm";
 import LaunchMilestoneCountdown from "@/components/LaunchMilestoneCountdown";
 import StormAtmosphere from "@/components/StormAtmosphere";
 import StoreHub from "@/components/StoreHub";
+import EnterTheStormShopBlock from "@/components/EnterTheStormShopBlock";
 
 const GOLD = "#dfcfb5";
 const SILVER = "#c9ced6";
@@ -13,6 +14,7 @@ const SILVER = "#c9ced6";
 export default function Shop() {
   const [countdownMatrix, setCountdownMatrix] = useState(LAUNCH_COUNTDOWN_MATRIX);
   const [activePromos, setActivePromos] = useState([]);
+  const [shopTab, setShopTab] = useState("buy");
 
   useEffect(() => {
     let cancelled = false;
@@ -347,22 +349,44 @@ export default function Shop() {
                 type="button"
                 role="tab"
                 id="shop-tab-where-to-buy"
-                aria-selected="true"
+                aria-selected={shopTab === "buy"}
                 aria-controls="shop-panel-where-to-buy"
                 className="shop-tab"
+                onClick={() => setShopTab("buy")}
               >
                 Where to BUY
               </button>
+              <button
+                type="button"
+                role="tab"
+                id="shop-tab-enter-the-storm"
+                aria-selected={shopTab === "storm"}
+                aria-controls="shop-panel-enter-the-storm"
+                className="shop-tab"
+                onClick={() => setShopTab("storm")}
+              >
+                Enter The Storm
+              </button>
             </div>
 
-            <div
-              role="tabpanel"
-              id="shop-panel-where-to-buy"
-              aria-labelledby="shop-tab-where-to-buy"
-            >
-              <h2 className="sr-only">Where to BUY</h2>
-              <StoreHub variant="full" />
-            </div>
+            {shopTab === "buy" ? (
+              <div
+                role="tabpanel"
+                id="shop-panel-where-to-buy"
+                aria-labelledby="shop-tab-where-to-buy"
+              >
+                <h2 className="sr-only">Where to BUY</h2>
+                <StoreHub variant="full" />
+              </div>
+            ) : (
+              <div
+                role="tabpanel"
+                id="shop-panel-enter-the-storm"
+                aria-labelledby="shop-tab-enter-the-storm"
+              >
+                <EnterTheStormShopBlock />
+              </div>
+            )}
           </div>
         </section>
 
