@@ -52,6 +52,11 @@ OLD *
 # PyCharm chat DBs rewrite every second and paint the tree red
 .idea/firebender/
 .idea/workspace.xml
+.idea/ChatHistory_schema_v3.xml
+.idea/copilot.data.migration.*.xml
+
+# Dropbox “conflicted copy” leftovers
+*conflicted copy*
 
 # Next.js agent stubs (recreated locally)
 AGENTS.md
