@@ -710,15 +710,15 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           display: block;
           width: 100%;
           height: 100%;
-          object-fit: cover;
-          object-position: 50% 100%;
+          object-fit: contain !important;
+          object-position: center center !important;
           pointer-events: none;
-          background: #07080c;
+          background: #070B16;
         }
         .character-wheel-slot img[data-mystery-chair="true"] {
-          object-fit: cover;
-          object-position: 50% 42%;
-          background: #07080c;
+          object-fit: contain;
+          object-position: center center;
+          background: #070B16;
         }
         .character-wheel-oncard {
           position: absolute;
@@ -767,8 +767,8 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
             height: 400px;
           }
           .character-wheel-slot img {
-            object-fit: contain;
-            object-position: center bottom;
+            object-fit: contain !important;
+            object-position: center center !important;
           }
           .character-wheel-oncard {
             left: 6px;
