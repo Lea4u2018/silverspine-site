@@ -85,7 +85,8 @@ export default function Shop() {
           }
           .shop-tab {
             appearance: none;
-            border: 0;
+            border: 1px solid rgba(223, 207, 181, 0.45);
+            border-radius: 0.6rem;
             background: transparent;
             color: #dfcfb5;
             font-weight: 800;
@@ -93,24 +94,23 @@ export default function Shop() {
             text-transform: uppercase;
             font-size: 0.72rem;
             padding: 0.7rem 1rem 0.85rem;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -1px;
+            margin-bottom: 0.35rem;
             cursor: pointer;
             transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
           }
           .shop-tab:hover {
             color: #111;
             background: #c5a059;
-            border-bottom-color: #c5a059;
+            border-color: #c5a059;
           }
           .shop-tab[aria-selected="true"] {
             color: #111;
             background: #dfcfb5;
-            border-bottom-color: #dfcfb5;
+            border-color: #dfcfb5;
           }
           .shop-tab[aria-selected="true"]:hover {
             background: #c5a059;
-            border-bottom-color: #c5a059;
+            border-color: #c5a059;
           }
           @media (min-width: 768px) {
             .shop-tab { font-size: 0.8rem; letter-spacing: 0.18em; padding: 0.8rem 1.15rem 0.95rem; }
