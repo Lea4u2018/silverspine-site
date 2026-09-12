@@ -79,22 +79,20 @@ export default function Shop() {
           .shop-tabs {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.35rem;
-            border-bottom: 1px solid rgba(255,255,255,0.12);
+            gap: 0.55rem;
             margin-bottom: 1.25rem;
           }
           .shop-tab {
             appearance: none;
-            border: 1px solid rgba(223, 207, 181, 0.45);
-            border-radius: 0.6rem;
+            border: 2px solid #dfcfb5;
+            border-radius: 0.75rem;
             background: transparent;
             color: #dfcfb5;
             font-weight: 800;
             letter-spacing: 0.14em;
             text-transform: uppercase;
             font-size: 0.72rem;
-            padding: 0.7rem 1rem 0.85rem;
-            margin-bottom: 0.35rem;
+            padding: 0.7rem 1.1rem 0.8rem;
             cursor: pointer;
             transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
           }
