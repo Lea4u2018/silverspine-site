@@ -33,6 +33,8 @@ const STORE_ICONS = {
   overdrive: FaBookOpen,
   cloudlibrary: FaBookOpen,
   hoopla: FaBookOpen,
+  borrowbox: FaBookOpen,
+  gardners: FaBookOpen,
   vivlio: FaBookOpen,
   "vivlio-libraries": FaBookOpen,
 };
