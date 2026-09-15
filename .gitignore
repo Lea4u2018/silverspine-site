@@ -39,3 +39,46 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Leameso OLD backups — stay on disk, not Git “new file” red
+/OLD *
+OLD *
+
+# local tooling / scratch
+.cursor/
+.venv-audio/
+.tmp-amazon-video/
+
+# PyCharm chat DBs rewrite every second and paint the tree red
+.idea/firebender/
+.idea/workspace.xml
+.idea/ChatHistory_schema_v3.xml
+.idea/copilot.data.migration.*.xml
+
+# Dropbox “conflicted copy” leftovers
+*conflicted copy*
+
+# Next.js agent stubs (recreated locally)
+AGENTS.md
+CLAUDE.md
+
+# local drafts / not site source
+printables/EMAIL_ARCHIVE/
+printables/SEND_*
+printables/**
+!printables/00_POST_ORDER_READ_ME.txt
+!printables/FIRESTORE_REVIEWS_RULES.txt
+!printables/GITHUB_TOKEN_FOR_REVIEWS.txt
+!printables/PERSONAL_FB_ATTENTION_20.txt
+!printables/PERSONAL_HOME_DAILY.txt
+!printables/SilverSpine_Launch_Planner_Aug-Nov2026.html
+!printables/SilverSpine_Launch_Planner_Aug-Nov2026.pdf
+SILVERSPINE_FULL_WEBSITE_CODING.html
+SILVERSPINE_THUMBDRIVE_READ_ME.txt
+
+# scratch / desktop dumps — stay on disk, stop PyCharm red
+.tmp-*/
+redrawn-stills/
+scripts/
+public/covers/facebook-cover-highway.png
+public/blog/new-door-same-storm-voice-clear.mp3
