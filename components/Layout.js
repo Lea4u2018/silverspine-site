@@ -1,61 +1,66 @@
-import Link from "next/link";
+// /components/Layout.js
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
+import Footer from "@/components/Footer";
+import SiteHeader from "@/components/SiteHeader";
+import SitePageLogo from "@/components/SitePageLogo";
+import PageBackdrop from "@/components/PageBackdrop";
+import { CinematicAudioProvider } from "@/components/CinematicAudio";
+import PauseMediaWhenHidden from "@/components/PauseMediaWhenHidden";
+import TopRightControls from "@/components/TopRightControls";
+import { clearGoogTransCookies } from "@/lib/chromeVars";
 
-export default function Layout({ children }) {
+export default function Layout({ children, footerNote }) {
   const router = useRouter();
+  const isAdmin = router.pathname.startsWith("/admin");
 
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Index" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
+  useEffect(() => {
+    try {
+      const path = window.location.pathname || "";
+      if (path.startsWith("/admin")) return;
+      if (sessionStorage.getItem("sss-visit-sent") === "1") return;
+      sessionStorage.setItem("sss-visit-sent", "1");
+      fetch("/api/visit", { method: "POST", credentials: "same-origin", keepalive: true }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  useEffect(() => {
+    clearGoogTransCookies();
+      try {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        document.body.style.top = "0px";
+        document.documentElement.style.top = "0px";
+      document.documentElement.classList.remove("translated-ltr", "translated-rtl");
+      document.body.classList.remove("translated-ltr", "translated-rtl");
+      try {
+        localStorage.setItem("sss-lang", "en");
+        document.cookie = "sss-lang=en; path=/; max-age=31536000; SameSite=Lax";
+      } catch {
+        /* ignore */
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col relative overflow-hidden">
-      {/* Header */}
-      <header className="relative z-10 bg-gray-900/70 backdrop-blur-md shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
-          <h1 className="text-2xl font-extrabold text-yellow-400">
-            Silver Spine Studio
-          </h1>
-          <nav className="flex space-x-6">
-            {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  router.asPath === href
-                    ? "text-red-500 font-semibold"
-                    : "text-gray-200 hover:text-yellow-400"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+    <CinematicAudioProvider>
+      <PauseMediaWhenHidden />
+      <div className="min-h-screen flex flex-col bg-black text-white">
+        {!isAdmin ? (
+          <PageBackdrop overlayClassName={router.pathname === "/about" ? "bg-black/32" : "bg-black/62"} />
+        ) : null}
+        <TopRightControls />
+        {!isAdmin ? <SiteHeader /> : null}
+        <div className="relative z-10 flex-1 min-w-0 pt-[var(--header-h,3.5rem)] pb-[var(--footer-h,5.75rem)]">
+          {!isAdmin ? <SitePageLogo /> : null}
+          {children}
         </div>
-      </header>
-
-      {/* Main content */}
-      <main className="flex-1 relative z-10">{children}</main>
-
-      {/* Footer */}
-      <footer className="relative z-10 bg-gray-950/70 text-gray-400 text-center py-8">
-        <p className="mb-4">
-          © {new Date().getFullYear()} Silver Spine Studio. All rights reserved.
-        </p>
-        <div className="flex justify-center space-x-6 text-2xl">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition"><FaFacebook /></a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition"><FaTwitter /></a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition"><FaInstagram /></a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition"><FaYoutube /></a>
-          <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400 transition"><FaTiktok /></a>
-        </div>
-      </footer>
-    </div>
+        {!isAdmin ? <Footer note={footerNote} /> : null}
+      </div>
+    </CinematicAudioProvider>
   );
 }
