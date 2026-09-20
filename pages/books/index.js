@@ -457,9 +457,11 @@ export default function Books() {
                     {PREORDER_STATUS.headline}. Sneak peek available now.
                   </p>
                   <p className="text-sm text-gray-300 leading-relaxed">
-                    Full DIGITAL copy: Sneak Peek buyers lock in <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> on{" "}
+                    Early-bird digital rate: Sneak Peek buyers lock in{" "}
+                    <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> on{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span>
-                    {" "}— that is not the release. The file is delivered {NOVEL_PRICING.releaseLabel} with the hardcover. Hardcover {NOVEL_PRICING.hardcover} from{" "}
+                    . That is not a date window to receive the novel. You get the full DIGITAL file on release day{" "}
+                    {NOVEL_PRICING.releaseLabel}, with the hardcover. Hardcover {NOVEL_PRICING.hardcover} from{" "}
                     <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>. Paperback{" "}
                     {NOVEL_PRICING.paperback}. Digital retail{" "}
                     <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
@@ -485,7 +487,7 @@ export default function Books() {
                 <div className="books-storm-panel w-full" aria-label="Join the launch list">
                   <h3>Stay in the storm</h3>
                   <p className="text-base text-gray-200 mb-4 leading-relaxed">
-                    Launch list for sneak peek news, the Oct 22 Gumroad Insider Deal, hardcover and full-digital alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy.
+                    Launch list for sneak peek news, the Oct 22 early-bird digital rate (not the release — you get the file Nov 1), hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy.
                   </p>
                   <LaunchListForm />
                 </div>

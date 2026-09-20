@@ -396,7 +396,7 @@ export default function Shop() {
             Not buying yet? Stay in the storm.
           </h2>
           <p className="text-base text-gray-200 mb-5 leading-relaxed">
-            Join the launch list for sneak peek news, the Oct 22 Gumroad Insider Deal, hardcover and full-digital alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
+            Join the launch list for sneak peek news, the Oct 22 early-bird digital rate (not the release — you get the file Nov 1), hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
           </p>
           <LaunchListForm />
         </section>
