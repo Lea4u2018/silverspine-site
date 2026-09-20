@@ -480,3 +480,19 @@ html {
     display: none;
   }
 }
+
+/* Books grid — hover only, no click lock */
+.book-pick:hover .book-halo {
+  opacity: 1 !important;
+}
+.book-pick:hover .book-card {
+  border-color: var(--glow) !important;
+}
+.book-pick:hover .tagline {
+  color: var(--glow) !important;
+  text-shadow: 0 0 16px var(--glow);
+  font-weight: 700;
+}
+.book-pick:hover .ribbon-text {
+  color: var(--glow) !important;
+}

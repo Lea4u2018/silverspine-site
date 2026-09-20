@@ -16,16 +16,37 @@ export default function Books() {
   const GOLD = "#dfcfb5";
   const SILVER = "#c9ced6";
   const router = useRouter();
-  const [selectedBookId, setSelectedBookId] = useState(null);
+
 
   // ===== Hover narration (separate from thunder) =====
   const audioRefs = useRef({});
+  const motionRefs = useRef({});
   const activeNarrationId = useRef(null);
   const [narrationEnabled, setNarrationEnabled] = useState(false);
   const [pendingNarrationId, setPendingNarrationId] = useState(null);
   const [showNarrationChip, setShowNarrationChip] = useState(false);
 
+  const playCoverMotion = (id) => {
+    const v = motionRefs.current[id];
+    if (!v) return;
+    try {
+      v.muted = true;
+      v.playsInline = true;
+      const play = v.play();
+      if (play && typeof play.catch === "function") play.catch(() => {});
+    } catch {}
+  };
+
+  const stopCoverMotion = (id) => {
+    const v = motionRefs.current[id];
+    if (!v) return;
+    try {
+      v.pause();
+    } catch {}
+  };
+
   const tryPlayNarration = async (id) => {
+    playCoverMotion(id);
     const el = audioRefs.current[id];
     if (!el) return;
     try {
@@ -49,12 +70,12 @@ export default function Books() {
         activeNarrationId.current = null;
         restoreAmbientAfterNarration();
       }
-      setPendingNarrationId(id);
-      setShowNarrationChip(true);
+      // Do not setState here — a chip in normal flow shoves the covers and kills hover.
     }
   };
 
   const stopNarration = (id) => {
+    stopCoverMotion(id);
     const el = audioRefs.current[id];
     if (!el) return;
     if (id === 1) {
@@ -192,7 +213,7 @@ export default function Books() {
           .heading { text-align:center; color:${GOLD}; font-size:2.8rem; font-weight:800; line-height:1.2; margin: 0.06rem 0 0; letter-spacing:.02em; text-shadow:0 2px 12px rgba(0,0,0,.6); }
           .subheading { text-align:center; color:#f3e2b8; font-size:1.02rem; font-style:italic; margin:.12rem 0 .6rem; }
           /* Single row, Book 1 → Book 7 in order */
-          .book-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.75rem; justify-items: center; align-items: start; max-width: 96%; margin: 0.45rem auto 1.1rem; padding: 0.15rem 0.5rem 2.5rem; position: relative; z-index: 40; scroll-margin-top: calc(var(--header-h) + 12px); }
+          .book-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.75rem; justify-items: center; align-items: start; max-width: 96%; margin: 0.45rem auto 1.1rem; padding: 0.15rem 0.5rem 2.5rem; position: relative; z-index: 80; scroll-margin-top: calc(var(--header-h) + 12px); }
           @media (max-width: 1600px) { .book-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.65rem; } }
           @media (max-width: 1100px) { .book-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; } }
           @media (max-width: 768px) {
@@ -203,17 +224,28 @@ export default function Books() {
             .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 96%; gap: 0.85rem; }
           }
           @media (max-width: 480px) { .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; } }
-          .book-card { position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 168px; background: rgba(12,12,12,0.55); border: 1px solid #dfcfb5; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; z-index: 2; }
-          .book-card:hover, .book-card.selected { transform: translateY(-2px) scale(1.012); box-shadow: 0 0 36px var(--glow), 0 0 60px var(--glow); border-color: var(--glow); }
+          .book-cover-slot { position: relative; width: 100%; max-width: 186px; overflow: visible; }
+          .book-halo {
+            position: absolute;
+            inset: -12px;
+            border-radius: 1.1rem;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0;
+          }
+          .book-pick:hover .book-halo { opacity: 1; }
+          .book-card { position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 168px; background: rgba(12,12,12,0.55); border: 3px solid #dfcfb5; cursor: pointer; z-index: 2; }
+          .book-pick:hover .book-card { border-color: var(--glow); }
           @media (max-width: 768px) { .book-card { max-width: 150px; } }
           @media (min-width: 1400px) { .book-card { max-width: 186px; } }
           .book-card img, .book-card video { width: 100%; height: 100%; object-fit: contain; object-position: center; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
           .ribbon { position:absolute; top:50%; left:50%; width:250%; height:52%; transform:translate(-50%,-50%) rotate(-45deg); background:#000; display:flex; align-items:center; justify-content:center; z-index:6; pointer-events: none; }
-          .ribbon-text { color:#fff; font:700 0.78rem/1 'Libre Baskerville', Georgia, serif; letter-spacing:.18em; text-transform:uppercase; opacity:.95; }
+          .ribbon-text { color:#fff; font:700 0.78rem/1 'Libre Baskerville', Georgia, serif; letter-spacing:.18em; text-transform:uppercase; opacity:.95; text-shadow: 0 1px 8px rgba(0,0,0,.85); }
+          .book-pick:hover .ribbon-text { color: var(--glow); }
           .book-title { position:absolute; top:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 2rem/1.16 'Libre Baskerville', Georgia, serif; color:var(--glow); text-shadow:0 0 18px rgba(0,0,0,.6); z-index:4; }
           .author-name { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); width:92%; text-align:center; font:700 1.2rem/1.2 'Libre Baskerville', Georgia, serif; color:var(--glow); letter-spacing:.18em; z-index:4; }
-          .tagline { margin-top:.45rem; min-height: 2.6em; text-align:center; color: #f5f5f5; font-style:italic; font-size:0.9rem; line-height:1.35; opacity:0; transition:opacity .35s ease-in-out; }
-          .book-card:hover + .tagline, .book-pick:hover .tagline, .tagline.visible { opacity:1; }
+          .tagline { margin-top:.45rem; min-height: 2.6em; text-align:center; color: #cfc6b0; font-style:italic; font-size:0.9rem; line-height:1.35; opacity: 1; }
+          .book-pick:hover .tagline { color: var(--glow) !important; text-shadow: 0 0 16px var(--glow); font-weight: 700; }
           .book-pick {
             appearance: none;
             background: transparent;
@@ -224,11 +256,15 @@ export default function Books() {
             max-width: 186px;
             cursor: pointer;
             position: relative;
-            z-index: 40;
+            z-index: 80;
             font: inherit;
             color: inherit;
+            pointer-events: auto;
+            overflow: visible;
+            transition: none !important;
           }
-          .book-card, .book-card * { pointer-events: none; }
+          .book-pick:focus { outline: none; }
+          .book-pick:focus-visible { outline: 2px solid var(--glow); outline-offset: 6px; }
           .books-reveal-hint {
             display: block;
             max-width: 42rem;
@@ -361,7 +397,7 @@ export default function Books() {
 
       <div className="page-frame relative z-10 w-full">
         {showNarrationChip && !narrationEnabled && (
-          <div className="relative z-20 flex items-center justify-center gap-3 mb-2">
+          <div className="fixed top-20 left-1/2 z-[200] flex -translate-x-1/2 items-center justify-center gap-3">
             <button className="chip" onClick={enableNarration} title="Enable narration (one-time)">
               🎧 Click once to enable narration
             </button>
@@ -377,11 +413,72 @@ export default function Books() {
             className="books-reveal-hint"
             aria-label="Click to scroll down to view the series books and hear narrations on hover or click"
           >
-            Click a book to reveal its brief below. Narration plays on hover (one-time enable may be required).
+            Hover a series cover to hear it glow. Move off and it goes quiet.
           </a>
 
           <LaunchMilestoneCountdown />
 
+          <section id="series-books" className="book-grid" aria-label="Seven-fold chronicle books">
+            {books.map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  className="book-pick"
+                  style={{ textAlign: "center", "--glow": b.color }}
+                  onMouseEnter={() => {
+                    playCoverMotion(b.id);
+                    tryPlayNarration(b.id);
+                  }}
+                  onMouseLeave={() => {
+                    stopCoverMotion(b.id);
+                    stopNarration(b.id);
+                  }}
+                  onClick={() => {
+                    playCoverMotion(b.id);
+                    tryPlayNarration(b.id);
+                  }}
+                  aria-label={b.id === 1 ? `${b.title}. ${b.tagline}` : `Book ${b.id}. ${b.ribbon}. ${b.tagline}`}
+                >
+                  <div className="book-cover-slot">
+                    <span
+                      className="book-halo"
+                      aria-hidden="true"
+                      style={{
+                        boxShadow: `0 0 0 3px ${b.color}, 0 0 28px 8px ${b.color}, 0 0 64px 18px ${b.color}`,
+                      }}
+                    />
+                    <div className="book-card" style={{ "--glow": b.color }}>
+                    {b.motion ? (
+                      <video
+                        ref={(el) => {
+                          motionRefs.current[b.id] = el;
+                        }}
+                        src={b.motion}
+                        poster={b.img}
+                        muted
+                        loop
+                        playsInline
+                        preload="auto"
+                        aria-label={b.id === 1 ? `${b.title} live cover` : `Book ${b.id} cover`}
+                      />
+                    ) : (
+                      <img src={b.img} alt={b.id === 1 ? b.title : `Book ${b.id} — ${b.ribbon}`} />
+                    )}
+                    {b.id !== 1 && (
+                      <div className="ribbon">
+                        <span className="ribbon-text">{b.ribbon}</span>
+                      </div>
+                    )}
+                    {/* Titles stay off Books 2–7 — only Book 1 shows its titled cover art */}
+                    <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
+                    </div>
+                  </div>
+                  <p className="tagline">
+                    {b.tagline}
+                  </p>
+                </button>
+            ))}
+          </section>
           <section id="featured-book" aria-label="Featured Book: The Beautiful Beast" className="featured-wrap">
             <div className="featured-panel grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 bg-black/40 p-5 md:p-6 rounded-2xl border border-white/5 shadow-2xl">
 
@@ -496,60 +593,6 @@ export default function Books() {
             </div>
           </section>
 
-          <section id="series-books" className="book-grid" aria-label="Seven-fold chronicle books">
-            {books.map((b) => {
-              const selected = selectedBookId === b.id;
-              return (
-                <button
-                  key={b.id}
-                  type="button"
-                  className="book-pick"
-                  style={{ textAlign: "center", "--glow": b.color }}
-                  onClick={() => setSelectedBookId((prev) => (prev === b.id ? null : b.id))}
-                  onMouseEnter={() => tryPlayNarration(b.id)}
-                  onMouseLeave={() => stopNarration(b.id)}
-                  aria-pressed={selected}
-                  aria-label={b.id === 1 ? `${b.title}. ${b.tagline}` : `Book ${b.id}. ${b.ribbon}. ${b.tagline}`}
-                >
-                  <div
-                    className={`book-card${selected ? " selected" : ""}`}
-                    style={{ "--glow": b.color }}
-                  >
-                    {b.motion ? (
-                      <video
-                        src={b.motion}
-                        poster={b.img}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        aria-label={b.id === 1 ? `${b.title} live cover` : `Book ${b.id} cover`}
-                      />
-                    ) : (
-                      <img src={b.img} alt={b.id === 1 ? b.title : `Book ${b.id} — ${b.ribbon}`} />
-                    )}
-                    {b.id !== 1 && (
-                      <div className="ribbon">
-                        <span className="ribbon-text">{b.ribbon}</span>
-                      </div>
-                    )}
-                    {/* Titles stay off Books 2–7 — only Book 1 shows its titled cover art */}
-                    <audio ref={(el) => (audioRefs.current[b.id] = el)} src={b.whisper} preload="auto" />
-                  </div>
-                  <p className={`tagline${selected ? " visible" : ""}`}>{b.tagline}</p>
-                </button>
-              );
-            })}
-          </section>
-          {selectedBookId ? (
-            <p
-              className="max-w-3xl mx-auto mb-8 px-4 py-3 text-center italic text-[#f5f0e4] border border-[#dfcfb5]/60 rounded-lg bg-black/60"
-              aria-live="polite"
-            >
-              {books.find((b) => b.id === selectedBookId)?.tagline}
-            </p>
-          ) : null}
         </main>
       </div>
     </div>
