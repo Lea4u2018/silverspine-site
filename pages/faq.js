@@ -208,19 +208,19 @@ const SECTIONS = [
     items: [
       {
         q: "Can I preorder the full DIGITAL copy now?",
-        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. Gumroad Insider Deal is ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers. The full DIGITAL file is not ready until ${NOVEL_PRICING.releaseLabel} — the same day hardcover ${NOVEL_PRICING.hardcover} and paperback ${NOVEL_PRICING.paperback} go live. Digital retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
+        a: `Not as a file you can read today. The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now and places you on the Insider whitelist. ${NOVEL_PRICING.digitalPreorderStartLabel} is Gumroad Insider Deal day — sneak-peek buyers lock in ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}). That is not the release. You receive the full DIGITAL file on official release day ${NOVEL_PRICING.releaseLabel}, with hardcover ${NOVEL_PRICING.hardcover} and paperback ${NOVEL_PRICING.paperback}. Digital retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
       },
       {
         q: "When can I order the hardcover?",
-        a: `Hardcover is ${NOVEL_PRICING.hardcover}. Orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Paperback is ${NOVEL_PRICING.paperback}. Gumroad Insider Deal for the full DIGITAL copy is ${NOVEL_PRICING.digitalPreorderStartLabel}; the file arrives ${NOVEL_PRICING.releaseLabel}.`,
+        a: `Hardcover is ${NOVEL_PRICING.hardcover}. Orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Paperback is ${NOVEL_PRICING.paperback}. Sneak Peek buyers lock in the ${NOVEL_PRICING.insider} digital rate on ${NOVEL_PRICING.digitalPreorderStartLabel}; they receive the file ${NOVEL_PRICING.releaseLabel}, not on Insider Deal day.`,
       },
       {
         q: "What is the benefit of buying the Extended Sneak Peek today?",
-        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) on Gumroad Insider Deal day (${NOVEL_PRICING.digitalPreorderStartLabel}). The file arrives ${NOVEL_PRICING.releaseLabel} with the hardcover. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover is ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Paperback is ${NOVEL_PRICING.paperback}.`,
+        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider whitelist. On ${NOVEL_PRICING.digitalPreorderStartLabel} you lock in ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) for the full DIGITAL novel — a release-day discount, not an early copy. The file is delivered ${NOVEL_PRICING.releaseLabel} with the hardcover. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover is ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Paperback is ${NOVEL_PRICING.paperback}.`,
       },
       {
         q: "How much does everything cost?",
-        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Gumroad Insider Deal: ${NOVEL_PRICING.insider} on ${NOVEL_PRICING.digitalPreorderStartLabel} (save ${NOVEL_PRICING.insiderSavePercent}; file ${NOVEL_PRICING.releaseLabel}). Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}. Paperback: ${NOVEL_PRICING.paperback}. Hardcover: ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
+        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Early-bird digital: ${NOVEL_PRICING.insider} locked in on ${NOVEL_PRICING.digitalPreorderStartLabel} (save ${NOVEL_PRICING.insiderSavePercent}); file delivered ${NOVEL_PRICING.releaseLabel}. Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}. Paperback: ${NOVEL_PRICING.paperback}. Hardcover: ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
       },
       {
         q: "Can I get a refund after I buy?",

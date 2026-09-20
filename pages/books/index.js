@@ -457,9 +457,9 @@ export default function Books() {
                     {PREORDER_STATUS.headline}. Sneak peek available now.
                   </p>
                   <p className="text-sm text-gray-300 leading-relaxed">
-                    Full DIGITAL copy: Gumroad Insider Deal <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> on{" "}
+                    Full DIGITAL copy: Sneak Peek buyers lock in <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> on{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span>
-                    {" "}for Sneak Peek buyers. The file arrives {NOVEL_PRICING.releaseLabel} with the hardcover. Hardcover {NOVEL_PRICING.hardcover} from{" "}
+                    {" "}— that is not the release. The file is delivered {NOVEL_PRICING.releaseLabel} with the hardcover. Hardcover {NOVEL_PRICING.hardcover} from{" "}
                     <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>. Paperback{" "}
                     {NOVEL_PRICING.paperback}. Digital retail{" "}
                     <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.

@@ -302,10 +302,10 @@ export default function Shop() {
                     {" "}— Prologue &amp; Chapters 1–2; places you on the Insider Deal whitelist
                   </li>
                   <li>
-                    <span className="text-[#dfcfb5] font-bold">Gumroad Insider Deal {NOVEL_PRICING.insider}</span>
-                    {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy for Sneak Peek buyers (
+                    <span className="text-[#dfcfb5] font-bold">Early-bird digital {NOVEL_PRICING.insider}</span>
+                    {" "}— Sneak Peek buyers lock in this rate on{" "}
                     <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span>
-                    ). The file arrives {NOVEL_PRICING.releaseLabel} with the hardcover.
+                    {" "}(save {NOVEL_PRICING.insiderSavePercent}). That is not the release. You get the full DIGITAL file {NOVEL_PRICING.releaseLabel} with the hardcover.
                   </li>
                   <li>
                     <span className="text-white font-bold">Hardcover {NOVEL_PRICING.hardcover}</span> — orders from{" "}

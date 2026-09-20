@@ -46,7 +46,7 @@
       "icon": "🚀",
       "when": "Oct 22, 2026",
       "title": "Gumroad Insider Deal",
-      "note": "$14.99 for whitelisted readers · full DIGITAL file still Nov 1"
+      "note": "$14.99 early-bird rate · not the release · file Nov 1"
     },
     {
       "icon": "⚖️",
@@ -60,7 +60,7 @@
       "key": "insiderDay",
       "at": "2026-10-22T06:00:00.000Z",
       "label": "Gumroad Insider Deal",
-      "detail": "$14.99 for whitelisted readers · full file Nov 1 with the hardcover",
+      "detail": "$14.99 early-bird rate · not the release · file Nov 1",
       "href": "/shop"
     },
     {
