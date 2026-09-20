@@ -85,7 +85,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
     if (!face) return;
     if (face.mystery) {
       const chair = face.src || MYSTERY_CHAIR_SRC;
-      el.removeAttribute("data-tall");
       if (img) {
         img.hidden = false;
         img.setAttribute("data-mystery-chair", "true");
@@ -96,8 +95,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
       if (plateName) plateName.textContent = "";
       return;
     }
-    if (face.tall) el.setAttribute("data-tall", "true");
-    else el.removeAttribute("data-tall");
     if (img) {
       img.hidden = false;
       img.removeAttribute("data-mystery-chair");
@@ -705,13 +702,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           -webkit-backface-visibility: hidden;
           pointer-events: none;
         }
-        .character-wheel-slot[data-tall="true"] {
-          width: 312px;
-          height: 468px;
-          margin-left: -156px;
-          margin-top: -234px;
-          padding: 4px;
-        }
         .character-wheel-slot img[hidden],
         .character-wheel-oncard[hidden] {
           display: none !important;
@@ -767,12 +757,6 @@ export default function CharacterWheel({ faces = CHAPTER_ONE_WHEEL }) {
           .character-wheel {
             --wheel-card-w: 230px;
             --wheel-card-h: 310px;
-          }
-          .character-wheel-slot[data-tall="true"] {
-            width: 230px;
-            height: 345px;
-            margin-left: -115px;
-            margin-top: -172px;
           }
           .character-wheel-name {
             font-size: 1.05rem;
