@@ -85,6 +85,7 @@ export default function Shop() {
           .shop-tab {
             appearance: none;
             border: 2px solid #dfcfb5;
+            box-shadow: 0 0 0 1px rgba(223, 207, 181, 0.55);
             border-radius: 0.75rem;
             background: transparent;
             color: #dfcfb5;
@@ -94,7 +95,7 @@ export default function Shop() {
             font-size: 0.72rem;
             padding: 0.7rem 1.1rem 0.8rem;
             cursor: pointer;
-            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
           }
           .shop-tab:hover {
             color: #111;
@@ -301,11 +302,10 @@ export default function Shop() {
                     {" "}— Prologue &amp; Chapters 1–2; places you on the Insider Deal whitelist
                   </li>
                   <li>
-                    <span className="text-[#dfcfb5] font-bold">Digital early bird {NOVEL_PRICING.insider}</span>
-                    {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy (
-                    <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span> –{" "}
-                    <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderEndLabel}</span>
-                    ), for sneak-peek buyers
+                    <span className="text-[#dfcfb5] font-bold">Gumroad Insider Deal {NOVEL_PRICING.insider}</span>
+                    {" "}— save {NOVEL_PRICING.insiderSavePercent} on the full DIGITAL copy for Sneak Peek buyers (
+                    <span className="text-white font-semibold">{NOVEL_PRICING.digitalPreorderStartLabel}</span>
+                    ). The file arrives {NOVEL_PRICING.releaseLabel} with the hardcover.
                   </li>
                   <li>
                     <span className="text-white font-bold">Hardcover {NOVEL_PRICING.hardcover}</span> — orders from{" "}
@@ -396,7 +396,7 @@ export default function Shop() {
             Not buying yet? Stay in the storm.
           </h2>
           <p className="text-base text-gray-200 mb-5 leading-relaxed">
-            Join the launch list for sneak peek news, the Sep 30 full DIGITAL preorder window, hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
+            Join the launch list for sneak peek news, the Oct 22 Gumroad Insider Deal, hardcover and full-digital alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy (winners announced mid-October).
           </p>
           <LaunchListForm />
         </section>

@@ -10,77 +10,63 @@
       "icon": "📖",
       "when": "Aug 4, 2026",
       "title": "Extended Sneak Peek Release",
-      "note": "Prologue & Chapters 1–2"
+      "note": "Prologue & Chapters 1–2 · live in stores"
     },
     {
       "icon": "📅",
       "when": "Aug 7 – Aug 14, 2026",
       "title": "ARC Sign-ups",
-      "note": "List closed · recipients chosen and will be notified"
+      "note": "Done · Sneak Peek sent · list closed"
     },
     {
       "icon": "📩",
       "when": "Aug 17, 2026",
       "title": "ARC Selection Emails Sent",
-      "note": ""
+      "note": "Done"
     },
     {
       "icon": "🎬",
       "when": "Aug 21, 2026",
       "title": "Teaser Trailer 2 Drop",
-      "note": ""
+      "note": "Done"
     },
     {
       "icon": "📦",
       "when": "Oct 1–3, 2026",
-      "title": "Digital copy — ARC Delivery Window",
-      "note": ""
-    },
-    {
-      "icon": "🚀",
-      "when": "Oct 8 – Oct 22, 2026",
-      "title": "Full Digital Insider Deal opens on Gumroad",
-      "note": "$14.99 on Gumroad for whitelisted readers"
+      "title": "ARC Sneak Peek delivery",
+      "note": "Done · Prologue & Chapters 1–2 only — not the full novel"
     },
     {
       "icon": "⚡",
       "when": "Oct 21–28, 2026",
       "title": "Launch Week Events",
-      "note": ""
+      "note": "Site announcements and socials"
+    },
+    {
+      "icon": "🚀",
+      "when": "Oct 22, 2026",
+      "title": "Gumroad Insider Deal",
+      "note": "$14.99 for whitelisted readers · full DIGITAL file still Nov 1"
     },
     {
       "icon": "⚖️",
       "when": "Nov 1, 2026",
-      "title": "Official Release Day & print orders open",
+      "title": "Official Release Day — full digital file & print orders",
       "note": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99"
     }
   ],
   "countdownTargets": [
     {
-      "key": "arcDelivery",
-      "at": "2026-10-01T06:00:00.000Z",
-      "label": "ARC digital copies deliver",
-      "detail": "Lucky Sleuthers · Oct 1–3 window",
-      "href": "/blog"
-    },
-    {
-      "key": "digitalPreorder",
-      "at": "2026-10-08T06:00:00.000Z",
-      "label": "Full DIGITAL Insider Deal opens (Gumroad)",
-      "detail": "$14.99 on Gumroad for whitelisted readers",
-      "href": "/shop"
-    },
-    {
-      "key": "insiderClose",
-      "at": "2026-10-23T06:00:00.000Z",
-      "label": "Insider Deal window closes (Gumroad)",
-      "detail": "Last chance at $14.99 on Gumroad for the full digital copy",
+      "key": "insiderDay",
+      "at": "2026-10-22T06:00:00.000Z",
+      "label": "Gumroad Insider Deal",
+      "detail": "$14.99 for whitelisted readers · full file Nov 1 with the hardcover",
       "href": "/shop"
     },
     {
       "key": "hardcoverRelease",
       "at": "2026-11-01T06:00:00.000Z",
-      "label": "Print orders & official release",
+      "label": "Official release — full digital file & hardcover",
       "detail": "Paperback $24.99 · Hardcover $29.99 · Digital $19.99",
       "href": "/shop"
     }
@@ -724,7 +710,7 @@
     "selection": {
       "arcSelected": {
         "subject": "[ARC SELECTED] You were chosen — The Beautiful Beast ARC team — Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You are on the early-access team for this digital ARC\n• ARC delivery window: Oct 1–3, 2026\n• Official release day: November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+        "body": "Hi {{firstName}},\n\nCongratulations — you were selected as one of the {{arcTeamSize}} ARC sleuths for The Beautiful Beast.\n\nWHAT THIS MEANS\n• You received the Extended Sneak Peek (Prologue & Chapters 1–2) — not the full novel\n• ARC Sneak Peek delivery: Oct 1–3, 2026\n• Official release day (full digital file + hardcover): November 1, 2026\n\nYou will receive a separate email with your download when files are ready. This message is your selection notice for August 17, 2026.\n\nIf you did not request an ARC, please reply to this email so we can fix our list.\n\nThank you for sleuthing with us.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "giveawayWinner": {
         "subject": "[WINNER] You won a full digital copy — The Beautiful Beast — Silver Spine Studio™",
@@ -777,8 +763,8 @@
         "body": "Hi {{firstName}},\n\nThank you for your interest in the Silver Spine Studio™ community wall.\n\nAfter review, we are not able to list this request at this time. If you believe this was an error, reply to this email with any details we should reconsider.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "insiderPreorder": {
-        "subject": "[INSIDER] Full digital preorder opens {{insiderStart}} — Silver Spine Studio™",
-        "body": "Hi {{firstName}},\n\nFollow-up for readers on the Silver Spine Studio™ list: the full digital novel opens for Insider preorder on {{insiderStart}} at {{insiderPrice}} (save {{insiderSave}} vs retail {{retailPrice}}).\n\nHardcover orders open {{hardcoverDate}}.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
+        "subject": "[INSIDER] Gumroad Insider Deal {{insiderStart}} — Silver Spine Studio™",
+        "body": "Hi {{firstName}},\n\nFollow-up for readers on the Silver Spine Studio™ list: Gumroad Insider Deal is {{insiderStart}} at {{insiderPrice}} (save {{insiderSave}} vs retail {{retailPrice}}). The full DIGITAL file arrives November 1, 2026 with the hardcover.\n\nHardcover orders open {{hardcoverDate}}.\n\n\nHappy Sleuthing!\n\nLeameso James\nSilver Spine Studio™\ncontact@silverspinestudio.com\nhttps://www.silverspinestudio.com"
       },
       "releaseDay": {
         "subject": "[RELEASE] The Beautiful Beast — out now — Silver Spine Studio™",

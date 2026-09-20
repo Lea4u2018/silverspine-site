@@ -208,19 +208,19 @@ const SECTIONS = [
     items: [
       {
         q: "Can I preorder the full DIGITAL copy now?",
-        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. The full DIGITAL copy opens for Insider preorder ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Hardcover is ${NOVEL_PRICING.hardcover} and is not available for order until ${NOVEL_PRICING.hardcoverOrderFromLabel}. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
+        a: `The Extended Sneak Peek (${NOVEL_PRICING.sneakPeek}) is available now. Gumroad Insider Deal is ${NOVEL_PRICING.digitalPreorderStartLabel} at ${NOVEL_PRICING.insider} for whitelisted readers. The full DIGITAL file is not ready until ${NOVEL_PRICING.releaseLabel} — the same day hardcover ${NOVEL_PRICING.hardcover} and paperback ${NOVEL_PRICING.paperback} go live. Digital retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}.`,
       },
       {
         q: "When can I order the hardcover?",
-        a: `Hardcover is ${NOVEL_PRICING.hardcover}. Orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Paperback is ${NOVEL_PRICING.paperback}. Full DIGITAL copy preorder opens separately ${NOVEL_PRICING.digitalPreorderStartLabel}.`,
+        a: `Hardcover is ${NOVEL_PRICING.hardcover}. Orders begin ${NOVEL_PRICING.hardcoverOrderFromLabel} — the official release day. Paperback is ${NOVEL_PRICING.paperback}. Gumroad Insider Deal for the full DIGITAL copy is ${NOVEL_PRICING.digitalPreorderStartLabel}; the file arrives ${NOVEL_PRICING.releaseLabel}.`,
       },
       {
         q: "What is the benefit of buying the Extended Sneak Peek today?",
-        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) when preorder opens (${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover is ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Paperback is ${NOVEL_PRICING.paperback}.`,
+        a: `Welcome in. Buying the Extended Sneak Peek for ${NOVEL_PRICING.sneakPeek} (Prologue & Chapters 1–2) places you on the Insider Deal whitelist. Whitelisted readers may secure the full DIGITAL copy for ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}) on Gumroad Insider Deal day (${NOVEL_PRICING.digitalPreorderStartLabel}). The file arrives ${NOVEL_PRICING.releaseLabel} with the hardcover. Full DIGITAL retail is ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.releaseLabel}. Hardcover is ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}. Paperback is ${NOVEL_PRICING.paperback}.`,
       },
       {
         q: "How much does everything cost?",
-        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Digital Insider preorder: ${NOVEL_PRICING.insider} (save ${NOVEL_PRICING.insiderSavePercent}, ${NOVEL_PRICING.digitalPreorderStartLabel} – ${NOVEL_PRICING.digitalPreorderEndLabel}). Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}. Paperback: ${NOVEL_PRICING.paperback}. Hardcover: ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
+        a: `Extended Sneak Peek: ${NOVEL_PRICING.sneakPeek} (Insider whitelist · available now). Gumroad Insider Deal: ${NOVEL_PRICING.insider} on ${NOVEL_PRICING.digitalPreorderStartLabel} (save ${NOVEL_PRICING.insiderSavePercent}; file ${NOVEL_PRICING.releaseLabel}). Digital retail: ${NOVEL_PRICING.retail} from ${NOVEL_PRICING.retailFromLabel}. Paperback: ${NOVEL_PRICING.paperback}. Hardcover: ${NOVEL_PRICING.hardcover} from ${NOVEL_PRICING.hardcoverOrderFromLabel}.`,
       },
       {
         q: "Can I get a refund after I buy?",
@@ -228,7 +228,7 @@ const SECTIONS = [
       },
       {
         q: "How do I join the launch list?",
-        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, preorder-window reminders, and release-day alerts. Launch-list members are also entered for a drawing: 3 lucky sleuths win a free FULL digital copy of The Beautiful Beast (readable on your devices). Winners announced mid-October 2026 by email and on social.",
+        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, Gumroad Insider Deal reminders, and release-day alerts. Launch-list members are also entered for a drawing: 3 lucky sleuths win a free FULL digital copy of The Beautiful Beast (readable on your devices). Winners announced mid-October 2026 by email and on social. The full digital file is not available until November 1, 2026.",
       },
       {
         q: "How do I enter the free digital copy giveaway?",
@@ -236,7 +236,7 @@ const SECTIONS = [
       },
       {
         q: "What is an ARC request?",
-        a: "ARC means Advanced Review Copy / early-release review access. We select 25 sleuths from applications (Aug 7–14, 2026; selection emails Aug 17). Delivery is Oct 1–3, 2026. Separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
+        a: "ARC means Advanced Review Copy / early-release review access. We select 25 sleuths from applications (Aug 7–14, 2026; selection emails Aug 17). ARC Sneak Peek delivery was Oct 1–3, 2026 — Prologue & Chapters 1–2 only, not the full novel. Separate from the paid sneak peek and the launch list. Use Request early-release ARC on the Blog page during open windows.",
       },
       {
         q: "How do I contact Silver Spine Studio?",

@@ -647,6 +647,7 @@ export default function Blog() {
           }
           .character-wheel-card.blog-media-card {
             background: transparent;
+            overflow: visible;
           }
           .blog-media-stage {
             width: 100%;
@@ -1076,7 +1077,7 @@ export default function Blog() {
               <button onClick={() => setShowList(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <p className="text-sm text-gray-300 mb-4 leading-relaxed">
-              Get launch updates for The Beautiful Beast and the seven-fold chronicle — sneak peek news, preorder windows, and release day alerts. Plus: 3 lucky sleuths win a free FULL digital copy (announced mid-October).
+              Get launch updates for The Beautiful Beast and the seven-fold chronicle — sneak peek news, the Oct 22 Gumroad Insider Deal, and November 1 release-day alerts. Plus: 3 lucky sleuths win a free FULL digital copy (announced mid-October). The full digital file is not available until November 1.
             </p>
             <LaunchListForm requestEmail={REQUEST_EMAIL} />
             <div className="flex justify-end mt-4">
@@ -1096,7 +1097,7 @@ export default function Blog() {
               <button onClick={() => setShowArc(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <p className="text-sm text-gray-300 mb-4 leading-relaxed">
-              Apply for an Advanced Review Copy of <span className="text-white font-semibold">The Beautiful Beast</span> (early full manuscript for review). Separate from the paid sneak peek.
+              Apply for an Advanced Review Copy of <span className="text-white font-semibold">The Beautiful Beast</span>. ARC delivery is the Extended Sneak Peek (Prologue &amp; Chapters 1–2) — not the full novel. Separate from the paid sneak peek.
             </p>
             <ArcRequestForm
               onCancel={() => setShowArc(false)}

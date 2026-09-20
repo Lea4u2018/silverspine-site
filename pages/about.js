@@ -399,8 +399,9 @@ export default function About() {
            {PREORDER_STATUS.headline}
          </p>
          <p>
-           Full DIGITAL Insider preorder: <span className="text-white font-bold">{NOVEL_PRICING.digitalPreorderStartLabel} – {NOVEL_PRICING.digitalPreorderEndLabel}</span> at{" "}
-           <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> for whitelisted readers.
+           Gumroad Insider Deal: <span className="text-white font-bold">{NOVEL_PRICING.digitalPreorderStartLabel}</span> at{" "}
+           <span className="text-[#dfcfb5] font-bold">{NOVEL_PRICING.insider}</span> for Sneak Peek buyers.
+           The full DIGITAL file arrives {NOVEL_PRICING.releaseLabel} with the hardcover.
            Hardcover {NOVEL_PRICING.hardcover} from <span className="text-white font-bold">{NOVEL_PRICING.hardcoverOrderFromLabel}</span>.
            Paperback {NOVEL_PRICING.paperback}. Digital retail <span className="text-white font-bold">{NOVEL_PRICING.retail}</span> from {NOVEL_PRICING.releaseLabel}.
          </p>
