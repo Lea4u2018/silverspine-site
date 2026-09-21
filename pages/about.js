@@ -190,8 +190,8 @@ export default function About() {
             opacity: 0.28;
             mix-blend-mode: screen;
             filter: saturate(0.2) contrast(1.35) brightness(0.92);
-            -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.65) 26%, rgba(0,0,0,0.2) 52%, transparent 72%);
-                    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.65) 26%, rgba(0,0,0,0.2) 52%, transparent 72%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 78% at 50% 42%, #000 0%, #000 52%, rgba(0,0,0,0.4) 64%, transparent 78%);
+                    mask-image: radial-gradient(ellipse 70% 78% at 50% 42%, #000 0%, #000 52%, rgba(0,0,0,0.4) 64%, transparent 78%);
           }
           /* Bolt punch layer — high-contrast silver forks only (screen blend keeps darks quiet) */
           .about-storm-bed video.about-storm-bolts {
@@ -209,8 +209,8 @@ export default function About() {
             );
             animation: about-rain-drift 1.1s linear infinite;
             opacity: 0.55;
-            -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 32%, rgba(0,0,0,0.15) 58%, transparent 78%);
-                    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 32%, rgba(0,0,0,0.15) 58%, transparent 78%);
+            -webkit-mask-image: radial-gradient(ellipse 68% 76% at 50% 44%, #000 0%, rgba(0,0,0,0.45) 60%, transparent 76%);
+                    mask-image: radial-gradient(ellipse 68% 76% at 50% 44%, #000 0%, rgba(0,0,0,0.45) 60%, transparent 76%);
           }
           @keyframes about-rain-drift {
             from { transform: translate3d(0, -12px, 0); }
@@ -236,7 +236,15 @@ export default function About() {
             overflow: hidden;
             border: 1px solid rgba(255,255,255,0.08);
             background: rgba(15,15,15,0.78);
-            box-shadow: 0 20px 48px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.03);
+            box-shadow:
+              0 20px 48px rgba(0,0,0,0.5),
+              0 0 36px 16px rgba(0,0,0,0.28),
+              inset 0 0 0 1px rgba(255,255,255,0.03);
+          }
+          #about-sales {
+            box-shadow:
+              0 20px 48px rgba(0,0,0,0.5),
+              0 0 36px 16px rgba(0,0,0,0.28) !important;
           }
           .nebula-sheet > .content { position:relative; }
           .card-wrap { padding: 12px 16px; } /* ↓ padding */
