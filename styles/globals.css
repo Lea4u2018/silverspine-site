@@ -203,6 +203,17 @@ html {
   animation: sss-distant-flash 14s ease-in-out infinite;
 }
 
+.sss-storm-flash--left {
+  background: radial-gradient(
+    ellipse 48% 42% at 14% 16%,
+    rgba(230, 240, 255, 0.4) 0%,
+    rgba(190, 210, 240, 0.12) 40%,
+    transparent 70%
+  );
+  animation-duration: 17s;
+  animation-delay: 5.5s;
+}
+
 .sss-storm-snow {
   overflow: hidden;
 }
@@ -444,7 +455,8 @@ html {
 
 @media (prefers-reduced-motion: reduce) {
   .sss-storm-snow,
-  .sss-storm-flash {
+  .sss-storm-flash,
+  .sss-storm-flash--left {
     display: none !important;
   }
   .sss-storm-mist {

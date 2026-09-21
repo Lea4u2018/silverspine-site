@@ -170,7 +170,12 @@ export default function StormAtmosphere({ mood = "highway" }) {
     <div className={`sss-storm sss-storm--${mood}`} aria-hidden="true">
       <div className="sss-storm-mist" />
       <div className="sss-storm-vignette" />
-      {wantsThunder ? <div className="sss-storm-flash" /> : null}
+      {wantsThunder ? (
+        <>
+          <div className="sss-storm-flash" />
+          <div className="sss-storm-flash sss-storm-flash--left" />
+        </>
+      ) : null}
       <div className="sss-storm-snow">
         {flakes.map((f) => (
           <span
