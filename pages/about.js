@@ -172,55 +172,6 @@ export default function About() {
           /* Starfield under the storm */
           #stars { position: fixed; inset: 0; z-index: 0; opacity: .22; pointer-events: none; }
 
-          /* Soft lightning bed — behind bio, not over text */
-          .about-storm-bed {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
-          }
-          /* Base lightning bed — same overall room light; bolts pushed silver/white */
-          .about-storm-bed video {
-            position: absolute;
-            inset: -8%;
-            width: 116%;
-            height: 116%;
-            object-fit: cover;
-            opacity: 0.34;
-            filter: saturate(0.25) contrast(1.28) brightness(0.74);
-            -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
-                    mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
-          }
-          /* Bolt punch layer — high-contrast silver forks only (screen blend keeps darks quiet) */
-          .about-storm-bed video.about-storm-bolts {
-            opacity: 0.62;
-            mix-blend-mode: screen;
-            filter: saturate(0) contrast(2.2) brightness(0.68) grayscale(1);
-          }
-          .about-rain {
-            position: absolute;
-            inset: 0;
-            background-image: repeating-linear-gradient(
-              -18deg,
-              transparent 0 14px,
-              rgba(200, 220, 245, 0.045) 14px 15px
-            );
-            animation: about-rain-drift 1.1s linear infinite;
-            opacity: 0.55;
-            -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
-                    mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
-          }
-          @keyframes about-rain-drift {
-            from { transform: translate3d(0, -12px, 0); }
-            to   { transform: translate3d(-8px, 18px, 0); }
-          }
-          @media (prefers-reduced-motion: reduce) {
-            .about-storm-bed video,
-            .about-storm-bed video.about-storm-bolts,
-            .about-rain { display: none !important; }
-          }
-
           /* Links */
           .nav-link { color: #e5e7eb; }
           .nav-link:hover { color: ${GOLD}; }
@@ -249,37 +200,7 @@ export default function About() {
         `}</style>
       </Head>
 
-      {/* Starfield + lightning/rain bed */}
       <canvas id="stars" />
-      <div className="about-storm-bed" aria-hidden="true">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          ref={(el) => {
-            if (el) el.playbackRate = 0.55;
-          }}
-        >
-          <source src="/storm-lightning.mp4" type="video/mp4" />
-        </video>
-        <video
-          className="about-storm-bolts"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          ref={(el) => {
-            if (el) el.playbackRate = 0.55;
-          }}
-        >
-          <source src="/storm-lightning.mp4" type="video/mp4" />
-        </video>
-        <div className="about-rain" />
-      </div>
-
       <StormAtmosphere mood="author" />
 
       {/* ===== Between header and footer (no local footer below) ===== */}
