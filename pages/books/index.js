@@ -204,7 +204,7 @@ export default function Books() {
           }
           @media (max-width: 480px) { .book-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; } }
           .book-card { position: relative; border-radius: 0.85rem; overflow: hidden; aspect-ratio: 2 / 3; width: 100%; max-width: 168px; background: rgba(12,12,12,0.55); border: 1px solid #dfcfb5; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; cursor: pointer; z-index: 2; }
-          .book-card:hover, .book-card.selected { transform: translateY(-2px) scale(1.012); box-shadow: 0 0 36px var(--glow), 0 0 60px var(--glow); border-color: var(--glow); }
+          .book-pick:hover .book-card, .book-card.selected { transform: translateY(-2px) scale(1.012); box-shadow: 0 0 36px var(--glow), 0 0 60px var(--glow); border-color: var(--glow); }
           @media (max-width: 768px) { .book-card { max-width: 150px; } }
           @media (min-width: 1400px) { .book-card { max-width: 186px; } }
           .book-card img, .book-card video { width: 100%; height: 100%; object-fit: contain; object-position: center; filter: contrast(1.15) saturate(1.15) brightness(1.05); pointer-events: none; }
@@ -228,7 +228,6 @@ export default function Books() {
             font: inherit;
             color: inherit;
           }
-          .book-card, .book-card * { pointer-events: none; }
           .books-reveal-hint {
             display: block;
             max-width: 42rem;
@@ -527,7 +526,14 @@ export default function Books() {
                         aria-label={b.id === 1 ? `${b.title} live cover` : `Book ${b.id} cover`}
                       />
                     ) : (
-                      <img src={b.img} alt={b.id === 1 ? b.title : `Book ${b.id} — ${b.ribbon}`} />
+                      <img
+                        src={b.img}
+                        alt={b.id === 1 ? b.title : `Book ${b.id} — ${b.ribbon}`}
+                        width={168}
+                        height={252}
+                        decoding="async"
+                        style={{ width: "100%", maxWidth: 168, height: "auto", aspectRatio: "2 / 3", objectFit: "contain", display: "block" }}
+                      />
                     )}
                     {b.id !== 1 && (
                       <div className="ribbon">

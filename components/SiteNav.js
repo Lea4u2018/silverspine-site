@@ -24,6 +24,19 @@ export default function SiteNav({ className = "" }) {
       >
         {NAV_LINKS.map(({ href, label }) => {
           const active = isNavActive(router.pathname, router.asPath, href);
+          const labelText = href === "/shop" ? "Studio Shop" : label;
+          if (href === "/books") {
+            return (
+              <a
+                key={href}
+                href="/books"
+                aria-current={active ? "page" : undefined}
+                className={tabClass(active)}
+              >
+                {labelText}
+              </a>
+            );
+          }
           return (
             <Link
               key={href}
@@ -31,7 +44,7 @@ export default function SiteNav({ className = "" }) {
               aria-current={active ? "page" : undefined}
               className={tabClass(active)}
             >
-              {href === "/shop" ? "Studio Shop" : label}
+              {labelText}
             </Link>
           );
         })}
@@ -57,6 +70,20 @@ export default function SiteNav({ className = "" }) {
         >
           {NAV_LINKS.map(({ href, label }) => {
             const active = isNavActive(router.pathname, router.asPath, href);
+            const labelText = href === "/shop" ? "Studio Shop" : label;
+            if (href === "/books") {
+              return (
+                <a
+                  key={href}
+                  href="/books"
+                  aria-current={active ? "page" : undefined}
+                  className={tabClass(active)}
+                  onClick={() => setOpen(false)}
+                >
+                  {labelText}
+                </a>
+              );
+            }
             return (
               <Link
                 key={href}
@@ -65,7 +92,7 @@ export default function SiteNav({ className = "" }) {
                 className={tabClass(active)}
                 onClick={() => setOpen(false)}
               >
-                {href === "/shop" ? "Studio Shop" : label}
+                {labelText}
               </Link>
             );
           })}
