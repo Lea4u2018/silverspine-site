@@ -485,9 +485,8 @@ html {
 .sss-about-veil {
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.28) 0%,
-    rgba(0, 0, 0, 0.12) 30%,
-    rgba(0, 0, 0, 0.04) 58%,
-    transparent 82%
+    rgba(0, 0, 0, 0.06) 0%,
+    rgba(0, 0, 0, 0.03) 22%,
+    transparent 52%
   );
 }

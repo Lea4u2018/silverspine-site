@@ -187,10 +187,11 @@ export default function About() {
             width: 116%;
             height: 116%;
             object-fit: cover;
-            opacity: 0.34;
-            filter: saturate(0.25) contrast(1.28) brightness(0.74);
-            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 22%, rgba(0,0,0,0.45) 48%, transparent 78%);
-                    mask-image: linear-gradient(to bottom, #000 0%, #000 22%, rgba(0,0,0,0.45) 48%, transparent 78%);
+            opacity: 0.28;
+            mix-blend-mode: screen;
+            filter: saturate(0.2) contrast(1.35) brightness(0.92);
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.65) 26%, rgba(0,0,0,0.2) 52%, transparent 72%);
+                    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.65) 26%, rgba(0,0,0,0.2) 52%, transparent 72%);
           }
           /* Bolt punch layer — high-contrast silver forks only (screen blend keeps darks quiet) */
           .about-storm-bed video.about-storm-bolts {
@@ -208,8 +209,8 @@ export default function About() {
             );
             animation: about-rain-drift 1.1s linear infinite;
             opacity: 0.55;
-            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 28%, rgba(0,0,0,0.4) 55%, transparent 82%);
-                    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, rgba(0,0,0,0.4) 55%, transparent 82%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 32%, rgba(0,0,0,0.15) 58%, transparent 78%);
+                    mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,0.55) 32%, rgba(0,0,0,0.15) 58%, transparent 78%);
           }
           @keyframes about-rain-drift {
             from { transform: translate3d(0, -12px, 0); }
