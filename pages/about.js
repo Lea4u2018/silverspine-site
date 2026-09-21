@@ -74,7 +74,7 @@ export default function About() {
   }, []);
 
   return (
-    <div className="text-gray-100">
+    <div className="about-page text-gray-100">
       <Head>
         <title>About {PUBLIC_AUTHOR_NAME} | Silver Spine Studio™</title>
         <meta

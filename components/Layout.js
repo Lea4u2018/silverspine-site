@@ -51,7 +51,7 @@ export default function Layout({ children, footerNote }) {
       <PauseMediaWhenHidden />
       <div className="min-h-screen flex flex-col bg-black text-white">
         {!isAdmin ? (
-          <PageBackdrop overlayClassName={router.pathname === "/about" ? "bg-black/50" : "bg-black/62"} />
+          <PageBackdrop overlayClassName={router.pathname === "/about" ? "bg-black/20" : "bg-black/62"} />
         ) : null}
         <TopRightControls />
         {!isAdmin ? <SiteHeader /> : null}

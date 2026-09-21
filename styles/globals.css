@@ -480,3 +480,11 @@ html {
     display: none;
   }
 }
+
+/* About: light full-bleed veil, no dark ring that reads as a curtain */
+.about-page .sss-storm-vignette {
+  opacity: 0;
+}
+.about-page .sss-storm--author .sss-storm-mist {
+  opacity: 0.28;
+}
