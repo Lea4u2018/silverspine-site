@@ -189,8 +189,8 @@ export default function About() {
             object-fit: cover;
             opacity: 0.34;
             filter: saturate(0.25) contrast(1.28) brightness(0.74);
-            -webkit-mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
-                    mask-image: radial-gradient(ellipse 70% 65% at 50% 42%, transparent 28%, #000 78%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 22%, rgba(0,0,0,0.45) 48%, transparent 78%);
+                    mask-image: linear-gradient(to bottom, #000 0%, #000 22%, rgba(0,0,0,0.45) 48%, transparent 78%);
           }
           /* Bolt punch layer — high-contrast silver forks only (screen blend keeps darks quiet) */
           .about-storm-bed video.about-storm-bolts {
@@ -208,8 +208,8 @@ export default function About() {
             );
             animation: about-rain-drift 1.1s linear infinite;
             opacity: 0.55;
-            -webkit-mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
-                    mask-image: radial-gradient(ellipse 55% 60% at 50% 40%, transparent 25%, #000 85%);
+            -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 28%, rgba(0,0,0,0.4) 55%, transparent 82%);
+                    mask-image: linear-gradient(to bottom, #000 0%, #000 28%, rgba(0,0,0,0.4) 55%, transparent 82%);
           }
           @keyframes about-rain-drift {
             from { transform: translate3d(0, -12px, 0); }
@@ -413,7 +413,7 @@ export default function About() {
            href="/shop"
            className="w-full inline-flex items-center justify-center gap-2 font-semibold tracking-wide text-[#dfcfb5] border border-[#dfcfb5]/45 hover:bg-[#dfcfb5]/10 transition-all duration-200 text-center py-3 px-6 rounded-xl text-sm"
          >
-           Full store hub · coming soon doors
+           Click here for Full Store Hub
          </Link>
        </div>
 
