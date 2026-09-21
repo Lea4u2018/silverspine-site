@@ -480,13 +480,3 @@ html {
     display: none;
   }
 }
-
-/* About only — fade from the top down, not a dark sheet over the whole page */
-.sss-about-veil {
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.06) 0%,
-    rgba(0, 0, 0, 0.03) 22%,
-    transparent 52%
-  );
-}
