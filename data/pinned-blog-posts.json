@@ -1,0 +1,224 @@
+{
+  "pinned": [
+    {
+      "id": "pinned-arc-lucky-sleuthers",
+      "category": "Announcement",
+      "dateISO": "2026-08-17",
+      "title": "Lucky Sleuthers — The ARC 25 Have Been Notified",
+      "body": "The ARC request window for The Beautiful Beast is closed. Silver Spine Studio™ has selected twenty-five Lucky Sleuthers for early access, and selection notices have been sent.\n\nIf you requested an ARC, please check your email inbox — and look in Junk / Spam as well. Notices went out August 17, 2026 from contact@silverspinestudio.com.\n\nUPDATE — ARC Sneak Peek delivery: October 1–3, 2026 (done). This was the Extended Sneak Peek — Prologue and Chapters 1–2 — not the full novel.\n\nCongratulations from Silver Spine Studio to everyone selected. Thank you to every reader who applied and took part — your support means more than you know.\n\nPlease keep an eye on silverspinestudio.com for updates and new release information.\n\nComing next for Extended Sneak Peek buyers: Gumroad Insider Deal is October 22, 2026 at $14.99. The full DIGITAL file is not ready until November 1 — the same day as the hardcover. Regular digital price is $19.99 from November 1; paperback $24.99; hardcover $29.99.\n\nQuestions or concerns? Please reach out anytime at contact@silverspinestudio.com — we are glad to help.\n\nHappy Sleuthing!",
+      "bullets": [
+        "25 Lucky Sleuthers selected and notified August 17, 2026 — check inbox + Junk / Spam",
+        "ARC Sneak Peek files: October 1–3, 2026 (done). This is not the full novel.",
+        "Next for Sneak Peek buyers: Gumroad Insider Deal Oct 22 · full digital file Nov 1 with the hardcover",
+        "Official release November 1, 2026 — digital $19.99 · paperback $24.99 · hardcover $29.99"
+      ],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "cover",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "books",
+        "shop",
+        "launch-list"
+      ],
+      "published": true,
+      "sortOrder": 70,
+      "createdAt": "2026-08-17T19:00:51.442Z",
+      "updatedAt": "2026-09-20T17:26:00.000Z",
+      "mediaFrame": "cover",
+      "cardCompact": true
+    },
+    {
+      "id": "pinned-chapter-one-faces",
+      "category": "Cast",
+      "dateISO": "2026-09-02",
+      "title": "Book 1: Meet the Characters",
+      "body": "Pick your poison. The one in front comes clear. Three seats stay a question — on purpose.\n\nMusic: Behind the Shadow — Ruiqi Zhao · Epidemic Sound",
+      "bullets": [],
+      "mediaType": "character-wheel",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "Book 1: Meet the Characters — drag or use the arrows",
+      "videoLive": true,
+      "figureKey": "",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "books",
+        "shop"
+      ],
+      "published": true,
+      "sortOrder": 90,
+      "createdAt": "2026-09-02T16:00:00.000Z",
+      "updatedAt": "2026-09-02T16:00:00.000Z"
+    },
+    {
+      "id": "pinned-meet-elliot",
+      "category": "Cast",
+      "dateISO": "2026-08-17",
+      "title": "Meet Elliot",
+      "body": "This isn’t just a novel…\n\nHere at Silver Spine Studio, you get to know the people you’re walking with in the storm — not line after line with strangers.\n\nCome know the man you’re walking beside — before the storm decides what it keeps.",
+      "bullets": [],
+      "mediaType": "video",
+      "mediaUrl": "/characters/elliot-windsor-meet-v2.mp4",
+      "mediaPoster": "/characters/elliot-windsor-portrait.png",
+      "mediaCaption": "Meet Elliot — tap unmute for sound",
+      "videoLive": true,
+      "figureKey": "",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "books",
+        "shop"
+      ],
+      "published": true,
+      "sortOrder": 60,
+      "createdAt": "2026-08-17T16:00:11.128Z",
+      "updatedAt": "2026-08-22T08:22:06.934Z"
+    },
+    {
+      "id": "pinned-website-inquiries",
+      "category": "Announcement",
+      "dateISO": "2026-08-09",
+      "title": "Website Inquiries Are Open — Plus Seven Spines in the Storm",
+      "body": "We’ve added a clear path for custom website builds. If you want a site designed, use Contact and choose Website build inquiry — those messages arrive tagged [WEBSITE INQUIRY] in the studio inbox.\n\nReach us at silverspinestudio.com/contact?topic=sites or email contact@silverspinestudio.com. Book launch still comes first — projects are considered by inquiry, fit, and timing.",
+      "bullets": [],
+      "mediaType": "video",
+      "mediaUrl": "/covers/seven-spines-noir-window.mp4",
+      "mediaPoster": "/covers/seven-spines-noir-window.png",
+      "mediaCaption": "Cream to deep fire red · seven spines in the storm",
+      "videoLive": true,
+      "figureKey": "",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "contact-sites",
+        "books"
+      ],
+      "published": true,
+      "sortOrder": 50,
+      "createdAt": "2026-08-14T09:21:56.670Z",
+      "updatedAt": "2026-08-14T09:21:56.670Z",
+      "mediaFrame": "window"
+    },
+    {
+      "id": "pinned-site-live",
+      "category": "Announcement",
+      "dateISO": "2026-08-08",
+      "title": "Silver Spine Studio™ Is Live — Come On In",
+      "body": "The site is in production. Rain, lightning, Books, Shop, Reviews, and the launch list are open — the storm is no longer waiting behind a closed gate.",
+      "bullets": [
+        "Extended Sneak Peek is live in stores",
+        "ARC list closed — the 25 Lucky Sleuthers have been notified",
+        "3 lucky winners will each receive a FULL digital copy — join the launch list"
+      ],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "cover",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "launch-list",
+        "shop",
+        "arc"
+      ],
+      "published": true,
+      "sortOrder": 40,
+      "createdAt": "2026-08-14T09:21:56.670Z",
+      "updatedAt": "2026-09-20T17:26:00.000Z",
+      "mediaFrame": "cover",
+      "confetti": true
+    },
+    {
+      "id": "pinned-launch-timeline",
+      "category": "Announcement",
+      "dateISO": "2026-07-28",
+      "title": "The Beautiful Beast — Launch Timeline & What’s Next",
+      "body": "The road to release is mapped. Here’s the plan and how to get early access.",
+      "bullets": [
+        "ARC Sneak Peek Oct 1–3 (done · not the full novel)",
+        "Launch week Oct 21–28 · Gumroad Insider Deal Oct 22",
+        "Official release Nov 1 — full digital file with the hardcover"
+      ],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "arcQuote",
+      "expandBody": "Milestones\n\n1. Cover Reveal — Aug 3, 2026. The blank ribbon falls away. The premium artwork is officially unmasked.\n2. Sneak Peek Release — Aug 4, 2026. Digital Extended Sneak Peek (Prologue & Chapters 1–2) for $4.99 — live in stores. This purchase places you on the Insider Deal whitelist.\n3. ARC Sign-ups — Aug 7 – Aug 14, 2026. Window closed. The 25 Lucky Sleuthers have been chosen and notified (Aug 17).\n4. Teaser Trailer 2 Drop — Aug 21, 2026. Production loops push live.\n5. ARC Sneak Peek delivery — Oct 1–3, 2026. Done. Prologue & Chapters 1–2 only — not the full novel.\n6. Launch Week Events — Oct 21–28, 2026. Site announcements and socials.\n7. Gumroad Insider Deal — Oct 22, 2026. $14.99 for whitelisted readers. The full DIGITAL file is not ready until Nov 1.\n8. Official Release Day — Nov 1, 2026. Full digital file · paperback $24.99 · hardcover $29.99 · digital retail $19.99.\n\nA note for readers & gift-givers\n\n• Begin with the Sneak Peek: $4.99 for Prologue & Chapters 1–2 — already in stores — and your place on the Insider whitelist.\n• Full DIGITAL: Gumroad Insider Deal Oct 22 at $14.99; the file arrives Nov 1 with the hardcover. Then $19.99 from Nov 1, 2026. Paperback $24.99. Hardcover $29.99.\n• Holiday timing: Nov 1 release lands just as gift season begins — a Colorado thriller ready for the nightstand, the stocking, or the reader who loves a storm.",
+      "expandLabel": "View timeline",
+      "actions": [
+        "timeline-toggle",
+        "launch-list",
+        "arc"
+      ],
+      "published": true,
+      "sortOrder": 30,
+      "createdAt": "2026-08-14T09:21:56.670Z",
+      "updatedAt": "2026-09-20T17:26:00.000Z",
+      "mediaFrame": "quote"
+    },
+    {
+      "id": "pinned-brand-look",
+      "category": "Behind the Scenes",
+      "dateISO": "2026-07-16",
+      "title": "Building the Silver Spine Look",
+      "body": "Jet black, deep gold, stormlight. The system we’re shipping across the site.",
+      "bullets": [],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "cliffside",
+      "expandBody": "Palette: Jet black base, storm-gold accents (#a77a23).\n\nType: Elegant serif for headings; clean sans for UI.\n\nMotion: Subtle fades/parallax under 400ms; cinematic, not busy.",
+      "expandLabel": "View notes",
+      "actions": [
+        "brand-notes-toggle",
+        "press"
+      ],
+      "published": true,
+      "sortOrder": 20,
+      "createdAt": "2026-08-14T09:21:56.670Z",
+      "updatedAt": "2026-08-14T09:21:56.670Z",
+      "mediaFrame": "scenic"
+    },
+    {
+      "id": "pinned-chronicle-begins",
+      "category": "Announcement",
+      "dateISO": "2026-07-05",
+      "title": "The Seven-Fold Chronicle Begins",
+      "body": "Book One — The Beautiful Beast — opens the mapped sequence: thrillers forged in storm and consequence, where beauty and danger share the same breath.",
+      "bullets": [
+        "Colorado highway. Thanksgiving night. The storm is already waiting.",
+        "Future volumes follow the rolling narrative timeline after Book 1",
+        "Join the launch list for calendar locks as dates firm up"
+      ],
+      "mediaType": "figure",
+      "mediaUrl": "",
+      "mediaPoster": "",
+      "mediaCaption": "",
+      "videoLive": true,
+      "figureKey": "highway",
+      "expandBody": "",
+      "expandLabel": "View details",
+      "actions": [
+        "books",
+        "launch-list"
+      ],
+      "published": true,
+      "sortOrder": 10,
+      "createdAt": "2026-08-14T09:21:56.670Z",
+      "updatedAt": "2026-08-14T09:21:56.670Z",
+      "mediaFrame": "scenic"
+    }
+  ]
+}
