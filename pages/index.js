@@ -233,7 +233,7 @@ export default function Home() {
 
   const LAUNCH_TICKER_ITEMS = Array.from({ length: 2 }, () => [
     { label: `Sneak Peek ${NOVEL_PRICING.sneakPeek} — Prologue & Ch. 1–2 · Insider whitelist`, outNow: true },
-    { label: "Drawing for 3 full digital copies in mid-October 2026 from the launch list and left reviews. No purchase necessary.", outNow: false },
+    { label: "Drawing for 3 full digital copies in mid-December 2026 from the launch list and left reviews. No purchase necessary.", outNow: false },
     { label: PREORDER_STATUS.digitalTicker, outNow: false },
     { label: PREORDER_STATUS.hardcoverTicker, outNow: false },
     { label: `Official release · ${NOVEL_PRICING.releaseLabel} · Digital ${NOVEL_PRICING.retail} · Paperback ${NOVEL_PRICING.paperback} · Hardcover ${NOVEL_PRICING.hardcover}`, outNow: false },

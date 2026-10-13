@@ -486,7 +486,7 @@ export default function Books() {
                 <div className="books-storm-panel w-full" aria-label="Join the launch list">
                   <h3>Stay in the storm</h3>
                   <p className="text-base text-gray-200 mb-4 leading-relaxed">
-                    Launch list for sneak peek news, the Oct 22 early-bird digital rate (not the release — you get the file Nov 1), hardcover alerts for Nov 1 — and a chance for 3 lucky sleuths to win a free FULL digital copy.
+                    Launch list for sneak peek news, the Dec 15 early-bird digital rate (not the release — you get the file Dec 25), hardcover alerts for Dec 25 — and a chance for 3 lucky sleuths to win a free FULL digital copy.
                   </p>
                   <LaunchListForm />
                 </div>

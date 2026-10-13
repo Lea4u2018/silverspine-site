@@ -228,11 +228,11 @@ const SECTIONS = [
       },
       {
         q: "How do I join the launch list?",
-        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, Gumroad Insider Deal reminders, and release-day alerts. Launch-list members are also entered for a drawing: 3 lucky sleuths win a free FULL digital copy of The Beautiful Beast (readable on your devices). Winners announced mid-October 2026 by email and on social. The full digital file is not available until November 1, 2026.",
+        a: "Use Join the launch list on Blog, Books, or Shop. You’ll get sneak peek news, Gumroad Insider Deal reminders, and release-day alerts. Launch-list members are also entered for a drawing: 3 lucky sleuths win a free FULL digital copy of The Beautiful Beast (readable on your devices). Winners announced mid-December 2026 by email and on social. The full digital file is not available until December 25, 2026.",
       },
       {
         q: "How do I enter the free digital copy giveaway?",
-        a: "Join the launch list on the website before the drawing. Three winners receive a free full digital novel. Announcement mid-October 2026; winners notified in their inbox and on Silver Spine socials. Separate from ARC applications.",
+        a: "Join the launch list on the website before the drawing. Three winners receive a free full digital novel. Announcement mid-December 2026; winners notified in their inbox and on Silver Spine socials. Separate from ARC applications.",
       },
       {
         q: "What is an ARC request?",

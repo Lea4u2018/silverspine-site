@@ -1077,7 +1077,7 @@ export default function Blog() {
               <button onClick={() => setShowList(false)} className="text-gray-300 hover:text-white">✕</button>
             </div>
             <p className="text-sm text-gray-300 mb-4 leading-relaxed">
-              Get launch updates for The Beautiful Beast and the seven-fold chronicle — sneak peek news, the Oct 22 Gumroad Insider Deal, and November 1 release-day alerts. Plus: 3 lucky sleuths win a free FULL digital copy (announced mid-October). The full digital file is not available until November 1.
+              Get launch updates for The Beautiful Beast and the seven-fold chronicle — sneak peek news, the Dec 15 Gumroad Insider Deal, and December 25 release-day alerts. Plus: 3 lucky sleuths win a free FULL digital copy (announced mid-December). The full digital file is not available until December 25.
             </p>
             <LaunchListForm requestEmail={REQUEST_EMAIL} />
             <div className="flex justify-end mt-4">
@@ -1145,7 +1145,7 @@ export default function Blog() {
                 </div>
                 <div>
                   <FormFieldLabel optional>Deadline</FormFieldLabel>
-                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Nov 12, 2026" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
+                  <input value={pressDeadline} onChange={e => setPressDeadline(e.target.value)} placeholder="e.g., Jan 5, 2027" className="w-full rounded-lg bg-black/50 border border-white/10 px-3 py-2 outline-none focus:border-[#dfcfb5]/60" />
                 </div>
               </div>
 
