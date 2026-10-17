@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "15.5.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "firebase": "^12.3.0",
+    "next": "^16.3.0",
+    "nodemailer": "^6.9.14",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
@@ -19,6 +21,7 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "vercel": "^58.9.0"
   }
 }

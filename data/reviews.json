@@ -1,0 +1,95 @@
+{
+  "reviews": [
+    {
+      "id": "df4d7e116bcdea06",
+      "name": "Mardenia",
+      "text": "Love it \nCan’t wait to see the next part 👀",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-09-04T07:03:53.017Z",
+      "approvedAt": "2026-09-04T09:26:25.085Z"
+    },
+    {
+      "id": "a796bc0d455a86c7",
+      "name": "Lauren Ferguson",
+      "text": "I am so excited for this new book release!! Leameso is very passionate when it comes to her work, so I know that “The Beautiful Beast” will be a hit! ❤️",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-19T21:41:02.874Z",
+      "approvedAt": "2026-08-19T22:09:50.392Z"
+    },
+    {
+      "id": "38ad0d0f6724db15",
+      "name": "Ms. Mimi",
+      "text": "So far I am so intrigued about \"The Beautiful Beast\" written by Ms Leameso James. I can barely contain myself. I am absolutely ready to embark on this stormy journey. Everybody get on board with you.",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-16T22:12:27.229Z",
+      "approvedAt": "2026-08-16T22:13:25.629Z"
+    },
+    {
+      "id": "2a38d7ff0db7e980",
+      "name": "Faith Aponte",
+      "text": "Amazing  Website  clean easy to navigate. Excited for this book to drop perfect timing for the fall season read. ⭐️⭐️⭐️⭐️⭐️🎃📖",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-16T18:05:50.307Z",
+      "approvedAt": "2026-08-16T18:08:06.158Z"
+    },
+    {
+      "id": "f04eedce15b7f43d",
+      "name": "Ashley",
+      "text": "I absolutely love this book so far. I read just a few pages and couldn’t put the book down! I can’t wait to read the rest of the series!",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-16T04:36:32.205Z",
+      "approvedAt": "2026-08-16T04:54:36.572Z"
+    },
+    {
+      "id": "d619e3b763aec7bb",
+      "name": "Jose Menendez",
+      "text": "So far so good! I can sense that this will be a very good book. Can't wait to read it all.",
+      "rating": 5,
+      "approved": true,
+      "rejected": false,
+      "createdAt": "2026-08-14T06:35:11.752Z",
+      "approvedAt": "2026-08-14T07:09:17.680Z"
+    },
+    {
+      "id": "8ddf4c1821bf8efe",
+      "name": "Lee  James",
+      "text": "Test for the reviews. I am the admin.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:58:31.092Z",
+      "approvedAt": "2026-08-08T04:59:59.242Z",
+      "rejectedAt": "2026-08-08T05:00:31.941Z"
+    },
+    {
+      "id": "b941b7d80048e73d",
+      "name": "Browser Diag",
+      "text": "Browser-context check that review submit works.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:56:19.207Z",
+      "rejectedAt": "2026-08-08T04:59:46.954Z"
+    },
+    {
+      "id": "c41d549b69d77000",
+      "name": "Setup Test",
+      "text": "Checking that free review storage works after deploy.",
+      "rating": 5,
+      "approved": false,
+      "rejected": true,
+      "createdAt": "2026-08-08T04:54:49.174Z",
+      "rejectedAt": "2026-08-08T04:59:43.194Z"
+    }
+  ]
+}
