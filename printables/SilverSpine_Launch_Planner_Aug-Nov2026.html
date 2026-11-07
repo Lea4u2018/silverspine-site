@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Silver Spine Studio™ — Launch Planner (Aug–Nov 2026)</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 0.55in 0.55in 0.55in 0.85in; /* extra left for hole punch */
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: #111;
+      font-size: 11pt;
+      line-height: 1.35;
+      margin: 0;
+      background: #fff;
+    }
+    .page {
+      page-break-after: always;
+      padding: 0.15in 0.1in;
+      min-height: 9.5in;
+    }
+    .page:last-child { page-break-after: auto; }
+    h1 { font-size: 20pt; margin: 0 0 0.15in; letter-spacing: 0.02em; }
+    h2 {
+      font-size: 13pt;
+      margin: 0.2in 0 0.12in;
+      border-bottom: 2px solid #111;
+      padding-bottom: 0.05in;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    h3 {
+      font-size: 11.5pt;
+      margin: 0.18in 0 0.08in;
+      color: #222;
+    }
+    .sub {
+      font-size: 9.5pt;
+      color: #333;
+      margin: 0 0 0.15in;
+      font-style: italic;
+    }
+    .meta {
+      font-size: 9.5pt;
+      margin-bottom: 0.15in;
+    }
+    .box {
+      border: 1.5px solid #222;
+      padding: 0.12in 0.14in;
+      margin: 0.1in 0;
+    }
+    .hook {
+      background: #f4f4f4;
+      border-left: 4px solid #a77a23;
+      padding: 0.1in 0.12in;
+      margin: 0.1in 0 0.16in;
+      font-size: 10.5pt;
+    }
+    .row {
+      display: flex;
+      gap: 0.2in;
+      align-items: flex-start;
+    }
+    .col { flex: 1; }
+    .check {
+      display: flex;
+      gap: 0.1in;
+      align-items: flex-start;
+      margin: 0.06in 0;
+      page-break-inside: avoid;
+    }
+    .check input {
+      width: 14px;
+      height: 14px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .check label { flex: 1; }
+    .date-tag {
+      display: inline-block;
+      min-width: 1.35in;
+      font-weight: bold;
+      font-size: 10pt;
+    }
+    .lines {
+      margin-top: 0.06in;
+    }
+    .line {
+      border-bottom: 1px solid #999;
+      height: 0.22in;
+      margin-top: 0.04in;
+    }
+    .line.tall { height: 0.28in; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin: 0.08in 0;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 0.06in 0.07in;
+      vertical-align: top;
+    }
+    th {
+      background: #ececec;
+      text-align: left;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .small { font-size: 9pt; color: #333; }
+    .footer-note {
+      margin-top: 0.2in;
+      font-size: 8.5pt;
+      color: #444;
+      border-top: 1px solid #bbb;
+      padding-top: 0.08in;
+    }
+    .priority {
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 9pt;
+      letter-spacing: 0.05em;
+      color: #6b4a12;
+    }
+    ul.tight { margin: 0.06in 0 0.1in 0.18in; padding: 0; }
+    ul.tight li { margin: 0.03in 0; }
+    .day-block {
+      border: 1px solid #333;
+      padding: 0.1in;
+      margin: 0.1in 0;
+      page-break-inside: avoid;
+    }
+    .day-title {
+      font-weight: bold;
+      font-size: 11pt;
+      margin-bottom: 0.06in;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 0.04in;
+    }
+    .print-hint {
+      font-size: 9pt;
+      border: 1px dashed #666;
+      padding: 0.1in;
+      margin-bottom: 0.15in;
+    }
+    @media print {
+      .print-hint { display: none; }
+      body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== PAGE 1: COVER + MASTER ROADMAP ===================== -->
+  <section class="page">
+    <div class="print-hint">
+      <strong>Print tip:</strong> Open this file in Chrome or Safari → File → Print → Paper: US Letter → Margins: Default → turn off headers/footers if you want a clean laminate page. Left margin is widened for a ½″ binder hole punch. Print single-sided for easier laminating.
+    </div>
+
+    <h1>Silver Spine Studio™</h1>
+    <div class="meta">
+      <strong>Launch Planner &amp; Organizer</strong> · <em>The Beautiful Beast</em><br />
+      Author: Leameso James · Window: <strong>Aug 7 – Nov 1, 2026</strong><br />
+      Purpose: Keep sales, platforms, health, and release tasks complete — not half-done.
+    </div>
+
+    <div class="hook">
+      <strong>Signature hook (use everywhere):</strong><br />
+      “Thanksgiving night. Million-Dollar Highway. A debt that doesn’t die.”
+    </div>
+
+    <h2>Master Mission (in order)</h2>
+    <div class="check"><input type="checkbox" id="m1" /><label for="m1"><strong>1. Sell</strong> the $4.99 Extended Sneak Peek (Gumroad live → add D2D + Amazon when verified).</label></div>
+    <div class="check"><input type="checkbox" id="m2" /><label for="m2"><strong>2. Capture</strong> every buyer / interested reader on the launch email list (Insider $14.99 path).</label></div>
+    <div class="check"><input type="checkbox" id="m3" /><label for="m3"><strong>3. ARC → reviews</strong> (select Aug 17 · deliver Sep 21–23 · collect honest early voices).</label></div>
+    <div class="check"><input type="checkbox" id="m4" /><label for="m4"><strong>4. Daily content</strong> with the same hook on your active platforms.</label></div>
+    <div class="check"><input type="checkbox" id="m5" /><label for="m5"><strong>5. Insider preorder</strong> Sep 30–Oct 14 @ $14.99 → Launch week Oct 21–28 → Release Nov 1 @ $24.99.</label></div>
+
+    <h2>Official Timeline (lock these)</h2>
+    <table>
+      <tr><th>Date</th><th>Milestone</th><th>Done</th><th>Comments / notes</th></tr>
+      <tr><td>Aug 3</td><td>Cover reveal</td><td>☐</td><td></td></tr>
+      <tr><td>Aug 4</td><td>Sneak Peek live — $4.99 (Prologue + Ch. 1–2)</td><td>☐</td><td></td></tr>
+      <tr><td>Aug 7–14</td><td>ARC applications open (aim: 25 sleuths)</td><td>☐</td><td></td></tr>
+      <tr><td>Aug 17</td><td>ARC team selected / notified</td><td>☐</td><td></td></tr>
+      <tr><td>Aug 21</td><td>Teaser Trailer 2</td><td>☐</td><td></td></tr>
+      <tr><td>Sep 21–23</td><td>ARC delivery</td><td>☐</td><td></td></tr>
+      <tr><td>Sep 30–Oct 14</td><td>Insider / preorder window — $14.99</td><td>☐</td><td></td></tr>
+      <tr><td>Oct 21–28</td><td>Launch week push</td><td>☐</td><td></td></tr>
+      <tr><td><strong>Nov 1</strong></td><td><strong>Release day — $24.99</strong></td><td>☐</td><td></td></tr>
+    </table>
+
+    <h2>Money &amp; Care Reminder</h2>
+    <div class="box small">
+      This is your job. Protect energy: do the Daily Sustainable Checklist first. If health is hard that day, complete only the <span class="priority">Must Do (3)</span> items — that still counts as a full workday.
+      <div class="lines">
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <p class="footer-note">Silver Spine Studio™ · Printable Launch Planner · Keep in ½″ binder · Not legal/medical advice — organizational tool only.</p>
+  </section>
+
+  <!-- ===================== PAGE 2: DAILY SUSTAINABLE CHECKLIST ===================== -->
+  <section class="page">
+    <h1>1) Daily Sustainable Work Checklist</h1>
+    <p class="sub">Health-friendly full day. Complete the Must Do (3) every day. Add More Only If Able when energy allows. Photocopy / reprint this page as needed.</p>
+
+    <div class="row">
+      <div class="col box">
+        <strong>Date:</strong> _______________ &nbsp; <strong>Day:</strong> _______________<br />
+        <strong>Energy (1–5):</strong> _____ &nbsp; <strong>Pain/anxiety note:</strong> ____________________
+      </div>
+    </div>
+
+    <h2><span class="priority">Must Do (3)</span> — full day if this is all you finish</h2>
+    <div class="check"><input type="checkbox" /><label><strong>SELL:</strong> 1 action that can make money today (post with purchase link, reply to a buyer, share Gumroad, email list invite, or store update).</label></div>
+    <div class="check"><input type="checkbox" /><label><strong>SHOW UP:</strong> 1 piece of content live (video, caption, story, or email) using the signature hook + clear CTA.</label></div>
+    <div class="check"><input type="checkbox" /><label><strong>TRACK:</strong> Log sales / emails / ARC replies / store status in binder comments (2 minutes).</label></div>
+
+    <h2>Body &amp; Mind (non-negotiable supports)</h2>
+    <div class="check"><input type="checkbox" /><label>Ate at least one real meal / food today</label></div>
+    <div class="check"><input type="checkbox" /><label>Water / meds / vitals check as needed</label></div>
+    <div class="check"><input type="checkbox" /><label>10 quiet minutes (no phone) — sit, breathe, or rest</label></div>
+    <div class="check"><input type="checkbox" /><label>Stopped work by a set time: _______ (protect sleep / heart / anxiety)</label></div>
+
+    <h2>More Only If Able (complete ≠ overload)</h2>
+    <div class="check"><input type="checkbox" /><label>Platform #2 post or engagement (15–20 comments/replies max)</label></div>
+    <div class="check"><input type="checkbox" /><label>Platform #3–5 quick check (links still work; pin correct CTA)</label></div>
+    <div class="check"><input type="checkbox" /><label>Website check (Shop / Books / Blog dates &amp; links)</label></div>
+    <div class="check"><input type="checkbox" /><label>ARC / review follow-up (1 message)</label></div>
+    <div class="check"><input type="checkbox" /><label>Admin: D2D / Amazon / tax / payment email checked</label></div>
+    <div class="check"><input type="checkbox" /><label>Save 1 win from today (even small)</label></div>
+
+    <h2>Today’s numbers</h2>
+    <table>
+      <tr><th>Metric</th><th>Count</th><th>Comments</th></tr>
+      <tr><td>Sneak Peek sales</td><td></td><td></td></tr>
+      <tr><td>Email / list signups</td><td></td><td></td></tr>
+      <tr><td>ARC messages / replies</td><td></td><td></td></tr>
+      <tr><td>Content pieces posted</td><td></td><td></td></tr>
+      <tr><td>Store emails checked (D2D/Amazon)</td><td>☐ yes ☐ no</td><td></td></tr>
+    </table>
+
+    <h3>Comments / what blocked me / what to do tomorrow</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+
+    <p class="footer-note">Rule: Half-done platforms are worse than fewer complete ones. Five platforms are OK if each has one job and the same CTA.</p>
+  </section>
+
+  <!-- ===================== PAGE 3: PLATFORM JOBS ===================== -->
+  <section class="page">
+    <h1>Platform Jobs (so nothing is half-done)</h1>
+    <p class="sub">Assign one job per platform. Same hook. Same CTA. Update links the day D2D/Amazon go live.</p>
+
+    <table>
+      <tr><th>Platform</th><th>One job</th><th>Primary CTA</th><th>Link ready</th><th>Comments</th></tr>
+      <tr>
+        <td><strong>Website</strong><br />silverspinestudio.com</td>
+        <td>Home base / proof / trust</td>
+        <td>Buy sneak peek + join list</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Gumroad</strong></td>
+        <td>Primary checkout now</td>
+        <td>$4.99 Extended Sneak Peek</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Draft2Digital</strong></td>
+        <td>Wide distribution</td>
+        <td>Sneak peek / later full book</td>
+        <td>☐</td>
+        <td>Awaiting payment/tax</td>
+      </tr>
+      <tr>
+        <td><strong>Amazon</strong></td>
+        <td>Largest discovery store</td>
+        <td>Sneak peek / later full book</td>
+        <td>☐</td>
+        <td>Awaiting setup/verify</td>
+      </tr>
+      <tr>
+        <td><strong>Email list</strong></td>
+        <td>Owned audience / Insider sales</td>
+        <td>Join for $14.99 window + launch</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>TikTok</strong></td>
+        <td>Mood + trailer clips</td>
+        <td>Link in bio → buy / list</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Facebook</strong></td>
+        <td>Community + longer posts</td>
+        <td>Buy / ARC / list</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Instagram</strong></td>
+        <td>Visual brand + stories</td>
+        <td>Link in bio</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>YouTube</strong></td>
+        <td>Trailer home</td>
+        <td>Description links</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><strong>Threads / other</strong></td>
+        <td>Quick echo posts</td>
+        <td>Same CTA</td>
+        <td>☐</td>
+        <td></td>
+      </tr>
+    </table>
+
+    <h2>Universal CTA lines (copy as needed)</h2>
+    <div class="box small">
+      <strong>Sale:</strong> “Extended Sneak Peek — Prologue &amp; Chapters 1–2 — $4.99. Personal license. Link in bio / on the site.”<br /><br />
+      <strong>List:</strong> “Join the launch list for Insider preorder alerts ($14.99 · Sep 30–Oct 14).”<br /><br />
+      <strong>ARC:</strong> “ARC applications open through Aug 14. 25 sleuths. Selection Aug 17.”
+    </div>
+
+    <h3>Notes / passwords / where links live (write carefully; keep binder private)</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 4–5: 7-DAY PLAN ===================== -->
+  <section class="page">
+    <h1>2) 7-Day Sales &amp; Content Plan</h1>
+    <p class="sub">Dated for the week ahead from planner creation. Adjust start date if needed. Goal: sales + list + ARC momentum — complete posts, not perfect posts.</p>
+
+    <div class="day-block">
+      <div class="day-title">Day 1 — Sat Aug 8, 2026 · Theme: OPEN FOR BUSINESS</div>
+      <div class="check"><input type="checkbox" /><label>Post on TikTok OR IG: 15–30 sec clip + hook + “$4.99 sneak peek — link in bio”</label></div>
+      <div class="check"><input type="checkbox" /><label>Facebook post: short story of why this book matters + Gumroad link + copyright note brief</label></div>
+      <div class="check"><input type="checkbox" /><label>Pin Gumroad link on every bio that is missing it</label></div>
+      <div class="check"><input type="checkbox" /><label>Check D2D + Amazon email for verification updates</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3) from Daily Checklist</label></div>
+      <p class="small"><strong>Caption seed:</strong> Thanksgiving night. Million-Dollar Highway. A debt that doesn’t die. Extended Sneak Peek $4.99.</p>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-title">Day 2 — Sun Aug 9, 2026 · Theme: TRUST</div>
+      <div class="check"><input type="checkbox" /><label>Post: “What’s inside the sneak peek” (Prologue + Ch. 1–2) + personal license reminder</label></div>
+      <div class="check"><input type="checkbox" /><label>Invite soft: join launch list for Insider $14.99 window</label></div>
+      <div class="check"><input type="checkbox" /><label>Reply to every comment / message from yesterday (cap 20 min if tired)</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-title">Day 3 — Mon Aug 10, 2026 · Theme: ARC PUSH</div>
+      <div class="check"><input type="checkbox" /><label>Post: ARC applications open through Aug 14 · selection Aug 17 · 25 sleuths</label></div>
+      <div class="check"><input type="checkbox" /><label>Share Blog ARC form link / site ARC path</label></div>
+      <div class="check"><input type="checkbox" /><label>DM or email 3 possible reviewers / readers (kind, clear expectations)</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-title">Day 4 — Tue Aug 11, 2026 · Theme: TRAILER / MOOD</div>
+      <div class="check"><input type="checkbox" /><label>Post trailer clip or storm/road still + hook (no mid-video clutter)</label></div>
+      <div class="check"><input type="checkbox" /><label>YouTube / FB: ensure trailer description has Gumroad + site links</label></div>
+      <div class="check"><input type="checkbox" /><label>Check Shop page still points to live checkout</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+  </section>
+
+  <section class="page">
+    <h1>2) 7-Day Plan (continued)</h1>
+
+    <div class="day-block">
+      <div class="day-title">Day 5 — Wed Aug 12, 2026 · Theme: WHY BUY NOW</div>
+      <div class="check"><input type="checkbox" /><label>Post: Insider Deal explained simply — buy sneak peek → whitelist → $14.99 Sep 30–Oct 14</label></div>
+      <div class="check"><input type="checkbox" /><label>Email list message OR FB long post with same explanation</label></div>
+      <div class="check"><input type="checkbox" /><label>Track: how many sneak peek sales + list signups this week so far</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-title">Day 6 — Thu Aug 13, 2026 · Theme: SOCIAL PROOF / STORY</div>
+      <div class="check"><input type="checkbox" /><label>Post: personal (appropriate) persistence story — this is your work, not a hobby — CTA still the book</label></div>
+      <div class="check"><input type="checkbox" /><label>Ask engaged followers to share the sneak peek link</label></div>
+      <div class="check"><input type="checkbox" /><label>ARC reminder: applications close tomorrow (Aug 14)</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments:</div>
+      <div class="line"></div><div class="line"></div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-title">Day 7 — Fri Aug 14, 2026 · Theme: CLOSE THE ARC WINDOW</div>
+      <div class="check"><input type="checkbox" /><label>Final ARC call post (applications close today)</label></div>
+      <div class="check"><input type="checkbox" /><label>Export / list all ARC applicants in one place for Aug 17 selection</label></div>
+      <div class="check"><input type="checkbox" /><label>Week review: sales, signups, best post, what to repeat</label></div>
+      <div class="check"><input type="checkbox" /><label>Prep weekend rest blocks on calendar (health)</label></div>
+      <div class="check"><input type="checkbox" /><label>Must Do (3)</label></div>
+      <div class="small">Comments / week win:</div>
+      <div class="line"></div><div class="line"></div><div class="line"></div>
+    </div>
+
+    <h2>End-of-week scorecard</h2>
+    <table>
+      <tr><th>Item</th><th>Target</th><th>Actual</th><th>Comments</th></tr>
+      <tr><td>Sneak Peek sales</td><td>any progress</td><td></td><td></td></tr>
+      <tr><td>List signups</td><td>grow weekly</td><td></td><td></td></tr>
+      <tr><td>ARC applications</td><td>toward 25</td><td></td><td></td></tr>
+      <tr><td>Days Must Do (3) completed</td><td>5–7</td><td></td><td></td></tr>
+      <tr><td>D2D / Amazon status</td><td>checked daily</td><td></td><td></td></tr>
+    </table>
+  </section>
+
+  <!-- ===================== PAGE 6: STORE / SITE TASKS ===================== -->
+  <section class="page">
+    <h1>3) Site &amp; Store Tasks — When D2D / Amazon Clear</h1>
+    <p class="sub">Do these the same day verification finishes. No half links. Check every box before you announce “live everywhere.”</p>
+
+    <h2>A. Draft2Digital — go-live checklist</h2>
+    <div class="check"><input type="checkbox" /><label>Payment method verified</label></div>
+    <div class="check"><input type="checkbox" /><label>Tax info verified</label></div>
+    <div class="check"><input type="checkbox" /><label>Title live / approved in chosen channels</label></div>
+    <div class="check"><input type="checkbox" /><label>Price confirmed: <strong>$4.99</strong> sneak peek (or correct product)</label></div>
+    <div class="check"><input type="checkbox" /><label>Description + copyright / terms match Gumroad intent</label></div>
+    <div class="check"><input type="checkbox" /><label>Cover displays correctly</label></div>
+    <div class="check"><input type="checkbox" /><label>Copy <strong>Books2Read / store links</strong> here:</label></div>
+    <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+    <div class="check"><input type="checkbox" /><label>Send links to site helper / paste into Shop page (status: live)</label></div>
+    <div class="check"><input type="checkbox" /><label>Test purchase or preview as customer</label></div>
+    <div class="small">D2D comments / ticket #:</div>
+    <div class="line"></div><div class="line"></div>
+
+    <h2>B. Amazon — go-live checklist</h2>
+    <div class="check"><input type="checkbox" /><label>Account / tax / payment complete</label></div>
+    <div class="check"><input type="checkbox" /><label>Listing live (or preorder set correctly for full novel later)</label></div>
+    <div class="check"><input type="checkbox" /><label>Price / categories / keywords checked</label></div>
+    <div class="check"><input type="checkbox" /><label>Look Inside / sample OK</label></div>
+    <div class="check"><input type="checkbox" /><label>ASIN / Amazon URL copied here:</label></div>
+    <div class="lines"><div class="line"></div><div class="line"></div></div>
+    <div class="check"><input type="checkbox" /><label>Add Amazon button on Shop + Books (live, not “soon”)</label></div>
+    <div class="check"><input type="checkbox" /><label>Bios updated (TikTok/IG/FB/YouTube/email footer)</label></div>
+    <div class="check"><input type="checkbox" /><label>Announce once: “Now also on Amazon / [channels]” + still push Gumroad if you want direct</label></div>
+    <div class="small">Amazon comments / case ID:</div>
+    <div class="line"></div><div class="line"></div>
+
+    <h2>C. Website wire-up (same day)</h2>
+    <div class="check"><input type="checkbox" /><label><code>lib/store.js</code> — set D2D <strong>status: "live"</strong> + href</label></div>
+    <div class="check"><input type="checkbox" /><label><code>lib/store.js</code> — set Amazon <strong>status: "live"</strong> + href</label></div>
+    <div class="check"><input type="checkbox" /><label>Shop page shows both buttons working</label></div>
+    <div class="check"><input type="checkbox" /><label>Books featured CTA still correct</label></div>
+    <div class="check"><input type="checkbox" /><label>Deploy production (“go”) after links added</label></div>
+    <div class="check"><input type="checkbox" /><label>Hard-refresh live site and click every store button</label></div>
+    <div class="small">Deploy date / notes:</div>
+    <div class="line"></div><div class="line"></div>
+  </section>
+
+  <!-- ===================== PAGE 7: AUG 15–31 ===================== -->
+  <section class="page">
+    <h1>Phase Calendar — Aug 15–31, 2026</h1>
+    <p class="sub">After ARC window closes. Selection + Trailer 2 + keep selling sneak peek.</p>
+
+    <table>
+      <tr><th>Date</th><th>Focus</th><th>Tasks</th><th>Done</th><th>Comments</th></tr>
+      <tr>
+        <td>Sat Aug 15</td>
+        <td>Recover + organize</td>
+        <td>Rest block · sort ARC apps · continue sales posts</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Sun Aug 16</td>
+        <td>ARC shortlist</td>
+        <td>Draft top 25 (+ 5 backups) · note who posts reviews</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Mon Aug 17</strong></td>
+        <td><strong>ARC selection day</strong></td>
+        <td>Notify selected · kind declines to others · log contacts</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Tue Aug 18</td>
+        <td>ARC expectations</td>
+        <td>Send guidelines: timeline, spoiler rules, where to post, no file sharing</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Wed Aug 19</td>
+        <td>Sales</td>
+        <td>Sneak peek push · Insider explanation replay</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Thu Aug 20</td>
+        <td>Trailer 2 prep</td>
+        <td>Finalize clip · captions · thumbnail · upload draft</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Fri Aug 21</strong></td>
+        <td><strong>Teaser Trailer 2</strong></td>
+        <td>Publish all platforms · link sneak peek · pin</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Aug 22–24</td>
+        <td>Amplify Trailer 2</td>
+        <td>Daily clip cuts · reply · sales CTA</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Aug 25–27</td>
+        <td>Mid-month review</td>
+        <td>Sales tally · list tally · fix broken links · store status</td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Aug 28–31</td>
+        <td>Steady sell + health</td>
+        <td>Must Do (3) daily · prep Sept ARC delivery files</td>
+        <td>☐</td><td></td>
+      </tr>
+    </table>
+
+    <h3>August comments / problems / wins</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 8: SEPTEMBER ===================== -->
+  <section class="page">
+    <h1>Phase Calendar — September 2026</h1>
+    <p class="sub">ARC delivery + set up Insider preorder rails before Sep 30.</p>
+
+    <table>
+      <tr><th>Dates</th><th>Focus</th><th>Checklist</th><th>Done</th><th>Comments</th></tr>
+      <tr>
+        <td>Sep 1–7</td>
+        <td>File readiness</td>
+        <td>
+          ☐ Final ARC manuscript packaged<br />
+          ☐ Watermark / personalization plan if used<br />
+          ☐ Reviewer spreadsheet columns ready
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Sep 8–14</td>
+        <td>Preorder setup</td>
+        <td>
+          ☐ Confirm full-novel price path ($14.99 Insider / $24.99 retail)<br />
+          ☐ Store pages drafted for preorder<br />
+          ☐ Email sequence drafted for Sep 30 open
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Sep 15–20</td>
+        <td>ARC countdown</td>
+        <td>
+          ☐ Reminder to ARC team: delivery window Sep 21–23<br />
+          ☐ Support FAQ for ARC readers<br />
+          ☐ Keep sneak peek selling
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Sep 21–23</strong></td>
+        <td><strong>ARC delivery</strong></td>
+        <td>
+          ☐ Deliver files<br />
+          ☐ Confirm receipt checklist<br />
+          ☐ Log who received what
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Sep 24–29</td>
+        <td>Insider launch prep</td>
+        <td>
+          ☐ Whitelist of sneak-peek buyers ready<br />
+          ☐ Sep 30 posts scheduled / drafted<br />
+          ☐ Site countdown / shop copy checked<br />
+          ☐ Trailer / graphics for preorder ready
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Sep 30</strong></td>
+        <td><strong>Insider opens $14.99</strong></td>
+        <td>
+          ☐ Announce to list first<br />
+          ☐ Post all platforms<br />
+          ☐ Verify checkout works
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+    </table>
+
+    <h3>September comments</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 9: OCTOBER + NOV 1 ===================== -->
+  <section class="page">
+    <h1>Phase Calendar — Oct 2026 → Release Nov 1</h1>
+
+    <table>
+      <tr><th>Dates</th><th>Focus</th><th>Checklist</th><th>Done</th><th>Comments</th></tr>
+      <tr>
+        <td>Oct 1–7</td>
+        <td>Insider week 1</td>
+        <td>
+          ☐ Daily reminder posts (not spam — value + urgency)<br />
+          ☐ Email #2 to list<br />
+          ☐ Help buyers who have issues (kind + clear)
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Oct 8–13</td>
+        <td>Insider week 2</td>
+        <td>
+          ☐ “Window closing” content<br />
+          ☐ Collect early reviews as allowed<br />
+          ☐ Prep launch-week assets
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Oct 14</strong></td>
+        <td><strong>Insider ends</strong></td>
+        <td>
+          ☐ Final call post morning + evening<br />
+          ☐ Close / update offers on site<br />
+          ☐ Thank whitelist buyers
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Oct 15–20</td>
+        <td>Bridge to launch</td>
+        <td>
+          ☐ Retail $24.99 messaging ready for Nov 1<br />
+          ☐ Press / blog update if needed<br />
+          ☐ Rest days scheduled
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Oct 21–28</strong></td>
+        <td><strong>Launch week</strong></td>
+        <td>
+          ☐ Daily content (Must Do 3)<br />
+          ☐ Review request wave<br />
+          ☐ Stories / trailer saturation<br />
+          ☐ Email: “Release Nov 1”
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td>Oct 29–31</td>
+        <td>Final 72 hours</td>
+        <td>
+          ☐ All store links tested<br />
+          ☐ Pin release posts<br />
+          ☐ Personal rest plan for Nov 1 evening
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+      <tr>
+        <td><strong>Sat Nov 1</strong></td>
+        <td><strong>RELEASE DAY $24.99</strong></td>
+        <td>
+          ☐ Publish / confirm live everywhere<br />
+          ☐ Announce list + all platforms<br />
+          ☐ Thank readers<br />
+          ☐ Log sales end of day<br />
+          ☐ Protect health — celebrate quietly if needed
+        </td>
+        <td>☐</td><td></td>
+      </tr>
+    </table>
+
+    <h3>Release-week emergency contacts / help notes</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+
+    <div class="box">
+      <strong>Nov 1 evening reflection</strong>
+      <div class="lines">
+        <div class="line tall"></div>
+        <div class="line tall"></div>
+        <div class="line tall"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 10: WEEKLY LOG BLANKS ===================== -->
+  <section class="page">
+    <h1>Weekly Log (reprint as needed)</h1>
+    <p class="sub">One page per week. Hole-punch and add behind the phase calendars.</p>
+
+    <div class="box">
+      <strong>Week of:</strong> _______________ &nbsp; to &nbsp; _______________<br />
+      <strong>Theme / priority:</strong> _______________________________________________
+    </div>
+
+    <h2>Week goals (max 5 — complete them)</h2>
+    <div class="check"><input type="checkbox" /><label>1. ____________________________________________________________</label></div>
+    <div class="check"><input type="checkbox" /><label>2. ____________________________________________________________</label></div>
+    <div class="check"><input type="checkbox" /><label>3. ____________________________________________________________</label></div>
+    <div class="check"><input type="checkbox" /><label>4. ____________________________________________________________</label></div>
+    <div class="check"><input type="checkbox" /><label>5. ____________________________________________________________</label></div>
+
+    <h2>Daily Must Do (3) tracker</h2>
+    <table>
+      <tr><th>Day</th><th>SELL</th><th>SHOW UP</th><th>TRACK</th><th>Health OK?</th><th>Comments</th></tr>
+      <tr><td>Mon</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Tue</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Wed</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Thu</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Fri</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Sat</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+      <tr><td>Sun</td><td>☐</td><td>☐</td><td>☐</td><td>☐</td><td></td></tr>
+    </table>
+
+    <h2>Weekly numbers</h2>
+    <table>
+      <tr><th>Metric</th><th>This week</th><th>Notes</th></tr>
+      <tr><td>Sneak Peek sales</td><td></td><td></td></tr>
+      <tr><td>Insider / preorder sales</td><td></td><td></td></tr>
+      <tr><td>Email signups</td><td></td><td></td></tr>
+      <tr><td>Reviews / ARC returns</td><td></td><td></td></tr>
+      <tr><td>Money in (approx)</td><td></td><td></td></tr>
+    </table>
+
+    <h3>What worked / what to stop / next week’s #1 priority</h3>
+    <div class="lines">
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+      <div class="line tall"></div>
+    </div>
+  </section>
+
+  <!-- ===================== PAGE 11: WAITING LOG + CONTACTS ===================== -->
+  <section class="page">
+    <h1>Waiting Room Log — D2D / Amazon / Other</h1>
+    <p class="sub">While verification is pending, you still work the Must Do (3). Use this page so nothing falls through.</p>
+
+    <table>
+      <tr><th>Date checked</th><th>Platform</th><th>Status</th><th>Next action</th><th>Done</th></tr>
+      <tr><td></td><td>Draft2Digital</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Draft2Digital</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Draft2Digital</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Amazon</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Amazon</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Amazon</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Gumroad</td><td></td><td></td><td>☐</td></tr>
+      <tr><td></td><td>Other:</td><td></td><td></td><td>☐</td></tr>
+    </table>
+
+    <h2>Important contacts</h2>
+    <table>
+      <tr><th>Who</th><th>How to reach</th><th>Why</th><th>Notes</th></tr>
+      <tr><td>Draft2Digital support</td><td></td><td>Payment / tax / distribution</td><td></td></tr>
+      <tr><td>Amazon KDP support</td><td></td><td>Listing / tax / pay</td><td></td></tr>
+      <tr><td>Gumroad support</td><td></td><td>Payouts / file issues</td><td></td></tr>
+      <tr><td>Site / tech help (Cursor)</td><td>This project chat</td><td>Links, deploy, pages</td><td>Say “go” to deploy</td></tr>
+      <tr><td>Emergency / medical</td><td></td><td>Your care</td><td></td></tr>
+      <tr><td></td><td></td><td></td><td></td></tr>
+    </table>
+
+    <h2>Binder order (suggested)</h2>
+    <ol class="small">
+      <li>Cover / Master Mission</li>
+      <li>Daily Sustainable Checklist (extra copies)</li>
+      <li>Platform Jobs</li>
+      <li>7-Day Sales &amp; Content Plan</li>
+      <li>Site &amp; Store Go-Live Tasks</li>
+      <li>Aug 15–31 Phase</li>
+      <li>September Phase</li>
+      <li>October → Nov 1 Phase</li>
+      <li>Weekly Logs</li>
+      <li>Waiting Room Log</li>
+    </ol>
+
+    <div class="box">
+      <strong>Promise to yourself</strong><br />
+      I will not half-do the work. I will complete the Must Do (3) on hard days. I will protect my health so I can keep building.
+      <div class="lines">
+        <div class="line tall"></div>
+        <div class="line"></div>
+      </div>
+      Signature / date: _________________________________
+    </div>
+
+    <p class="footer-note">
+      File location on your computer:<br />
+      <strong>Dropbox/13_SILVERSPINE-SITE/printables/SilverSpine_Launch_Planner_Aug-Nov2026.html</strong><br />
+      Open → Print → laminate → hole-punch → ½″ binder.
+    </p>
+  </section>
+
+</body>
+</html>
