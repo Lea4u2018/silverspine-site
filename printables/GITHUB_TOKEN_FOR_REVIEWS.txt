@@ -1,0 +1,39 @@
+Silver Spine Studio — Free review storage (no Firebase billing)
+
+Reviews now save through GitHub (free) instead of suspended Google Firebase billing.
+
+ONE-TIME SETUP (about 3 minutes):
+
+1) Create a GitHub token
+   - Go to: https://github.com/settings/tokens?type=beta
+   - Fine-grained personal access token → Generate
+   - Token name: silverspine-reviews
+   - Resource owner: Lea4u2018
+   - Repository access: Only select repositories → silverspine-site
+   - Permissions → Repository permissions → Contents: Read and write
+   - Generate token → COPY IT (shown once)
+
+2) Add it in Vercel
+   - https://vercel.com → silverspine-site → Settings → Environment Variables
+   - Name: GITHUB_TOKEN
+   - Value: (paste the token)
+   - Environments: Production (and Preview if you want)
+   - Save
+
+3) Optional (already defaulted in code)
+   - GITHUB_REPO = Lea4u2018/silverspine-site
+   - GITHUB_REVIEWS_BRANCH = restore-site-2025-10-25
+
+   Note: review saves make GitHub commits titled "review: …".
+   Vercel project setting "Ignored Build Step" should skip those so you
+   don't get a flood of failed-preview emails. Command used:
+   git log -1 --pretty=%s | grep -qE '^review:' && exit 0 || exit 1
+
+4) Deploy the site (say "go" in Cursor, or redeploy in Vercel)
+
+5) Test
+   - Submit a review on /reviews
+   - You get [REVIEW] email
+   - Approve at /admin with your ADMIN_PASSWORD
+
+Cost: $0

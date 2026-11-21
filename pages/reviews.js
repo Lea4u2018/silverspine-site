@@ -1,149 +1,316 @@
-// pages/reviews.js
-import Link from "next/link";
-import { useRouter } from "next/router";
+// /pages/reviews.js
 import Head from "next/head";
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState, useMemo } from "react";
+import { FaRegCommentDots } from "react-icons/fa";
+import StarRating, { StarDisplay } from "@/components/StarRating";
+import StormAtmosphere from "@/components/StormAtmosphere";
+import FormFieldLabel, { FormRequiredNote } from "@/components/FormFieldLabel";
 
 export default function ReviewsPage() {
-  const router = useRouter();
-  const links = [
-    { href: "/", label: "Home" },
-    { href: "/books", label: "Books" }, // ✅ FIXED
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-    { href: "/blog", label: "Blog" },
-    { href: "/reviews", label: "Reviews" },
-  ];
 
-  const reviews = [
-    {
-      name: "Alex R.",
-      text: "This book gripped me from the first page. Dark, cinematic, and unforgettable.",
-      rating: 5,
-    },
-    {
-      name: "Jordan M.",
-      text: "The twists left me speechless. Easily one of the best thrillers I’ve read in years.",
-      rating: 5,
-    },
-    {
-      name: "Taylor S.",
-      text: "Characters so vivid I still think about them weeks later. Highly recommended.",
-      rating: 4,
-    },
-    {
-      name: "Morgan K.",
-      text: "A story that lingers like a storm—atmospheric and relentless.",
-      rating: 5,
-    },
-  ];
+  const GOLD = "#dfcfb5";
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.documentElement;
+    root.classList.add("sss-reviews-lock");
+    return () => {
+      root.classList.remove("sss-reviews-lock");
+    };
+  }, []);
+
+  // form
+  const [rating, setRating] = useState(5.0);
+  const [name, setName] = useState("");
+  const [text, setText] = useState("");
+  const [hp, setHp] = useState("");
+  const [startedAt] = useState(() => Date.now());
+  const [submitting, setSubmitting] = useState(false);
+
+  // data (approved only — free storage, no Firebase billing)
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/reviews");
+        const data = await res.json();
+        if (!cancelled && res.ok && data.ok) {
+          setReviews(Array.isArray(data.reviews) ? data.reviews : []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const stats = useMemo(() => {
+    if (!reviews.length) return { avg: 0, count: 0 };
+    const sum = reviews.reduce((acc, r) => acc + (r.rating || 0), 0);
+    return { avg: sum / reviews.length, count: reviews.length };
+  }, [reviews]);
+
+  // little starfield
+  const [stars, setStars] = useState([]);
+  useEffect(() => {
+    const newStars = Array.from({ length: 40 }, () => ({
+      top: Math.random() * 30,
+      left: Math.random() * 100,
+      size: Math.random() * 1.4 + 0.8,
+      opacity: Math.random() * 0.5 + 0.35,
+      delay: Math.random() * 4,
+      dur: 3 + Math.random() * 2.5,
+    }));
+    setStars(newStars);
+  }, []);
 
   return (
-    <div className="bg-black text-gray-100 min-h-screen flex flex-col">
+    <div className="reviews-page text-gray-100 min-h-screen flex flex-col relative overflow-x-hidden">
+      <StormAtmosphere mood="ash" />
       <Head>
-        <title>Reader Reviews | Silver Spine Studio™</title>
-        <meta
-          name="description"
-          content="What readers are saying about Silver Spine Studio books. Honest reviews and impressions."
-        />
+        <title>Reviews | Silver Spine Studio™</title>
+        <meta name="description" content="Leave a review and read what others are saying." />
+        <style>{`
+          :root { --gold: ${GOLD}; --header-h: 56px; --footer-h: 136px; }
+
+          @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.06); }
+          }
+          .stars { position:absolute; inset:0 0 auto 0; height:40vh; pointer-events:none; z-index:0; }
+          .star { position:absolute; background:white; border-radius:50%;
+            box-shadow:0 0 3px rgba(255,255,255,0.4);
+            animation: twinkle var(--dur, 4s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+          }
+
+          .z-content { z-index: 20; position: relative; }
+
+          /* cards */
+          .sheet {
+            background:#0b0b0b; border:1px solid rgba(167,122,35,0.35); border-radius:22px;
+            box-shadow: 0 18px 48px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.04);
+          }
+
+          /* LIFT content up slightly without touching the nebula bands */
+          .boxes-offset { margin-top: 8px; }
+          @media (min-width: 768px){ .boxes-offset { margin-top: 12px; } }
+
+          /* Ensure page scrolls normally */
+          html, body { margin:0; background:#000; height:auto; overflow-y:auto; }
+          #__next { height:auto; overflow:visible; }
+
+          /* Reviews chrome: page content scrolls; global header/footer stay frozen */
+          html.sss-reviews-lock #site-footer {
+            position: fixed !important;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 40;
+          }
+
+          @media (min-width: 768px) {
+            html.sss-reviews-lock .reviews-page > main {
+              overflow-x: hidden;
+            }
+          }
+        `}</style>
       </Head>
 
-      {/* Header */}
-      <header className="bg-gray-900 shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center p-6">
-          <h1 className="text-2xl font-extrabold text-yellow-400">
-            Silver Spine Studio
-          </h1>
-          <nav className="flex space-x-6">
-            {links.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`transition ${
-                  router.asPath === href
-                    ? "text-red-500 font-semibold"
-                    : "text-gray-200 hover:text-yellow-400"
-                }`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </header>
+      {/* stars layer */}
+      <div className="stars">
+        {stars.map((s, i) => (
+          <div
+            key={i}
+            className="star"
+            style={{
+              top: `${s.top}%`,
+              left: `${s.left}%`,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
+              opacity: s.opacity,
+              ["--delay"]: `${s.delay}s`,
+              ["--dur"]: `${s.dur}s`,
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Reviews Grid */}
-      <main className="flex-1 px-6 py-12 text-center">
-        <h1 className="text-3xl font-bold mb-12 text-yellow-400">Reader Reviews</h1>
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {reviews.map((review, index) => (
-            <div
-              key={index}
-              className="rounded-2xl bg-gray-900 shadow-lg p-6 hover:shadow-xl transition duration-300"
-            >
-              <p className="mb-6 text-lg italic leading-relaxed">
-                “{review.text}”
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">{review.name}</span>
-                <span className="text-yellow-400 text-sm">
-                  {"★".repeat(review.rating)}
-                  {"☆".repeat(5 - review.rating)}
-                </span>
+      <h1
+        className="relative z-content text-center text-4xl md:text-5xl font-extrabold tracking-tight pt-8 pb-2"
+        style={{ color: GOLD, textShadow: "0 2px 10px rgba(0,0,0,0.82)" }}
+      >
+        Reviews
+      </h1>
+
+      {/* ===== MAIN ===== */}
+      <main className="flex-1 z-content px-6 md:px-8 pb-10">
+        <section className="mx-auto w-full max-w-[1140px] boxes-offset">
+          {/* stats row */}
+          <div className="flex items-center justify-between mb-5">
+            <div className="text-gray-300">
+              {stats.count > 0 ? (
+                <>
+                  Avg <span className="font-semibold" style={{ color: GOLD }}>{stats.avg.toFixed(1)}</span>
+                  {" "}· <span className="text-gray-200">{stats.count}</span> review{stats.count === 1 ? "" : "s"}
+                </>
+              ) : (<>Your words could be the first spark here.</>)}
+            </div>
+            <div className="text-3xl" style={{ color: GOLD }} aria-hidden="true">
+              <FaRegCommentDots />
+            </div>
+          </div>
+
+          {/* two columns — lifted with smaller top offset */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            {/* left: form */}
+            <div className="sheet">
+              <div className="p-6 md:p-8">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: GOLD }}>Share your thoughts</h3>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const n = name.trim();
+                    const t = text.trim();
+                    if (!n || n.length < 2) {
+                      alert("Please enter your name.");
+                      return;
+                    }
+                    if (!t || t.length < 10) {
+                      alert("Please enter a longer review (at least a sentence).");
+                      return;
+                    }
+                    setSubmitting(true);
+                    try {
+                      const res = await fetch("/api/reviews/submit", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          name: n,
+                          text: t,
+                          rating,
+                          hp,
+                          startedAt,
+                        }),
+                      });
+                      let data = {};
+                      try {
+                        data = await res.json();
+                      } catch {
+                        data = {};
+                      }
+                      if (res.ok && data.ok) {
+                        setName("");
+                        setText("");
+                        setRating(5.0);
+                        alert(data.message || "Thank you! Your review was submitted and is pending approval.");
+                      } else {
+                        alert(data.error || `Sorry—something went wrong (${res.status}). Please try again in a moment.`);
+                      }
+                    } catch (err) {
+                      console.error(err);
+                      alert("Sorry—something went wrong. Please try again in a moment.");
+                    } finally {
+                      setSubmitting(false);
+                    }
+                  }}
+                >
+                  {/* honeypot — leave empty (odd name avoids password-manager autofill) */}
+                  <input
+                    type="text"
+                    name="sss_website_url"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
+                    style={{ position: "absolute", left: "-9999px" }}
+                  />
+                  <FormRequiredNote className="text-xs text-gray-500 mb-3" />
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Your Rating <span className="text-red-400 font-semibold ml-0.5" aria-hidden="true">*</span>
+                  </label>
+                  <StarRating value={rating} onChange={setRating} />
+
+                  <div className="mt-5">
+                    <FormFieldLabel htmlFor="name" required>
+                      Name
+                    </FormFieldLabel>
+                    <input
+                      id="name"
+                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 focus:outline-none focus:border-[#dfcfb5] transition"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g., A. Reader"
+                      maxLength={80}
+                      required
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <FormFieldLabel htmlFor="text" required>
+                      Your Review
+                    </FormFieldLabel>
+                    <textarea
+                      id="text"
+                      className="w-full bg-black text-gray-100 rounded-xl border border-gray-800 px-4 py-3 min-h-[12rem] text-base resize-y focus:outline-none focus:border-[#dfcfb5] transition"
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      placeholder="Share your honest thoughts (no spoilers please!)"
+                      maxLength={2000}
+                      required
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Submissions appear after approval.</p>
+                  </div>
+
+                  <div className="mt-6 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="px-5 py-3 rounded-xl bg-[#dfcfb5] text-black font-semibold hover:opacity-90 transition disabled:opacity-60"
+                    >
+                      {submitting ? "Sending…" : "Submit Review"}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
-          ))}
-        </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-950 text-gray-400 text-center py-8">
-        <p className="mb-4">
-          © {new Date().getFullYear()} Silver Spine Studio. All rights reserved.
-        </p>
-        <div className="flex justify-center space-x-6 text-2xl">
-          <a
-            href="https://facebook.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaFacebook />
-          </a>
-          <a
-            href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTwitter />
-          </a>
-          <a
-            href="https://instagram.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaInstagram />
-          </a>
-          <a
-            href="https://youtube.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaYoutube />
-          </a>
-          <a
-            href="https://tiktok.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-yellow-400 transition"
-          >
-            <FaTiktok />
-          </a>
-        </div>
-      </footer>
+            {/* right: reviews */}
+            <div className="sheet">
+              <div className="p-5 md:p-7">
+                <h3 className="text-xl font-semibold mb-4" style={{ color: GOLD }}>What readers are saying</h3>
+                <div className="space-y-4 max-h-[32rem] overflow-y-auto pr-1">
+                  {reviews.length > 0 ? (
+                    reviews.map((r) => (
+                      <article
+                        key={r.id}
+                        className="rounded-xl p-4 border border-white/10 transition hover:border-[#dfcfb5]/40"
+                        style={{ background: "#0d0d0d" }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="text-lg font-semibold" style={{ color: GOLD }}>{r.name}</div>
+                          <StarDisplay value={r.rating} />
+                        </div>
+                        <p className="text-gray-200 leading-relaxed whitespace-pre-wrap">{r.text}</p>
+                      </article>
+                    ))
+                  ) : (
+                    <div className="flex items-center justify-center h-[200px] text-gray-400 italic">
+                      Be the first to leave a review — your voice helps shape the story.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
